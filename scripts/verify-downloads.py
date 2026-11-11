@@ -22,6 +22,9 @@ def inspect_modules(read):
   assert b'SIL OPEN FONT LICENSE Version 1.1' in read('licenses/NOTO-OFL.txt'),'Font license missing'
   assert b'2014-2021 Adobe' in read('licenses/NOTO-COPYRIGHT.txt'),'Font copyright missing'
   assert b'f8d157532fbfaeda587e826d4cd5b21a49186f7c' in read('licenses/NOTO-SOURCE.md'),'Font provenance missing'
+ if b'EndingMusic' in read('main.js'):
+  assert hashlib.sha256(read('audio/after_last_rollcall.wav')).hexdigest()=='78b620040ae3a706ef6aee52c3a7bc4916d087c6fec17114513f074e5d27cbac','Ending music missing or changed'
+  assert b'Apache' in read('licenses/ENDING-MUSIC-SOURCE.md'),'Ending music provenance missing'
  checked=set()
  def visit(name):
   assert not name.startswith(('../','/')),name

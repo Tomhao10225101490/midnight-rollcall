@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {EndingMusic} from '../dist/ending-music.js';
+test('结局音乐复用播放器；取消旧播放请求不得打断新曲，失焦暂停并恢复，静音立即生效',async()=>{
+ const previous=globalThis.Audio;let instances=0,requests=[];
+ globalThis.Audio=class{constructor(){instances++;this.currentTime=0;this.duration=33.41;this.readyState=4;this.paused=true}addEventListener(){}pause(){this.paused=true}play(){this.paused=false;return new Promise((resolve,reject)=>requests.push({resolve,reject}))}};
+ try{const music=new EndingMusic();music.begin();music.begin();requests[0].reject(Error('cancelled'));await Promise.resolve();assert.equal(music.measure().active,true);assert.equal(music.measure().error,false);music.update(1,.8,true,false);assert.ok(music.measure().volume>0);music.update(.1,0,true,false);assert.equal(music.measure().volume,0);music.update(.1,.8,false,false);requests[1].reject(Error('focus pause'));await Promise.resolve();assert.equal(music.measure().active,true);assert.equal(music.measure().paused,true);for(let i=0;i<10;i++)music.update(.05,.8,false,false);assert.equal(music.measure().paused,true);assert.equal(requests.length,2);music.update(.1,.8,true,false);assert.equal(music.measure().paused,false);assert.equal(requests.length,3);music.stop();requests[2].reject(Error('stopped'));await Promise.resolve();assert.equal(music.measure().active,false);assert.equal(music.measure().error,false);assert.equal(instances,1)}finally{globalThis.Audio=previous}
+});

@@ -23,4 +23,4 @@ architectural-surfaces.ts 的抹灰和水磨石颜色、凹凸及粗糙度均由
 
 `src/door-model.ts`的木框、压条、把手、锁孔、踢脚板和合页为原创程序化模型，按材质合并并共享，无外部模型素材。
 
-0.7音乐候选assets/GeneratedSFX/after_last_rollcall.wav由项目编排脚本调用Specs本地算法合成工具生成，无外部采样；该第三方工具为Apache-2.0且未复制进本仓库。候选曲暂未进入游戏构建，详情见同目录SOURCE.md。
+0.7结局音乐assets/GeneratedSFX/after_last_rollcall.wav由项目编排脚本调用Specs本地算法合成工具生成，无外部采样；该第三方工具为Apache-2.0且未复制进本仓库。曲目随离线游戏构建分发，详情见同目录SOURCE.md。

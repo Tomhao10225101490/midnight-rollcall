@@ -31,7 +31,8 @@
     "test:fonts": "npm run build && node scripts/fonts-electron.mjs",
     "test:score-reset": "npm run build && node scripts/score-reset-electron.mjs",
     "test:pointer-transition": "npm run build && node scripts/pointer-transition-electron.mjs",
-    "test:door-collision": "npm run build && node scripts/door-collision-electron.mjs"
+    "test:door-collision": "npm run build && node scripts/door-collision-electron.mjs",
+    "test:ending-music": "npm run build && node scripts/ending-music-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"

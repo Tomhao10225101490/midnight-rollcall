@@ -1,3 +1,5 @@
+import{EndingMusic}from './ending-music';
+const endingMusic=new EndingMusic();
 import{prepareTypography}from './typography';
 import {Defeat,threatCue} from './feedback';
 import {codePanel,circuitPanel} from './puzzle-ui';
@@ -57,10 +59,10 @@ function nearbyClue(){return clues.find(c=>Math.hypot(camera.position.x-c.x,came
 const hidingSpot=new HidingSpot();walls.push(hidingSpot.bounds);
 const hideCabinet=storageCabinet();hideCabinet.position.set(8,0,-7);scene.add(hideCabinet);
 const hideSign=label('储物柜 · H 藏身',8,-6.49);hideSign.position.y=1.88;hideSign.position.z=-6.46;hideSign.scale.set(.5,.22,1);
-function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { closeOverlay=null;score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = ()=>settings(); document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
+function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { if(title!=='天亮之前')endingMusic.stop(); closeOverlay=null;score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = ()=>settings(); document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
 function settings(back:()=>void=()=>menu()){closeOverlay=back;settingsView(ui,back,()=>{setVolume(options.volume);sens=options.sensitivity/1000;renderer.setPixelRatio(options.quality);rendering.configure(options.ambientOcclusion);camera.fov=options.fov;camera.updateProjectionMatrix()})}
 function announce(text:string){narrative.defer();broadcast(text)}
-function start(s: number,restoredNotes:ClueId[]=[]) { score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0;doorBlocked=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; resume(); }
+function start(s: number,restoredNotes:ClueId[]=[]) { endingMusic.stop(); score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0;doorBlocked=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; resume(); }
 function resume() { closeOverlay=null;resumeAudio(); score.start(); playing = true; keys.clear(); const request=++lockRequest;lockPending=true;try{Promise.resolve(renderer.domElement.requestPointerLock()).then(()=>{if(request!==lockRequest)return;lockPending=false;if(playing&&!document.pointerLockElement)pause()},()=>{if(request===lockRequest){lockPending=false;pause()}})}catch{lockPending=false;pause()} tone(440); }
 function pausedMenu(){closeOverlay=resume;ui.innerHTML='<section><h2>暂停</h2><button id="resume">恢复</button><button id="paused-settings">设置 / 操作</button><button id="menu">主菜单</button></section>';ui.querySelector<HTMLButtonElement>('#resume')!.onclick=resume;ui.querySelector<HTMLButtonElement>('#paused-settings')!.onclick=()=>settings(pausedMenu);ui.querySelector<HTMLButtonElement>('#menu')!.onclick=()=>menu()}
 function pause(){lockRequest++;lockPending=false;if(!playing)return;pauseAudio();score.pause();playing=false;keys.clear();document.exitPointerLock();pausedMenu()}
@@ -74,7 +76,7 @@ function interact() { const door=nearestDoor(camera.position);if(door){if(door.s
 } if (stage === 3) {
     score.pause();pauseAudio();playing=false;closeOverlay=resume;document.exitPointerLock();circuitPanel(ui,advance,resume);return;
 } if (stage === 4) {
-    if (time % 60 < 12) {ending.begin(camera);menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');broadcast('本次点名结束。你的名字，已从名单中划去。');}
+    if (time % 60 < 12) {ending.begin(camera);menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');broadcast('本次点名结束。你的名字，已从名单中划去。');endingMusic.begin();}
     return;
 } advance(); }
 function advance() { stage++; score.reset(stage);save(stage,notes); tone(660, .4); resume(); }
@@ -84,7 +86,9 @@ addEventListener('keydown', e => {if(playing&&e.code.startsWith('Arrow'))e.preve
     e.preventDefault(); keys.add(e.code); if(e.code==='Escape'){e.preventDefault();if(closeOverlay)closeOverlay();else pause()} if (playing && !e.repeat && e.code === 'KeyE')
     interact(); if(playing&&!e.repeat&&e.code==='KeyH'){if(hidden){hidingSpot.leave(camera);hidden=false;effect('door',.3)}else if(hidingSpot.enter(camera)){hidden=true;effect('door',.3)}} });
 addEventListener('keyup', e => keys.delete(e.code));
-function setWindowFocus(focused:boolean){windowFocused=focused;if(!focused){pause();pauseAudio();score.pause()}}
+function syncEndingFocus(){endingMusic.update(0,options.volume,windowFocused&&!document.hidden,false)}
+function setWindowFocus(focused:boolean){windowFocused=focused;syncEndingFocus();if(!focused){pause();pauseAudio();score.pause()}}
+document.addEventListener('visibilitychange',()=>{syncEndingFocus();if(document.hidden){pause();pauseAudio();score.pause()}});
 addEventListener('focus',()=>setWindowFocus(true));addEventListener('blur',()=>setWindowFocus(false));
 const desktopFocus=(window as unknown as {desktopFocus?:{onChange:(callback:(focused:boolean)=>void)=>void}}).desktopFocus;desktopFocus?.onChange(setWindowFocus);
 document.addEventListener('pointerlockchange', () => {if(document.pointerLockElement){if(!playing)document.exitPointerLock()}else if(!lockPending)pause()});
@@ -93,7 +97,7 @@ addEventListener('mousemove', e => { if (playing && document.pointerLockElement)
     camera.rotation.x = T.MathUtils.clamp(camera.rotation.x - e.movementY * sens, -1.4, 1.4);
 } });
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);rendering.resize(); });
-function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms; defeat.update(dt,windowFocused&&!document.hidden);if(windowFocused&&!document.hidden)ending.update(dt,camera); if (playing) {
+function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms;endingMusic.update(dt,options.volume,windowFocused&&!document.hidden,'speechSynthesis' in window&&speechSynthesis.speaking); defeat.update(dt,windowFocused&&!document.hidden);if(windowFocused&&!document.hidden)ending.update(dt,camera); if (playing) {
     camera.rotation.y+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*dt*1.4;camera.rotation.x=T.MathUtils.clamp(camera.rotation.x+((keys.has('ArrowUp')?1:0)-(keys.has('ArrowDown')?1:0))*dt*1.1,-1.4,1.4);
     doorBlocked=Math.max(0,doorBlocked-dt);doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage,'speechSynthesis' in window&&speechSynthesis.speaking);
     const before = time;
@@ -122,4 +126,4 @@ menu();
 requestAnimationFrame(frame);
 // Opt-in read-only telemetry for automated keyboard-driven traversal. No state mutation.
 if (new URLSearchParams(location.search).has('qa'))
-    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, notes:[...notes], storyRecords:narrative.records.map(r=>r.text), subtitle:narrative.subtitle, windowFocused,captureActive:defeat.active,captureTime:defeat.elapsed, playing, hidden, hideAvailable:hidingSpot.canEnter(camera.position), alert, time, fov:camera.fov,pixelRatio:renderer.getPixelRatio(),ambientOcclusion:rendering.enabled,audio:score.measure(),effects:measureEffects(), position: camera.position.toArray(), yaw: camera.rotation.y,pitch:camera.rotation.x, enemy: enemy.body.position.toArray(), enemyEvidence:enemy.last.toArray(), enemyState: enemy.state, door:nearestDoor(camera.position)?{open:nearestDoor(camera.position)!.open}:null, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });
+    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, notes:[...notes], storyRecords:narrative.records.map(r=>r.text), subtitle:narrative.subtitle, windowFocused,captureActive:defeat.active,captureTime:defeat.elapsed, playing, hidden, hideAvailable:hidingSpot.canEnter(camera.position), alert, time, fov:camera.fov,pixelRatio:renderer.getPixelRatio(),ambientOcclusion:rendering.enabled,audio:score.measure(),endingMusic:endingMusic.measure(),effects:measureEffects(), position: camera.position.toArray(), yaw: camera.rotation.y,pitch:camera.rotation.x, enemy: enemy.body.position.toArray(), enemyEvidence:enemy.last.toArray(), enemyState: enemy.state, door:nearestDoor(camera.position)?{open:nearestDoor(camera.position)!.open}:null, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });
