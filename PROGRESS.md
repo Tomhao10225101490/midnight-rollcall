@@ -346,3 +346,9 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 修复阴影预热后28636退出0，实际庭院app完整断网正常键鼠通关，3次捕获后通过真实检查点续玩，HTTP/页面错误均0。逃生界面16ms可见；音乐/最小化暂停/恢复/重开通过。120帧1993.1ms约60.21FPS，仅本机结局短时视点。报告courtyard-warm-shadow-full-0.7.json，实际胜利截图docs/ending-0.7.png。
 - 实际同包桌面回归69510退出0：暂停逻辑、8次重开、800x600设置布局、全屏通过；330几何/59纹理保持不变；120帧1994.3ms约60.17FPS，仅起始视点；页面错误0。报告courtyard-desktop-regression.json。
 - 所有本轮本机GUI任务已结束。29项逻辑测试、typecheck与56模块/字体/音频检查通过。版本推进0.7.0以准备各系统runner构建；当前本地庭院app元数据仍为0.7.0-dev.1，尚无0.7公开Release，不把旧0.6产物当成0.7。
+
+## 0.7 原生构建已排队
+- 固定候选源提交5af7512db849bee459d9acdf6de484bb1ab5772e已推送，版本0.7.0；原生build.yml运行43096405685（https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43096405685），最近查询status=queued、jobs=[]，并非失败或停止。后续继续查询此运行，不重复dispatch。
+- 正常gh auth status与gh api user确认Tomhao10225101490/id126887862。v0.7.0草稿已创建，isDraft=true、targetCommitish等于固定源SHA、assets=[]；实际草稿URL https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/untagged-7bff70e23a6f7f7184e7 。未公开、不展示为下载入口。
+- 实际本机0.7.0候选app位于release/candidate-0.7/mac-arm64/末铃点名.app；56运行模块、版本、入口、字体与音频来源检查通过（candidate-0.7-package-inspection.json）。实际应用smoke会话69553退出0，菜单/鼠标锁定/暂停恢复/键盘/设置保存通过，日志candidate-0.7-smoke.log；整局证据仍为相同游戏逻辑的0.7.0-dev.1庭院app，不把smoke称为整局。
+- 当前本机GUI和打包进程均结束。下一步等待43096405685真实完成，成功后对现有草稿使用upload-preview.yml，参数version=0.7.0、build_run=43096405685、source_sha=上述固定SHA；随后取得9包大小/SHA256清单、远端核验、下载Mac包整局验证与DMG只读检查，再发布。不得把workflow存在或排队写成已发布。
