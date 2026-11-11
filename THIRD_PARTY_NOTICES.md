@@ -22,3 +22,5 @@ TypeScript、Vite和electron-builder：构建工具，MIT。Playwright：测试�
 architectural-surfaces.ts 的抹灰和水磨石颜色、凹凸及粗糙度均由本项目原创算法生成，遵循项目 MIT 许可，无第三方照片或扫描材质。
 
 `src/door-model.ts`的木框、压条、把手、锁孔、踢脚板和合页为原创程序化模型，按材质合并并共享，无外部模型素材。
+
+0.7音乐候选assets/GeneratedSFX/after_last_rollcall.wav由项目编排脚本调用Specs本地算法合成工具生成，无外部采样；该第三方工具为Apache-2.0且未复制进本仓库。候选曲暂未进入游戏构建，详情见同目录SOURCE.md。
