@@ -38,7 +38,6 @@ export function decorate() {
         }
     }
     for (const z of [-18, -8, 2, 12]) {
-        box(0, 3.2, z, 2, .08, .3, '#e7d9ab');
         for (const x of [-3.85, 3.85])
             box(x, .55, z, .06, 1, 3, '#3a5b51');
     }

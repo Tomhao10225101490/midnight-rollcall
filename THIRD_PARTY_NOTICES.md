@@ -12,3 +12,5 @@ TypeScript、Vite和electron-builder：构建工具，MIT。Playwright：测试�
 `src/furniture.ts`的课桌、钢架课椅和储物铁柜为本项目原创共享几何。`src/strings.ts`为本项目实现的阻尼弦波导合成器，激励噪声本地生成，不含录音或音色库。
 
 0.5开发版新增三次轻敲音效由同一原创波形合成模块产生；虚构角色林序及途中叙事文本为本项目原创。
+
+`src/architecture.ts`包含原创双管荧光灯、暖气片、管路阀门和校钟几何，使用共享网格实例化，无外部模型或纹理。

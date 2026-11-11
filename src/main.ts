@@ -1,3 +1,4 @@
+import {architecturalDetails} from './architecture';
 import {Narrative} from './narrative';
 const narrative=new Narrative();
 import {HidingSpot} from './hiding';
@@ -25,7 +26,7 @@ import { Enemy } from './enemy';
 import { read, save } from './save';
 import { tone, effect, measureEffects, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
 init();
-decorate();props();initDoors();
+decorate();props();initDoors();architecturalDetails(scene,walls);
 upgradeMaterials(scene);batchStaticBoxes(scene);
 setVolume(options.volume);
 const renderer = new T.WebGLRenderer({ antialias: true });

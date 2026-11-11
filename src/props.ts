@@ -11,5 +11,5 @@ export function props(){
  for(let i=0;i<5;i++)box(-8.5,.83+i*.035,-2.3,.6,.025,.75,i%2?'#c9c0a3':'#69705e');
  const brass=new T.MeshStandardMaterial({color:'#82775a',metalness:.65,roughness:.4});const lamp=new T.Mesh(new T.CylinderGeometry(.2,.23,.06,24),brass);lamp.position.set(-7,.84,-2.3);scene.add(lamp);box(-7,1.1,-2.3,.04,.5,.04,'#7d7757');const shade=new T.Mesh(new T.ConeGeometry(.32,.24,24,1,true),new T.MeshStandardMaterial({color:'#42634c',side:T.DoubleSide}));shade.position.set(-7,1.4,-2.3);scene.add(shade);const light=new T.PointLight('#efce8d',4,4);light.position.set(-7,1.25,-2.3);scene.add(light);
  const cup=new T.Mesh(new T.CylinderGeometry(.09,.075,.18,20),new T.MeshStandardMaterial({color:'#c2cbbb',roughness:.3}));cup.position.set(-7.6,.9,-2.2);scene.add(cup);
- for(const x of [-8,8])for(const z of [-17,-7,3,13]){const l=new T.PointLight(z===3?'#a9c5c2':'#d4c7a1',6,10);l.position.set(x,2.9,z);scene.add(l);box(x,3.22,z,1.2,.05,.2,'#dad8bd')}
+ for(const x of [-8,8])for(const z of [-17,-7,3,13]){const l=new T.PointLight(z===3?'#a9c5c2':'#d4c7a1',6,10);l.position.set(x,2.9,z);scene.add(l)}
 }

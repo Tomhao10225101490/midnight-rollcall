@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import * as T from 'three';
 globalThis.document={createElement:()=>({width:0,height:0,getContext:()=>({fillRect(){},fillText(){},strokeRect(){}})})};
-const {init,clear,visible}=await import('../dist/world.js');const {Enemy}=await import('../dist/enemy.js');init();const {decorate}=await import('../dist/decor.js');decorate();const{props}=await import('../dist/props.js');props();
+const {init,clear,visible}=await import('../dist/world.js');const {Enemy}=await import('../dist/enemy.js');init();const {decorate}=await import('../dist/decor.js');decorate();const{props}=await import('../dist/props.js');props();const{architecturalDetails}=await import('../dist/architecture.js');const{scene,walls}=await import('../dist/world.js');architecturalDetails(scene,walls);
 test('外墙碰撞与墙体遮挡',()=>{assert.equal(clear(12,0),false);assert.equal(clear(0,-19),true);assert.equal(visible(new T.Vector3(0,1,-19),new T.Vector3(-8,1,-19)),false)});
 test('所有任务站点均能通过门口抵达',()=>{const e=new Enemy();e.body.position.set(0,1,-19);for(const [x,z]of [[-8,-19],[-8,-8],[-8,3],[-8,13],[8,18],[8,-7]]){e.route(new T.Vector3(x,1,z));assert.ok(e.path.length>0,`${x},${z} 无可达路径`);for(const p of e.path)assert.ok(clear(p.x,p.z));e.body.position.set(x,1,z)}});
 test('墙后目标不能触发视觉追逐',()=>{const e=new Enemy();e.body.position.set(0,1,-19);e.update(.1,new T.Vector3(-8,1,-19),false,false,0,false);assert.equal(e.state,'巡逻')});
