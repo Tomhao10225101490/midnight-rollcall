@@ -51,9 +51,9 @@ export function decorate() {
     }
     label('违纪扣分：奔跑会引来值班人', 8, 1);
     label('铃响十二秒 · 离校窗口', 8, 20.8);
-    box(8, 1.5, 21.5, 3, 3, .15, '#344941',true);
+    box(8, 1.5, 21.5, 3, 3, .15, '#344941',true).userData.dynamic=true;
     for (const x of [6.6, 7.3, 8, 8.7, 9.4])
-        box(x, 1.5, 21.3, .07, 3, .1, '#b5a77f');
+        box(x, 1.5, 21.3, .07, 3, .1, '#b5a77f').userData.dynamic=true;
     for (const z of [12, 13, 14])
         box(-10, .15 * (z - 11), z, 2, .3 * (z - 11), 1, '#717a70');
     label('封闭楼梯 · 请走东侧校门', -8, 20.5);

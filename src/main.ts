@@ -1,3 +1,4 @@
+import{batchStaticBoxes}from './batching';
 import{clues,type ClueId}from './clues';
 import{station}from './stations';
 import{hintSteps}from './hints';
@@ -19,7 +20,7 @@ import { read, save } from './save';
 import { tone, effect, measureEffects, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
 init();
 decorate();props();initDoors();
-upgradeMaterials(scene);
+upgradeMaterials(scene);batchStaticBoxes(scene);
 setVolume(options.volume);
 const renderer = new T.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
