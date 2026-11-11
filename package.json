@@ -32,7 +32,9 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md"
     ],
     "directories": {
       "output": "release"
@@ -51,9 +53,13 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "tar.gz"
       ]
-    }
+    },
+    "artifactName": "midnight-rollcall-${version}-${os}-${arch}.${ext}"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "description": "Original offline Chinese campus horror escape game",
+  "author": "Midnight Rollcall contributors"
 }

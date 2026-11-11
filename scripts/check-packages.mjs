@@ -1,0 +1,2 @@
+import fs from 'node:fs';import crypto from 'node:crypto';
+const names=fs.readdirSync('release').filter(n=>/\.(dmg|zip|exe|AppImage|tar\.gz)$/.test(n));if(!names.length)throw Error('No installation archives');let output='';for(const name of names){const data=fs.readFileSync('release/'+name);if(data.length<10000000)throw Error('Unexpectedly small desktop package: '+name);const hash=crypto.createHash('sha256').update(data).digest('hex');output+=`${hash}  ${name}\n`;console.log(`${name}: ${data.length} bytes`)}fs.writeFileSync('release/SHA256SUMS.txt',output);
