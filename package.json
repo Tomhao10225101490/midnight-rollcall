@@ -57,7 +57,13 @@
         "tar.gz"
       ]
     },
-    "artifactName": "midnight-rollcall-${version}-${os}-${arch}.${ext}"
+    "artifactName": "midnight-rollcall-${version}-${os}-${arch}.${ext}",
+    "nsis": {
+      "artifactName": "midnight-rollcall-${version}-win-${arch}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "midnight-rollcall-${version}-win-${arch}-portable.${ext}"
+    }
   },
   "license": "MIT",
   "description": "Original offline Chinese campus horror escape game",
