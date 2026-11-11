@@ -55,7 +55,7 @@ const names = ['阅读一班试卷', '打开办公室档案柜', '校准广播�
 const points = [[-8, -19], [-8, -8], [-8, 3], [-8, 13], [8, 18]];
 const stations=points.map((p,i)=>station(i,p[0],p[1]));
 function syncStations(){stations.forEach(s=>s.update(stage,time%60<12))}
-clues.forEach(c=>station(0,c.x,c.z));
+clues.forEach(c=>station(0,c.x,c.z,c));
 function nearbyClue(){return clues.find(c=>Math.hypot(camera.position.x-c.x,camera.position.z-c.z)<2.2)}
 const hidingSpot=new HidingSpot();walls.push(hidingSpot.bounds);
 const hideCabinet=storageCabinet();hideCabinet.position.set(8,0,-7);scene.add(hideCabinet);

@@ -5,6 +5,7 @@ import {deskTools} from './desk-tools';
 import {propSurface} from './prop-surfaces';
 import {metricBoxUV} from './architectural-surfaces';
 import {stationDisplay} from './station-display';
+import type {PaperRecord} from './record-print';
 // Original multi-part props in metres. Interaction coordinates stay unchanged.
 const metal=propSurface('enamel');
 const dark=new T.MeshStandardMaterial({color:'#192321',metalness:.35,roughness:.55});
@@ -23,11 +24,11 @@ function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:n
  const map=new T.CanvasTexture(c);map.colorSpace=T.SRGBColorSpace;map.anisotropy=4;
  const mesh=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,roughness:.9}));mesh.position.set(x,y,z);if(flat)mesh.rotation.x=-Math.PI/2;g.add(mesh);
 }
-export function station(index:number,x:number,z:number){const g=new T.Group();g.position.set(x,0,z);scene.add(g);let update=(_stage:number,_bell:boolean)=>{};
+export function station(index:number,x:number,z:number,record?:PaperRecord){const g=new T.Group();g.position.set(x,0,z);scene.add(g);let update=(_stage:number,_bell:boolean)=>{};
  if(index===0){
   block(g,0,.78,0,1.5,.08,.95,wood);for(const dx of [-.64,.64])for(const dz of [-.35,.35])block(g,dx,.38,dz,.055,.76,.055,metal);
   for(let i=0;i<4;i++){const sheet=block(g,-.18,.83+i*.006,0,.43,.005,.6,paper);sheet.rotation.y=i*.025}
-  const exam=examPaper();exam.position.set(-.18,.858,0);exam.rotation.y=-.045;g.add(exam);
+  const exam=examPaper(record);exam.position.set(-.18,.858,0);exam.rotation.y=-.045;g.add(exam);
   g.add(deskTools());
  }else if(index===1){
   block(g,0,.92,0,1.05,1.84,.6,metal);

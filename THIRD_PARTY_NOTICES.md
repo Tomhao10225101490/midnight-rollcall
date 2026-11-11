@@ -30,3 +30,5 @@ architectural-surfaces.ts 的抹灰和水磨石颜色、凹凸及粗糙度均由
 0.8开发版的`src/exam-paper.ts`试卷印刷、纸纤维、红笔复核标记与卷边，以及`src/desk-tools.ts`钢笔/手持印章几何均为项目原创程序化资产，使用项目MIT许可。印刷文字使用上述已授权的Noto Sans SC字体。
 
 `src/prop-surfaces.ts`的木纹、漆面颗粒、划痕及独立颜色/高度/粗糙度贴图由项目确定性生成，MIT许可，无照片、外部材质库或付费资源。
+
+`src/record-print.ts`的三份校园文件排版为项目原创；实体纸面的线索文字直接来自`src/clues.ts`，与交互弹窗共用数据，字体继续使用随包Noto Sans SC及其SIL OFL许可。

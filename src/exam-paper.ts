@@ -1,7 +1,8 @@
 import * as T from 'three';
+import {printRecord,type PaperRecord} from './record-print';
 
 /** Original printed examination sheet: deterministic ink/fibre, gently lifted corners. */
-export function examPaper() {
+export function examPaper(record?:PaperRecord) {
  const canvas=document.createElement('canvas');canvas.width=768;canvas.height=1088;
  const c=canvas.getContext('2d')!;let seed=3819;
  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
@@ -9,6 +10,7 @@ export function examPaper() {
  for(let i=0;i<18000;i++){c.fillStyle=`rgba(83,65,39,${random()*.075})`;c.fillRect(random()*768,random()*1088,1+random()*2,1)}
  const edge=c.createLinearGradient(0,0,768,0);edge.addColorStop(0,'#8b735333');edge.addColorStop(.08,'#8b735300');edge.addColorStop(.9,'#8b735300');edge.addColorStop(1,'#8b735344');c.fillStyle=edge;c.fillRect(0,0,768,1088);
  const text=(s:string,x:number,y:number,size=24,color='#384039')=>{c.fillStyle=color;c.font=`${size}px RollcallText`;c.fillText(s,x,y)};
+ if(record)printRecord(c,record);else {
  text('昭川中学 · 晚自习',164,97,36);text('离 校 复 核 试 卷',176,153,38);
  c.strokeStyle='#4b5145';c.lineWidth=2;c.strokeRect(55,181,658,791);
  for(const y of [251,319,573,814]){c.beginPath();c.moveTo(55,y);c.lineTo(713,y);c.stroke()}
@@ -28,9 +30,10 @@ export function examPaper() {
  c.save();c.translate(548,472);c.rotate(-.12);c.strokeStyle='#8b302a';c.lineWidth=4;c.strokeRect(-94,-47,188,86);text('退回复核',-79,7,35,'#8b302a');c.restore();
  c.strokeStyle='#8b302a';c.lineWidth=3;c.beginPath();c.moveTo(201,559);c.quadraticCurveTo(376,568,514,556);c.stroke();
  c.beginPath();c.ellipse(202,216,120,28,-.02,0,Math.PI*2);c.stroke();
+ }
  const map=new T.CanvasTexture(canvas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=8;
  const geometry=new T.PlaneGeometry(.43,.6,16,22);const positions=geometry.attributes.position;
  for(let i=0;i<positions.count;i++) {const x=positions.getX(i),y=positions.getY(i);const corner=Math.pow(Math.max(0,(Math.abs(x)-.12)/.095),2)*Math.pow(Math.max(0,(Math.abs(y)-.21)/.09),2);positions.setZ(i,.012*corner+.0015*Math.sin(x*19+y*13))}
  geometry.computeVertexNormals();geometry.rotateX(-Math.PI/2);
- const mesh=new T.Mesh(geometry,new T.MeshStandardMaterial({map,roughness:.94,side:T.DoubleSide}));mesh.castShadow=mesh.receiveShadow=true;mesh.name='original-exam-paper';return mesh;
+ const mesh=new T.Mesh(geometry,new T.MeshStandardMaterial({map,roughness:.94,side:T.DoubleSide}));mesh.castShadow=mesh.receiveShadow=true;mesh.name=record?'record-paper-'+record.id:'original-exam-paper';return mesh;
 }
