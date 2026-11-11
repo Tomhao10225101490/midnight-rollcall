@@ -1,69 +1,67 @@
 # 末铃点名 · 桌面单机恐怖逃生（开发中）
 虚构的昭川中学里，晚自习已经结束，广播仍在点名。探索教室、档案室与广播室，寻找离校方法，避开仍在巡查的值班人。
 
-![0.4.0实际下载应用运行截图](docs/desktop.png)
+![0.5.0实际下载应用运行截图](docs/desktop.png)
 
-主要交付是离线运行的桌面软件。当前为可玩开发预览，主流程已通过通关与发布验证；整体美术、音频和首次体验时长仍未达到最终验收。20—30分钟是设计目标，不是已测游玩时长。
+主要交付是离线运行的桌面软件。[下载 v0.5.0 开发预览](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.5.0)，无需安装Node或打开浏览器。当前主流程已通过通关与发布验证；高级商业音画品质和首次体验时长仍未完成最终验收。20—30分钟是设计目标，不是已测游玩时长。
 
-## 本机运行
-本机应用位于 `release/mac-arm64/末铃点名.app`，版本0.4.0，可双击启动，不需要Node。公开发布包请从下方Release下载，应用未经开发者签名与苹果公证。
+## 下载与启动
+M系列Mac选arm64 DMG/ZIP；Intel Mac选x64；Windows可选安装EXE或便携EXE；Linux可选AppImage或tar.gz。具体启动与未签名提示见[安装说明](docs/INSTALL.md)。应用无开发者签名与苹果公证，不保证没有系统提示。
 
-## 源码开发
-Node.js 22及以上。首次安装：
+本机已下载的DMG/ZIP位于 `release/downloads-0.5.0/`；ZIP解出的实际发行应用为 `artifacts/downloaded-0.5.0/末铃点名.app`，可双击运行。同源本机构建另存于 `release/dev-0.5/mac-arm64/末铃点名.app`。旧的 `release/mac-arm64` 仍是0.4，不代表最新版。
+
+## 操作与玩法
+WASD移动、鼠标/方向键观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜前藏入/退出、J查看记录/楼层示意图/逐级提示、Esc暂停。柜内只能通过通风缝观察，被目击藏入会遭搜查。
+
+奔跑制造声音并提高纪律值；安静行动逐步降低。值班人丢失视线后会检查最后动静位置及附近。铃响期间值班人停步听令、出口开放十二秒；不要碰到他。试卷、监考登记、档案、频道索引与配电记录构成完整解谜链。关键进度自动存档，设置保存到本机。
+
+恐怖追逐，无血腥，无镜头晃动或刻意闪烁。请先调低音量；出现晕动不适时暂停。支持音量、灵敏度、视野、全屏、画面比例和接触阴影设置。
+
+## 验证范围
+本次包对应固定提交 `ef2a4a2902d9985c8afef0d538fe2788031a3596`。新增空间叙事、设备谜题面板、校园建筑细节、人物曲面/织纹、广播混音、被捕演出、原生失焦暂停、周边搜查和楼层图。
+
+全部9个包已检查内部入口/版本及48个递归运行模块，远端大小与SHA256逐个匹配，详见[产物清单](docs/ARTIFACTS-0.5.0.md)。
+
+| 平台 | 0.5.0实际产物 | 验证范围 |
+|---|---|---|
+| macOS arm64 | DMG、应用ZIP | 实际下载ZIP完整网络禁用键盘通关；菜单/鼠标锁定/设置通过；DMG挂载和安装入口通过 |
+| macOS x64 | DMG、应用ZIP | 对应系统构建、包检查通过，未实机试玩 |
+| Windows x64 | 安装EXE、便携EXE | 对应系统构建、包检查通过，未实机试玩 |
+| Linux x64 | AppImage、tar.gz | 对应系统构建、包检查通过，未实机试玩 |
+| Web | 静态ZIP | Chrome基础启动、菜单、暂停及包检查；未整局试玩 |
+
+完整键盘路线经历3次被捕后通过正常检查点续玩，没有瞬移、无敌或物品注入。网络禁用由Playwright会话离线模式实现，完整路线HTTP请求为零。熟知路线的自动操作不能代表首次玩家时长；音频图和本地播报状态检查不代表主观听感验收。[完整报告](FINAL_REPORT.md)。网页试玩未部署。
+
+## 从源码运行、测试与构建
+Node.js 22及以上，在本项目目录运行：
 ```sh
 npm ci
 node node_modules/electron/install.js
 npm run desktop
 ```
-检查与构建：
+逻辑测试与构建：
 ```sh
 npm run typecheck
 npm test
-npm run test:desktop
-npm run test:traverse
-npm run test:settings
-npm run test:rendering
-npm run test:hiding
-npm run test:hints
 npm run build
 npm run dist
+npm run dist:web
 ```
-`npm run test:traverse`通过实际键盘操作走路线，只读观察游戏状态，不使用瞬移、无敌或道具注入。以实际输出为准，不等同于人工主观体验验收。
+`npm run dist`生成当前系统的桌面包；跨平台发布使用对应系统的GitHub Actions runner。`npm run dev`在本机4173端口运行辅助浏览器构建。
 
-`npm run dev`可在本机4173端口运行辅助浏览器构建。最终用户无需打开浏览器。
-
-## 操作
-WASD移动、鼠标/方向键观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜前藏入/退出（柜内只能通过通风缝观察，被目击藏入会遭搜查）、J查看记录和逐级提示、Esc暂停。奔跑制造声音并提高纪律值；安静行动逐步降低。铃响期间出口开放十二秒。关键进度自动存档，设置保存到本机。
-
-恐怖追逐，无血腥，无镜头晃动或刻意闪烁。请先调低音量；出现晕动不适时暂停。
-
-## 验证与下载
-[下载 v0.4.0 开发预览（GitHub Release）](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.4.0)。桌面包内置运行时，可离线运行，无需安装Node。M系列Mac选arm64；Intel Mac选x64；Windows可选安装版或便携版；Linux可选tar.gz或AppImage。
-
-这批包对应提交5301ad6，新增真实柜内窥视、实体柜碰撞、原创课桌椅与黑板、可关闭接触阴影和阻尼弦配乐音色。全部9个包已检查内部入口/版本及41个递归运行模块，远端大小与SHA256逐个匹配，详见[产物清单](docs/ARTIFACTS-0.4.0.md)。安装方法见[安装说明](docs/INSTALL.md)。
-
-| 平台 | 0.4.0构建 | 试玩范围 |
-|---|---|---|
-| macOS arm64 | DMG、应用ZIP | 本机0.4应用完整键盘通关；下载ZIP启动/断网检查与DMG挂载通过 |
-| macOS x64 | DMG、应用ZIP | 构建通过、未实机试玩 |
-| Windows x64 | 安装EXE、便携EXE | 构建通过、未实机试玩 |
-| Linux x64 | AppImage、tar.gz | 构建通过、未实机试玩 |
-| Web | 静态ZIP | Chrome基础运行、构建及入口检查；未整局试玩 |
-
-[源码仓库](https://github.com/Tomhao10225101490/midnight-rollcall)。网页试玩未部署。
+以下桌面自动回归脚本已在macOS实测；默认使用Mac Electron，可通过 `ELECTRON_PATH` 指定应用可执行文件：
+```sh
+npm run test:desktop
+npm run test:traverse
+npm run test:search
+npm run test:map
+npm run test:defeat
+npm run test:mix
+```
+`test:traverse`使用正常键鼠路线、只读观察状态。macOS/Linux shell可用 `ROLLCALL_OFFLINE=1 npm run test:traverse`进行网络禁用回归。`test:mix`需要系统已安装离线中文语音。`npm run test:panels`直接挂载界面组件检查布局和输入，仅为组件验证。
 
 ## 原创与许可
-原创代码MIT。几何、标牌、材质纹理和合成音乐由项目代码生成；不使用下载模型、音频或字体。中文语音只尝试本机离线系统声音，无声音时保留提示音与文字信息。第三方软件保持各自许可，详见THIRD_PARTY_NOTICES.md。
+原创代码MIT。几何、标牌、材质纹理和合成音乐由项目代码生成；不使用下载模型、音频或字体。中文语音只尝试本机离线系统声音，无声音时保留提示音与完整字幕。第三方软件保持各自许可，详见[第三方声明](THIRD_PARTY_NOTICES.md)。无账号系统、后端或遥测。
 
 ## English Quick Start
-Offline desktop game under development. Run `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. `npm test` runs logic tests; `npm run test:desktop` tests Electron. A playable development preview is available on GitHub Releases; final quality acceptance is still pending.
-
-当前 main 为待发布的 0.5.0：新增开场身份与空间叙事、可回看的本局途中记录、建筑细节和设备谜题面板。公开下载安装包仍为 0.4.0；本机 release/mac-arm64 应用也仍是已验证的 0.4.0。开发版叙事回归：`npm run test:narrative`。
-
-设备面板独立布局与输入检查：`npm run test:panels`。该脚本直接挂载界面组件，不代表真实玩家通关；完整路线请用 `npm run test:traverse`。
-
-0.5开发版另存于 `release/dev-0.5/mac-arm64/末铃点名.app`，包含空间叙事、设备面板与追捕反馈；不覆盖上面的0.4正式预览包。被捕/窗口失焦回归：`npm run test:defeat`。
-
-人物曲面/织纹与广播时配乐压低已加入0.5开发app；本地语音混音回归：`npm run test:mix`，需系统已安装离线中文语音。高级商业音画与首次玩家20—30分钟体验仍未验收。
-
-0.5源码新增最后证据位置的周边搜查与随身记录中的楼层示意图。`npm run test:search`使用正常键鼠引诱、脱离视线、入柜并观察搜查；`npm run test:map`验证实际移动后的定位和小窗口退出。
+Offline desktop game under development. [Download the 0.5.0 preview](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.5.0) for a bundled desktop app. From source: `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. Use `npm test`, `npm run build`, and `npm run dist` for tests and native packaging. Final visual/audio quality and first-player duration acceptance remain pending.

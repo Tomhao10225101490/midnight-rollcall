@@ -198,3 +198,15 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 已创建0.5.0草稿预发布，targetCommitish固定上述SHA。草稿不等于公开发布，尚无0.5公开下载验收；0.4仍为已公开版本。
 - 后续：确认5个构建job与9个真实包，调用upload-preview.yml（version=0.5.0、build_run=43080126142、source_sha=上述SHA），核对独立manifest与远端全部资产，再下载Mac包实启和DMG挂载检查；全部通过后才公开草稿。不能仅凭workflow存在宣布完成。
 - 本机最新0.5.0应用：release/dev-0.5/mac-arm64/末铃点名.app；release/mac-arm64仍为0.4，不混淆验证范围。本轮所有本机GUI测试均已结束；只有上述远程CI仍在运行。
+
+- 原生构建43080126142终态success，5个job全部成功，headSha仍ef2a4a2902d9985c8afef0d538fe2788031a3596。包检查/草稿上传已启动43080804457，待核验终态与manifest，不重复dispatch。
+- 本机0.5 Chrome基础启动/菜单/暂停通过。额外实际app整局断网测试96661正在运行，禁用网络并采集HTTP请求；不把先前断网启动检查升级宣称为全程离线通关。
+
+- 0.5包检查/草稿上传43080804457终态success。独立下载verified-preview-manifest，远端11项（9包+2清单）大小、SHA256、固定源SHA逐项匹配；全部包递归检查48运行模块。
+- 实际从草稿下载Mac arm64 DMG/ZIP，本地哈希与大小均匹配；ZIP解出版本0.5.0，启动/鼠标锁定/暂停/移动/设置保存PASS，真实截图已观察。DMG只读挂载、应用版本/可执行入口/Applications链接检查通过，正常卸载。
+- 本机同源app整局网络禁用测试96661退出0：3次捕获/正常续玩，全部谜题与胜利通过，HTTP请求0、pageerror0。下载ZIP app整局网络禁用测试27881仍在运行，结束前不宣称下载包整局验证完成。
+
+## 0.5.0已公开
+- 实际下载ZIP app整局网络禁用测试27881退出0：3次捕获后正常检查点续玩，全部谜题与胜利通过，HTTP/pageerror均0。独立保留artifacts/downloaded-0.5-full.json及日志。
+- Release已公开：https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.5.0 。公开后verify-release再次核对11项资产及源提交，isDraft=false、verified=true。
+- README、FINAL_REPORT、docs/ARTIFACTS-0.5.0.md与实际下载截图已同步。所有本机测试、构建和上传任务均已结束。后续重点仍是商业级音画与首次玩家节奏，完整目标未达成。

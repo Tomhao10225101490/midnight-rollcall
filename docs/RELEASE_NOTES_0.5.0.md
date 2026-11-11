@@ -16,3 +16,7 @@
 Mac选arm64（M系列）或x64（Intel）的DMG/ZIP；Windows选安装EXE或便携EXE；Linux选AppImage或tar.gz。web.zip为次要的独立静态构建。桌面版内置运行时，无需Node或联网。
 
 应用未提供开发者签名与苹果公证。核实来源与SHA256后，按[Apple官方说明](https://support.apple.com/zh-cn/102445)允许单个可信应用运行；Windows参考[Microsoft SmartScreen说明](https://support.microsoft.com/windows/what-is-smartscreen-5a0a1631-8f9a-4cd7-a3a6-c85bca56d5b9)。不要关闭全局系统保护。
+
+发布验收：五个原生/静态构建任务通过，九个包均核对内部入口、版本与48个递归运行模块；全部远端资产大小及SHA256匹配。实际下载的Mac arm64 ZIP应用已通过完整网络禁用键盘逃生（3次捕获后正常检查点继续，0个HTTP请求、0个页面错误），菜单/鼠标锁定/设置通过；DMG只读挂载及安装入口通过。
+
+固定源码：ef2a4a2902d9985c8afef0d538fe2788031a3596。[构建记录](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43080126142)；[包检查与上传记录](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43080804457)。首次玩家时长与主观音画品质仍未验收。
