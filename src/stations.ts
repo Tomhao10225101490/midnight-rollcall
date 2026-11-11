@@ -2,15 +2,18 @@ import * as T from 'three';
 import {scene} from './world';
 import {examPaper} from './exam-paper';
 import {deskTools} from './desk-tools';
+import {propSurface} from './prop-surfaces';
+import {metricBoxUV} from './architectural-surfaces';
 // Original multi-part props in metres. Interaction coordinates stay unchanged.
-const metal=new T.MeshStandardMaterial({color:'#54665e',metalness:.55,roughness:.48});
+const metal=propSurface('enamel');
 const dark=new T.MeshStandardMaterial({color:'#192321',metalness:.35,roughness:.55});
 const brass=new T.MeshStandardMaterial({color:'#b9a16b',metalness:.7,roughness:.32});
-const wood=new T.MeshStandardMaterial({color:'#785839',roughness:.74});
+const wood=propSurface('timber');
 const paper=new T.MeshStandardMaterial({color:'#d9cba6',roughness:.96});
 const green=new T.MeshStandardMaterial({color:'#9ccd9d',emissive:'#36734a',emissiveIntensity:.8,roughness:.45});
 function block(g:T.Group,x:number,y:number,z:number,w:number,h:number,d:number,m:T.Material){let geometry:T.BufferGeometry;
  if(Math.min(w,h,d)>.09){const r=Math.min(.018,w*.06,h*.06,d*.06),shape=new T.Shape();shape.moveTo(-w/2+r,-h/2+r);shape.lineTo(w/2-r,-h/2+r);shape.lineTo(w/2-r,h/2-r);shape.lineTo(-w/2+r,h/2-r);shape.closePath();geometry=new T.ExtrudeGeometry(shape,{depth:d-r*2,bevelEnabled:true,bevelSegments:2,bevelSize:r,bevelThickness:r,steps:1});geometry.translate(0,0,-d/2+r)}else geometry=new T.BoxGeometry(w,h,d);
+ if(m===wood||m===metal)metricBoxUV(geometry);
  const mesh=new T.Mesh(geometry,m);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;g.add(mesh);return mesh}
 function knob(g:T.Group,x:number,y:number,z:number,r=.04){const m=new T.Mesh(new T.CylinderGeometry(r,r,.035,16),brass);m.rotation.x=Math.PI/2;m.position.set(x,y,z);g.add(m)}
 function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:number,flat=false){

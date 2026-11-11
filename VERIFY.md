@@ -415,3 +415,8 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - `node scripts/smoke-electron.mjs`实际桌面窗口通过菜单、鼠标锁定、暂停/恢复、键盘输入和设置持久化。
 - 字体构建审计通过：556非ASCII、537汉字；所有印刷内容使用随包本地字体。新增资产无外部资源请求。
 - `ROLLCALL_OFFLINE=1 node scripts/traverse-electron.mjs`退出0：普通键鼠完整通关，3次捕获后用实际检查点继续，未瞬移/修改物品栏/跳关，页面错误和HTTP请求均0，结局音乐、原生最小化暂停/恢复及重开通过。版本化报告artifacts/paper-0.8-traverse-result.json、trail.json与log保留；这是源码运行的Electron开发版验证，不是新发行包验证。
+
+## 0.8.0-dev.1 道具材质与包内资源
+- 类型检查/构建通过；实际Electron诊断渲染观察了试卷桌面与档案柜，首版过强木纹修正后重渲染检查。
+- `node scripts/regression-electron.mjs`通过，报告artifacts/surfaces-0.8-regression.json：8重开344几何/65纹理稳定，暂停、800×600、全屏通过，pageerrors=[]；120帧约2000.3ms，非全地图性能承诺。
+- `npx electron-builder --mac --arm64 --dir --publish never --config.directories.output=release/materials-0.8`实际生成未签名.app；指定其Contents/MacOS/末铃点名执行smoke-electron通过，日志surfaces-0.8-packaged-smoke.log。已有包检查函数实际读取app.asar确认0.8.0-dev.1、入口与60递归模块、字体/音乐资源及许可证，报告surfaces-0.8-package-inspection.json。此为启动与资源验证，不是该包完整通关。
