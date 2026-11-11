@@ -388,3 +388,10 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 
 - 串行音频切换修复后的可见Chrome回归13601退出0：普通鼠标锁定/观察、键盘开门取得第一份试卷和stage1、暂停游戏/敌人/配乐/音效、800x600设置、全屏、刷新后已获得检查点与视野85保存、静音信号0均通过；无页面错误或外部HTTP请求。报告browser-regression-0.7.json。实际查看browser-record-0.7.png中文记录完整、未裁切。这是源码构建的本地浏览器回归，不是整局。
 - 新增反向异步竞争（慢速suspend期间恢复）及设备请求拒绝后重试检查，31项逻辑测试通过。实际修复后Mac app位于release/audio-fix-0.7，57模块/入口/字体/音乐检查通过。实际音频/静音回归及20次记录开关/真正Esc/最小化检查通过；连续任务25688当前正在正常断网整局，artifacts/audio-fix-full.log，不重复启动。
+
+## 音频修复候选整局及安装包通过，新原生构建已提交
+- 固定修复源e411ca05f9eea347de25e527c450c98c08ec0080已推送。实际修复后app连续任务25688退出0：音频信号/静音、20次记录开关及Esc/最小化检查、完整断网键鼠通关均通过；整局3次捕获正常续玩，HTTP/页面错误0，报告audio-fix-full.json。逃生界面7ms可见，结局120帧1989.2ms（本机短时视点），音乐与重开清理通过。
+- 新本机DMG/ZIP位于release/fixed-0.7，75129完成只读DMG挂载/正常卸载、0.7.0版本/入口/Applications链接、57模块/音频字体来源检查，ZIP CRC及实际解压启动通过。两个包app.asar均与完整通关app逐字节一致。旧local-0.7保留，不覆盖历史校验记录。
+- 新独立网页ZIP57833单独解压后可见Chrome普通键鼠回归通过，含第一道谜题、音频暂停/静音、设置/全屏/刷新读档，不是整局。三包真实大小/SHA256见docs/FIXED-LOCAL-ARTIFACTS-0.7.0.md和release/fixed-0.7/SHA256SUMS.txt。
+- 旧43096405685两次服务startup_failure已终止。新运行43098439265（https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43098439265）已提交并确认headSha=e411ca05f9eea347de25e527c450c98c08ec0080，最近status=queued、jobs=[]；后续只跟踪此新运行，不重新提交。v0.7.0现有草稿targetCommitish已更新为e411ca05f9eea347de25e527c450c98c08ec0080，isDraft=true、assets=[]；实际草稿URL变为https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/untagged-1174f18a5ac0aee4891b。
+- 本轮所有GUI、打包、临时HTTP已结束。下一步新原生构建成功后调用upload-preview.yml，参数version=0.7.0/build_run=43098439265/source_sha=e411ca05f9eea347de25e527c450c98c08ec0080；仍需9包与远端11资产核验、实际下载Mac包复验，再公开。已向用户发出可选首次试玩时长/体验反馈请求，尚无回复，不把缺少回复当成验收。
