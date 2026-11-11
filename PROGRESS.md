@@ -272,3 +272,6 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 固定源码/tag：44290b21ad99b54ea31e6987a2c37fc48cff28c6 / v0.6.0。已提交原生构建43088769893，确认headSha一致；只跟进该run，不重复dispatch：https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43088769893 。
 - 已创建0.6.0草稿预发布，target固定上述SHA；尚未上传或公开包。待五个job成功，再dispatch upload-preview.yml(version=0.6.0, build_run=43088769893, source_sha=上述SHA)，核对manifest/远端资产，下载Mac ZIP实启和完整离线通关、DMG只读挂载检查，再决定公开。
 - 本机GUI测试全部结束，只有上述CI仍在运行。没有新的自动化提醒能力，期间主动汇报。
+
+- 0.6正式候选app补充检查通过：本地字体断网加载、真实字形、地图及小窗口；音乐/音效信号、静音输出为零；实际离线中文广播压低音乐并恢复。Chrome仅基础启动/菜单/暂停通过，不能当作浏览器整局或主观音质验收。
+- 原生构建43088769893仍活跃：web成功，Windows/Linux构建中，Mac arm64/x64等待runner；不属于已失败或需重启。已启动只读gh run watch，输出artifacts/build-0.6-watch.log。
