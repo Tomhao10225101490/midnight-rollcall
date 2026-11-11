@@ -382,3 +382,11 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 0.7草稿仍固定源e411ca05f9eea347de25e527c450c98c08ec0080，assets=[]。若将来服务再次终止，可保留已验证本机产物并明确平台缺口；目前五job仍活跃，继续完整构建路线，不提前把部分发布当全部完成。
 
 - 已启动只读状态监视`gh run watch 43098439265 --interval 30 --exit-status`，exec会话22738，输出artifacts/native-0.7-watch.log。最近write_stdin确认仍运行；日志显示五job待运行、尚无步骤结果。后续先恢复此监视句柄或查询同一远端运行，不重复构建。
+
+## 0.7.0 已真实公开发布
+- 原生运行43098439265最终completed/success，五job均completed/success；先前job列表短暂滞后于整体结论，已再次核对最终一致。只读监视22738正常退出0。源提交e411ca05f9eea347de25e527c450c98c08ec0080。
+- 检查上传运行43100202536最终completed/success。实际下载独立verified-preview-manifest到artifacts/verified-0.7.0；九包均校验SHA256、入口/版本、57递归运行模块及字体/音频来源；远端9包+校验文件+大小清单共11资产逐个匹配。
+- 实际CI Mac arm64包下载到artifacts/ci-0.7-mac-arm64，ZIP CRC/57模块检查通过；DMG只读挂载、0.7.0版本、可执行入口、Applications链接和资源检查通过，正常卸载。实际CI ZIP解压app完整断网键鼠通关35376退出0，3次捕获后真实检查点续玩、HTTP/页面错误0，谜题/铃声出口/结局音乐/最小化暂停恢复/重开通过；报告ci-0.7-full.json。逃生19ms可见，120帧1998.4ms，仅本机短时视点。
+- 另从Release下载Mac DMG/ZIP及网页ZIP到release/downloads-0.7.0；Mac文件与上述CI下载包逐字节一致，报告release-0.7-download-verification.json。网页包67个文件全部与可见Chrome已测独立包内容一致，报告release-0.7-web-verification.json。Release ZIP另行实际解压到artifacts/downloaded-0.7.0并启动，69953菜单/鼠标/暂停/移动/设置通过；不是第二次整局。docs/desktop.png来自该实际Release应用，docs/ending-0.7.png来自正常CI下载包通关。
+- 发布前verify-release通过，随后公开v0.7.0；公开后再次校验isDraft=false、verified=true、11资产与固定源SHA一致，tag v0.7.0指向e411ca05f9eea347de25e527c450c98c08ec0080。实际URL https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.7.0 。九包字节数/SHA256已同步docs/ARTIFACTS-0.7.0.md，README与FINAL_REPORT已更新真实平台范围，Windows/Linux/Intel仍未实机试玩。
+- 本轮所有GUI/下载/CI/监视进程已终止，无待恢复句柄。服务启动故障已解除，不再作为阻塞。整体目标仍active：高级商业音画品质、独立首次玩家体验/时长仍未验收；不要重复发布0.7或称总体目标已完成。可选试玩反馈尚无回复。

@@ -2,17 +2,17 @@
 
 虚构的昭川中学里，晚自习已经结束，广播仍在点名。探索教室、档案室与广播室，寻找离校方法，避开仍在巡查的值班人。
 
-![0.6.0实际下载应用运行截图](docs/desktop.png)
+![0.7.0实际Release下载应用运行截图](docs/desktop.png)
 
 主要交付是离线桌面软件，安装后无需Node、浏览器、账号或联网服务。20—30分钟是首次玩家设计目标，不是实测时长；高级商业音画品质及首次体验仍未完成验收。
 
 ## 下载与当前版本
 
-公开版本：[下载0.6.0开发预览](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.6.0)。M系列Mac选arm64 DMG/ZIP，Intel Mac选x64，Windows选安装EXE或便携EXE，Linux选AppImage或tar.gz。具体启动和单个可信应用的未签名处理见[安装说明](docs/INSTALL.md)。应用无Developer ID、苹果公证或Windows代码签名，不保证没有系统提示。
+[下载0.7.0开发预览](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.7.0)。M系列Mac选arm64 DMG/ZIP，Intel Mac选x64，Windows选安装EXE或便携EXE，Linux选AppImage或tar.gz。具体启动和单个可信应用的未签名处理见[安装说明](docs/INSTALL.md)。应用无Developer ID、苹果公证或Windows代码签名，不保证没有系统提示。
 
-源码main目前为0.7.0候选，尚未公开Release。新增门扇近景及打开后的实体碰撞、原创结局曲、晨光庭院，并修复快速恢复/暂停的音频竞争。本机已验证的最新安装包在 `release/fixed-0.7`，可执行应用在 `release/audio-fix-0.7/mac-arm64/末铃点名.app`；这些本机目录不上传源码仓库，不能当成GitHub下载地址。[本机产物大小、SHA256与验证范围](docs/FIXED-LOCAL-ARTIFACTS-0.7.0.md)。旧local-0.7是修复前历史候选。
+0.7新增门扇近景及打开后的实体碰撞、原创结局曲和晨光庭院，并修复快速恢复/暂停的音频竞争。本机已从Release下载的DMG/ZIP在 `release/downloads-0.7.0`，实际解压应用为 `artifacts/downloaded-0.7.0/末铃点名.app`。这些本机目录不提交到源码仓库；线上用户请使用上面的真实Release链接。
 
-0.7原生构建[43098439265](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43098439265)仍待完成。旧运行曾因GitHub服务启动异常结束，未执行构建；不将其视为平台包已通过。网页试玩未部署。
+九个安装/网页包、字节数和SHA256见[0.7产物清单](docs/ARTIFACTS-0.7.0.md)，Release同时提供`SHA256SUMS.txt`。网页试玩页面未部署，桌面用户不需要网页包。
 
 ## 操作与玩法
 WASD移动、鼠标/方向键观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜前藏入/退出、J查看记录/楼层示意图/逐级提示、Esc暂停。柜内只能通过通风缝观察，被目击藏入会遭搜查。
@@ -23,17 +23,19 @@ WASD移动、鼠标/方向键观察、Shift奔跑、Ctrl潜行、E互动、H在�
 
 ## 验证范围
 
-| 平台 | 已公开0.6.0 | 本机0.7候选与限制 |
+| 平台 | 0.7实际产物 | 验证范围 |
 |---|---|---|
-| macOS arm64 | DMG/ZIP，实际下载ZIP完整断网键鼠通关，DMG入口检查通过 | 新修复app完整断网通关；DMG/ZIP实际生成、57模块/入口检查、ZIP解压启动通过；包内app.asar与整局app逐字节一致 |
-| macOS x64 | 对应系统构建DMG/ZIP、包检查通过 | 0.7尚未完成；未实机试玩 |
-| Windows x64 | 对应系统构建安装/便携EXE、包检查通过 | 0.7尚未完成；未实机试玩 |
-| Linux x64 | 对应系统构建AppImage/tar.gz、包检查通过 | 0.7尚未完成；未实机试玩 |
-| 浏览器 | 静态ZIP及Chrome基础启动/菜单/暂停通过 | 0.7独立ZIP解压后可见Mac Chrome正常键鼠完成第一道谜题、鼠标观察、音频暂停/静音、设置/全屏及刷新读档；未整局 |
+| macOS arm64 | DMG、应用ZIP | CI下载ZIP解压后完整断网键鼠通关；DMG只读挂载/入口检查；Release下载文件与CI包逐字节一致，Release ZIP实际解压启动通过 |
+| macOS x64 | DMG、应用ZIP | 对应系统runner构建、包检查通过，未实机试玩 |
+| Windows x64 | 安装EXE、便携EXE | 对应系统runner构建、包检查通过，未实机试玩 |
+| Linux x64 | AppImage、tar.gz | 对应系统runner构建、包检查通过，未实机试玩 |
+| 浏览器 | 静态ZIP | 独立包普通键鼠第一道谜题、鼠标观察、音频暂停/静音、设置/全屏及刷新读档通过；Release包全部67个文件与可见Mac Chrome测试包内容一致；未整局 |
 
-0.6九包真实大小与SHA256见[公开产物清单](docs/ARTIFACTS-0.6.0.md)。0.7修复候选固定源为e411ca05f9eea347de25e527c450c98c08ec0080，31项逻辑测试/typecheck通过。完整桌面路线经历3次被捕后通过正常检查点续玩，没有瞬移、无敌或物品注入；Playwright会话网络禁用，HTTP与页面错误为零。熟知路线的自动操作不能代表首次玩家时长；音频信号检查不等于主观听感验收。[完整报告](FINAL_REPORT.md)。
+固定源提交e411ca05f9eea347de25e527c450c98c08ec0080。[原生构建](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43098439265)五job成功，[九包检查上传](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43100202536)成功。31项逻辑测试/typecheck、九包入口/版本及57个递归运行模块检查通过，公开前后11项远端资产与大小/SHA256清单一致。
 
-![0.7庭院候选实际正常通关结局](docs/ending-0.7.png)
+完整桌面路线经历3次被捕后通过正常检查点续玩，没有瞬移、无敌或物品注入；Playwright会话网络禁用，HTTP与页面错误为零。熟知路线的自动操作不能代表首次玩家时长；音频信号检查不等于主观听感验收。[完整报告](FINAL_REPORT.md)。
+
+![0.7 CI下载应用实际正常通关结局](docs/ending-0.7.png)
 
 ## 从源码运行、测试与构建
 Node.js 22及以上，在本项目目录运行：
@@ -76,4 +78,4 @@ npm run test:ending-music
 
 ## English Quick Start
 
-Offline desktop game under development. [Download the published 0.6.0 preview](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.6.0) for a bundled app. The 0.7.0 candidate is available locally and in source; its cross-platform release is pending. From source: `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. Use `npm test`, `npm run typecheck`, `npm run build`, and `npm run dist` for tests and native packaging. Final visual/audio quality and first-player duration acceptance remain pending.
+Offline desktop game under development. [Download the published 0.7.0 preview](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.7.0) for a bundled app. Native packages for macOS, Windows and Linux are available; physical playtesting was performed only on Apple Silicon Mac. From source: `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. Use `npm test`, `npm run typecheck`, `npm run build`, and `npm run dist` for tests and native packaging. Final visual/audio quality and first-player duration acceptance remain pending.
