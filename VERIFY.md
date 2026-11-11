@@ -163,3 +163,11 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - v0.4.0已公开（非草稿、prerelease），链接https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.4.0 。发布后11资产/源SHA复核仍通过。
 - 实际下载Mac DMG/ZIP校验通过，ZIP应用启动与断网检查通过；DMG只读挂载0.4.0/入口/Applications链接通过，已正常卸载。所有下载/GUI/挂载会话已正常结束。
 - README/FINAL_REPORT/ARTIFACTS-0.4.0已更新，截图来自实际下载应用。整体目标保持未完成，高级音画与首次20—30分钟未验收。
+
+## 0.5 空间叙事验证
+- `npm test`19项通过；`npm run typecheck`通过。
+- `scripts/narrative-electron.mjs`普通键盘走入一班，等待地点事件，无调试位置/计时注入。开场字幕、三声轻敲字幕、J笔记回看、暂停冻结、重新开始复位通过，无pageerror。artifacts/narrative-event.png实际已查看；报告narrative-regression.json。
+- 逻辑测试覆盖地点/进度、单次触发、冷却、危险抑制和重开；新增knock与其他音效同样执行44.1k/48k样本检查。
+- 未对0.5作完整通关/打包/跨平台构建；上述为源码桌面验证。
+
+- 0.5源码桌面菜单/输入/鼠标锁定/暂停/设置与三级提示回归通过。主线记录和铃声会清理过期环境字幕，途中笔记仍保留；针对性叙事测试与typecheck再次通过。所有本轮测试已结束。

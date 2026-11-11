@@ -57,3 +57,5 @@ WASD移动、鼠标/方向键观察、Shift奔跑、Ctrl潜行、E互动、H在�
 
 ## English Quick Start
 Offline desktop game under development. Run `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. `npm test` runs logic tests; `npm run test:desktop` tests Electron. A playable development preview is available on GitHub Releases; final quality acceptance is still pending.
+
+当前 main 为未发布的 0.5.0-dev.1：新增开场身份与空间叙事、可回看的本局途中记录。公开下载安装包仍为 0.4.0；本机 release/mac-arm64 应用也仍是已验证的 0.4.0。开发版叙事回归：`npm run test:narrative`。

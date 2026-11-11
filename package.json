@@ -1,6 +1,6 @@
 {
   "name": "midnight-rollcall",
-  "version": "0.4.0",
+  "version": "0.5.0-dev.1",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -21,7 +21,8 @@
     "test:materials": "npm run build && node scripts/materials-electron.mjs",
     "test:settings": "npm run build && node scripts/settings-electron.mjs",
     "test:rendering": "npm run build && node scripts/rendering-electron.mjs",
-    "test:hiding": "npm run build && node scripts/hiding-electron.mjs"
+    "test:hiding": "npm run build && node scripts/hiding-electron.mjs",
+    "test:narrative": "npm run build && node scripts/narrative-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"

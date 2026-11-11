@@ -1,7 +1,7 @@
 /** Original procedural foley. No recordings, external samples or network dependencies. */
-export type Effect='step'|'door'|'bell'|'radio';
+export type Effect='step'|'door'|'bell'|'radio'|'knock';
 export function synthesize(kind:Effect,rate:number,seed=731){
- const length={step:.24,door:.8,bell:3.8,radio:.55}[kind];
+ const length={step:.24,door:.8,bell:3.8,radio:.55,knock:1.8}[kind];
  const output=new Float32Array(Math.ceil(length*rate));let low=0;
  for(let i=0;i<output.length;i++){
   const t=i/rate;seed=(seed*1664525+1013904223)>>>0;const noise=seed/4294967296*2-1;low+=.08*(noise-low);let sample=0;
@@ -12,6 +12,8 @@ export function synthesize(kind:Effect,rate:number,seed=731){
    const scrape=Math.sin(2*Math.PI*(175*t+45*t*t))*.11*Math.sin(Math.PI*Math.min(t/.58,1));
    const latch=t>.58?(Math.sin(2*Math.PI*830*(t-.58))*.23+noise*.12)*Math.exp(-(t-.58)*42):0;
    sample=scrape+low*.09*Math.sin(Math.PI*t/length)+latch;
+  }else if(kind==='knock'){
+   for(const start of [0,.48,1.1]){const u=t-start;if(u>=0)sample+=(Math.sin(2*Math.PI*118*u)*.32+Math.sin(2*Math.PI*287*u)*.13+noise*.05)*Math.exp(-u*23)*Math.min(1,u*900)}
   }else if(kind==='bell'){
    for(const start of [0,.62]){const u=t-start;if(u<0)continue;
     for(const [ratio,amp,decay]of [[1,.22,1.4],[2.71,.08,2.1],[4.08,.035,3.3],[5.43,.016,5]])sample+=Math.sin(2*Math.PI*440*ratio*u)*amp*Math.exp(-u*decay)*Math.min(1,u*1000);
