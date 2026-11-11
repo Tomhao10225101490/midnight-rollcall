@@ -220,3 +220,10 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 0.5.0本机独立app已构建，48个递归运行模块/版本/入口/预加载检查通过。实际app整局与地图回归77753仍在运行，日志artifacts/final-0.5-traverse.log；最新搜查补足时间已包含。公开0.4下载仍保持不变，0.5尚未创建Release。
 
 - 最终0.5.0实际app完整键鼠逃生与地图回归77753退出0通过：3次被捕后正常续玩、全部谜题、出口铃声、胜利最小化冻结、地图实际房间定位和800×600返回；无状态注入或pageerror。准备锁定源码并启动各平台CI。
+
+## 0.5.0 构建发布进行中
+- 固定源码/tag：ef2a4a2902d9985c8afef0d538fe2788031a3596 / v0.5.0；21项逻辑测试、typecheck、最终Mac实际app整局和地图回归已通过。
+- 原生构建运行43080126142已确认in_progress，headSha与固定源码一致：https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43080126142 。不要重复dispatch；先检查该run的终态与各job。
+- 已创建0.5.0草稿预发布，targetCommitish固定上述SHA。草稿不等于公开发布，尚无0.5公开下载验收；0.4仍为已公开版本。
+- 后续：确认5个构建job与9个真实包，调用upload-preview.yml（version=0.5.0、build_run=43080126142、source_sha=上述SHA），核对独立manifest与远端全部资产，再下载Mac包实启和DMG挂载检查；全部通过后才公开草稿。不能仅凭workflow存在宣布完成。
+- 本机最新0.5.0应用：release/dev-0.5/mac-arm64/末铃点名.app；release/mac-arm64仍为0.4，不混淆验证范围。本轮所有本机GUI测试均已结束；只有上述远程CI仍在运行。
