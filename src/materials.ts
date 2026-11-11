@@ -1,3 +1,4 @@
+import{architecturalMaps,metricBoxUV}from './architectural-surfaces';
 import * as T from 'three';
 // Original, deterministic surface assets. Existing artwork (notices, labels) is sacred.
 type Surface = 'plaster' | 'wood' | 'paint';
@@ -18,13 +19,17 @@ function surfaceTexture(kind: Surface) {
 }
 const woodColors=new Set(['806445','5b4936','907349','66543c','554734','66523c','6d5035','584936','403c35','b29156','514a3c']);
 export function upgradeMaterials(scene:T.Scene){
+ const architecture={plaster:architecturalMaps('plaster'),terrazzo:architecturalMaps('terrazzo')};
  const textures={plaster:surfaceTexture('plaster'),wood:surfaceTexture('wood'),paint:surfaceTexture('paint')};
  scene.traverse(object=>{
   if(!(object instanceof T.Mesh))return;
   object.castShadow=true;object.receiveShadow=true;
+  const surface=object.userData.architecturalSurface as 'plaster'|'terrazzo'|undefined;
+  if(surface)metricBoxUV(object.geometry);
   const materials=Array.isArray(object.material)?object.material:[object.material];
   for(const material of materials){
    if(!(material instanceof T.MeshStandardMaterial)||material.map||material.userData.authoredSurface)continue;
+   if(surface){Object.assign(material,architecture[surface]);material.bumpScale=surface==='plaster'?.012:.004;material.roughness=1;material.needsUpdate=true;continue}
    // Preserve brass, ceramic and other intentionally authored material responses.
    if(material.metalness>0||material.roughness<.7)continue;
    const color=material.color.getHexString();

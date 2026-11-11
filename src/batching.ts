@@ -5,7 +5,7 @@ export function batchStaticBoxes(scene:T.Scene){
  for(const object of [...scene.children]){
   if(!(object instanceof T.Mesh)||object instanceof T.InstancedMesh||!(object.geometry instanceof T.BoxGeometry)||!(object.material instanceof T.MeshStandardMaterial)||object.userData.dynamic)continue;
   const m=object.material,p=object.geometry.parameters;
-  const key=JSON.stringify([p,m.color.getHex(),m.roughness,m.metalness,m.map?.uuid,m.bumpMap?.uuid,m.bumpScale,m.emissive.getHex(),m.emissiveIntensity,m.transparent,m.opacity,m.side,object.castShadow,object.receiveShadow]);
+  const key=JSON.stringify([p,m.color.getHex(),m.roughness,m.metalness,m.map?.uuid,m.bumpMap?.uuid,m.roughnessMap?.uuid,m.bumpScale,m.emissive.getHex(),m.emissiveIntensity,m.transparent,m.opacity,m.side,object.castShadow,object.receiveShadow]);
   const meshes=groups.get(key)||[];meshes.push(object);groups.set(key,meshes);
  }
  let removed=0;

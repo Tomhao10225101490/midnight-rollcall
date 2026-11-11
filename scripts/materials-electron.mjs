@@ -1,6 +1,7 @@
 import{_electron as electron}from '@playwright/test';import assert from 'node:assert/strict';import fs from 'node:fs';
-const app=await electron.launch({executablePath:'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron',args:['.'],env:{...process.env,ROLLCALL_QA:'1'}});
+const app=await electron.launch({executablePath:process.env.ELECTRON_PATH||'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron',args:['.'],env:{...process.env,ROLLCALL_QA:'1'}});
 try{const page=await app.firstWindow();await page.getByRole('button',{name:'新游戏',exact:true}).click();
+ fs.mkdirSync('artifacts',{recursive:true});await page.keyboard.down('ArrowDown');await page.waitForTimeout(650);await page.keyboard.up('ArrowDown');await page.screenshot({path:'artifacts/surface-player-floor.png'});await page.keyboard.down('ArrowUp');await page.waitForTimeout(650);await page.keyboard.up('ArrowUp');
  const surfaces=await page.evaluate(async()=>{const {scene}=await import('./world.js');const data=[];scene.traverse(o=>{const m=o.material;if(m?.isMeshStandardMaterial)data.push({image:m.map?.image?{width:m.map.image.width,height:m.map.image.height}:null,metalness:m.metalness,roughness:m.roughness,bump:m.bumpScale})});return data});
  assert.equal(surfaces.filter(m=>m.image?.width===512&&m.image?.height===640).length,3,'all three original notice canvases remain');assert.ok(surfaces.some(m=>m.metalness===.65&&m.roughness===.4),'brass retains authored metal response');assert.ok(surfaces.some(m=>m.bump===.008),'wood surface present');
  await page.keyboard.down('w');await page.waitForTimeout(3600);await page.keyboard.up('w');await page.keyboard.down('d');await page.waitForTimeout(750);await page.keyboard.up('d');

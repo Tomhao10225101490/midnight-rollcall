@@ -6,7 +6,7 @@ export function decorate() {
     const tileGeo=new T.BoxGeometry(.98,.018,.98);
     const tileMat=new T.MeshStandardMaterial({color:'#737e73',roughness:.78});
     const tiles=new T.InstancedMesh(tileGeo,tileMat,24*44);const matrix=new T.Matrix4();let tileIndex=0;
-    for(let x=-12;x<12;x++)for(let z=-22;z<22;z++){matrix.makeTranslation(x+.5,.015,z+.5);tiles.setMatrixAt(tileIndex,matrix);tiles.setColorAt(tileIndex,new T.Color((x+z)%2?'#68766f':'#798078'));tileIndex++}tiles.receiveShadow=true;scene.add(tiles);
+    for(let x=-12;x<12;x++)for(let z=-22;z<22;z++){matrix.makeTranslation(x+.5,.015,z+.5);tiles.setMatrixAt(tileIndex,matrix);tiles.setColorAt(tileIndex,new T.Color((x+z)%2?'#68766f':'#798078'));tileIndex++}tiles.receiveShadow=true;tiles.userData.architecturalSurface='terrazzo';scene.add(tiles);
     const roomNames=[['一班 · 试卷','档案办公室','广播控制室','配电值班室'],['二班 · 考场','储物间 · 躲藏','纪律公示室','东侧校门']];
     for(const [side,x] of [-4,4].entries())for(const [i,z]of [-15,-5,5,15].entries()){
         box(x,3.05,z,.28,.7,3.1,'#4e5c54',true);
