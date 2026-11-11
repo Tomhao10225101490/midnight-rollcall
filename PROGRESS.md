@@ -390,3 +390,9 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 另从Release下载Mac DMG/ZIP及网页ZIP到release/downloads-0.7.0；Mac文件与上述CI下载包逐字节一致，报告release-0.7-download-verification.json。网页包67个文件全部与可见Chrome已测独立包内容一致，报告release-0.7-web-verification.json。Release ZIP另行实际解压到artifacts/downloaded-0.7.0并启动，69953菜单/鼠标/暂停/移动/设置通过；不是第二次整局。docs/desktop.png来自该实际Release应用，docs/ending-0.7.png来自正常CI下载包通关。
 - 发布前verify-release通过，随后公开v0.7.0；公开后再次校验isDraft=false、verified=true、11资产与固定源SHA一致，tag v0.7.0指向e411ca05f9eea347de25e527c450c98c08ec0080。实际URL https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.7.0 。九包字节数/SHA256已同步docs/ARTIFACTS-0.7.0.md，README与FINAL_REPORT已更新真实平台范围，Windows/Linux/Intel仍未实机试玩。
 - 本轮所有GUI/下载/CI/监视进程已终止，无待恢复句柄。服务启动故障已解除，不再作为阻塞。整体目标仍active：高级商业音画品质、独立首次玩家体验/时长仍未验收；不要重复发布0.7或称总体目标已完成。可选试玩反馈尚无回复。
+
+## 0.8.0-dev.1：近景试卷与文具
+- 公开下载仍为已验证0.7.0；本地源码明确升为0.8.0-dev.1，未覆盖旧Release或安装包。
+- 新增原创exam-paper模块：768×1088确定性印刷/纤维/边缘色差，复核栏线、红笔标记及轻微卷边几何。保持一班试卷→二班登记的线索关系，未新增答案或改变解谜逻辑。新增desk-tools模块，替换矩形笔与金属方块为圆柱笔身、笔帽/夹/金属笔尖及车削印章柄。
+- 实际Electron诊断镜头已观察，docs/exam-paper-0.8-dev.png为近景美术检查图，不是正常玩家视点证明。typecheck、31项测试、Electron菜单/锁鼠/暂停/输入/设置通过；断网普通键鼠整局验证随后通过（3次捕获后真实检查点继续、未注入状态），报告artifacts/paper-0.8-traverse-result.json；所有GUI进程已退出。
+- 再次读取loop技能并核对工具目录：无subscription timer，也无notify_on_output参数；未假装创建后台20分钟提醒。持续目标与会话内进展汇报仍有效。

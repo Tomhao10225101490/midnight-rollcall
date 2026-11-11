@@ -1,5 +1,7 @@
 import * as T from 'three';
 import {scene} from './world';
+import {examPaper} from './exam-paper';
+import {deskTools} from './desk-tools';
 // Original multi-part props in metres. Interaction coordinates stay unchanged.
 const metal=new T.MeshStandardMaterial({color:'#54665e',metalness:.55,roughness:.48});
 const dark=new T.MeshStandardMaterial({color:'#192321',metalness:.35,roughness:.55});
@@ -21,9 +23,8 @@ export function station(index:number,x:number,z:number){const g=new T.Group();g.
  if(index===0){
   block(g,0,.78,0,1.5,.08,.95,wood);for(const dx of [-.64,.64])for(const dz of [-.35,.35])block(g,dx,.38,dz,.055,.76,.055,metal);
   for(let i=0;i<4;i++){const sheet=block(g,-.18,.83+i*.006,0,.43,.005,.6,paper);sheet.rotation.y=i*.025}
-  artwork(g,['昭川中学','离校复核试卷','姓名：未归档','请翻阅背面'],.43,.6,-.18,.856,0,true);
-  const pen=block(g,.32,.837,.03,.015,.015,.3,dark);pen.rotation.y=.3;
-  block(g,.5,.85,-.25,.15,.035,.1,brass);
+  const exam=examPaper();exam.position.set(-.18,.858,0);exam.rotation.y=-.045;g.add(exam);
+  g.add(deskTools());
  }else if(index===1){
   block(g,0,.92,0,1.05,1.84,.6,metal);
   for(let i=0;i<4;i++){const y=.29+i*.42;block(g,0,y,.311,.97,.38,.025,dark);block(g,0,y,.33,.93,.35,.018,metal);block(g,0,y+.04,.36,.28,.04,.05,brass);artwork(g,[['未归档','待复核','空白名单','离校许可'][i]],.2,.085,0,y-.07,.345)}

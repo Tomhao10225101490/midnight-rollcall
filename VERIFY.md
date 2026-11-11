@@ -408,3 +408,10 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 另从Release下载Mac DMG/ZIP及网页ZIP到release/downloads-0.7.0；Mac文件与上述CI下载包逐字节一致，报告release-0.7-download-verification.json。网页包67个文件全部与可见Chrome已测独立包内容一致，报告release-0.7-web-verification.json。Release ZIP另行实际解压到artifacts/downloaded-0.7.0并启动，69953菜单/鼠标/暂停/移动/设置通过；不是第二次整局。docs/desktop.png来自该实际Release应用，docs/ending-0.7.png来自正常CI下载包通关。
 - 发布前verify-release通过，随后公开v0.7.0；公开后再次校验isDraft=false、verified=true、11资产与固定源SHA一致，tag v0.7.0指向e411ca05f9eea347de25e527c450c98c08ec0080。实际URL https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.7.0 。九包字节数/SHA256已同步docs/ARTIFACTS-0.7.0.md，README与FINAL_REPORT已更新真实平台范围，Windows/Linux/Intel仍未实机试玩。
 - 本轮所有GUI/下载/CI/监视进程已终止，无待恢复句柄。服务启动故障已解除，不再作为阻塞。整体目标仍active：高级商业音画品质、独立首次玩家体验/时长仍未验收；不要重复发布0.7或称总体目标已完成。可选试玩反馈尚无回复。
+
+## 0.8.0-dev.1 近景资产检查（尚未发布）
+- `npm run typecheck`通过；`npm run test`31/31通过。
+- `node scripts/inspect-props.mjs`实际渲染并人工查看paper.png，卷边、印刷内容与红色复核标记可见。此脚本使用诊断相机，不是普通通关证据。
+- `node scripts/smoke-electron.mjs`实际桌面窗口通过菜单、鼠标锁定、暂停/恢复、键盘输入和设置持久化。
+- 字体构建审计通过：556非ASCII、537汉字；所有印刷内容使用随包本地字体。新增资产无外部资源请求。
+- `ROLLCALL_OFFLINE=1 node scripts/traverse-electron.mjs`退出0：普通键鼠完整通关，3次捕获后用实际检查点继续，未瞬移/修改物品栏/跳关，页面错误和HTTP请求均0，结局音乐、原生最小化暂停/恢复及重开通过。版本化报告artifacts/paper-0.8-traverse-result.json、trail.json与log保留；这是源码运行的Electron开发版验证，不是新发行包验证。

@@ -26,3 +26,5 @@ architectural-surfaces.ts 的抹灰和水磨石颜色、凹凸及粗糙度均由
 0.7结局音乐assets/GeneratedSFX/after_last_rollcall.wav由项目编排脚本调用Specs本地算法合成工具生成，无外部采样；该第三方工具为Apache-2.0且未复制进本仓库。曲目随离线游戏构建分发，详情见同目录SOURCE.md。
 
 `src/courtyard.ts`的铺石矿物噪声、分叉树干与折面叶片、长椅、围栏、外门和远景建筑均为本项目原创程序化资产，按MIT提供，无第三方模型、纹理或扫描数据。
+
+0.8开发版的`src/exam-paper.ts`试卷印刷、纸纤维、红笔复核标记与卷边，以及`src/desk-tools.ts`钢笔/手持印章几何均为项目原创程序化资产，使用项目MIT许可。印刷文字使用上述已授权的Noto Sans SC字体。
