@@ -65,3 +65,5 @@ npm run test:mix
 
 ## English Quick Start
 Offline desktop game under development. [Download the 0.5.0 preview](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.5.0) for a bundled desktop app. From source: `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. Use `npm test`, `npm run build`, and `npm run dist` for tests and native packaging. Final visual/audio quality and first-player duration acceptance remain pending.
+
+当前main为未发布的0.6.0-dev.1，新增原创立体窗户和档案柜细节。本机开发应用另存于 `release/dev-0.6/mac-arm64/末铃点名.app`；公开下载及上述发布验证仍对应0.5.0。

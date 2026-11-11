@@ -1,3 +1,4 @@
+import {campusWindows} from './windows';
 import {schoolChair} from './furniture';
 import * as T from 'three';
 import { box, label, scene } from './world';
@@ -30,21 +31,30 @@ export function decorate() {
                 const chair=schoolChair();chair.position.set(a,0,z+1);scene.add(chair);
             }
     }
-    for (let z = -20; z < 21; z += 3) {
-        for (const x of [-11.8, 11.8]) {
-            box(x, 2, z, .12, 1.6, 1.8, '#203946');
-            box(x, 2, z, .16, .07, 1.9, '#88948b');
-            box(x, 2, z, .16, 1.7, .07, '#88948b');
-        }
-    }
+    campusWindows(scene);
     for (const z of [-18, -8, 2, 12]) {
         for (const x of [-3.85, 3.85])
             box(x, .55, z, .06, 1, 3, '#3a5b51');
     }
     // Archive cabinets, broadcast mixing desk, washbasins, discipline notices.
-    for (const z of [-8, -6, -4]) {
+    for (const [index,z] of [-8, -6, -4].entries()) {
         box(-11, .95, z, 1.3, 1.9, 1.2, '#636b60', true);
-        box(-10.3, 1.1, z, .05, .15, .2, '#b5ad85');
+        // Pressed steel doors, folded edges, card holders and ventilation slots.
+        box(-10.338,.99,z,.024,1.69,1.08,'#26332e');
+        for(const side of [-1,1]){
+            const cz=z+side*.27;
+            box(-10.315,.99,cz,.03,1.65,.515,'#788073');
+            for(const y of [.21,1.77])box(-10.292,y,cz,.018,.028,.46,'#9a9e8a');
+            for(const dz of [-.238,.238])box(-10.292,.99,cz+dz,.018,1.58,.022,'#9a9e8a');
+            box(-10.25,1.05,z+side*.09,.09,.18,.035,'#a79f80');
+            for(const y of [.43,.51,.59])box(-10.292,y,cz,.018,.025,.33,'#31433b');
+            for(const y of [.45,1.5])box(-10.276,y,z+side*.54,.045,.14,.035,'#56665c');
+            box(-10.278,1.46,cz,.025,.18,.36,'#a79f80');
+            box(-10.26,1.46,cz,.012,.125,.3,'#d1c8a9');
+        }
+        box(-10.27,1.24,z,.018,.17,.94,'#34483d');
+        const sign=label(['旧档案','出勤留存','校务记录'][index],-10.255,z);sign.rotation.y=Math.PI/2;sign.position.y=1.24;sign.scale.set(.3,.2,1);
+        box(-10.29,.1,z,.07,.09,1.1,'#46594c');
     }
     box(-10, .6, 6, 2.3, 1.2, 1.4, '#403c35', true);
     for (const z of [5.6, 6, 6.4])
