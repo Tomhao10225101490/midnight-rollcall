@@ -1,3 +1,4 @@
+import{openForEnemy}from './doors';
 import * as T from 'three';
 import { proctor } from './character';
 import { box, clear, visible } from './world';
@@ -22,10 +23,7 @@ export class Enemy {
         }
         for (const d of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
             const n = [p[0] + d[0], p[1] + d[1]];
-            if (Math.abs(n[0]) > 11 || Math.abs(n[1]) > 21 || !clear(...n as [
-                number,
-                number
-            ]) || seen.has(n.join()))
+            if (Math.abs(n[0]) > 11 || Math.abs(n[1]) > 21 || !clear(n[0],n[1],true) || seen.has(n.join()))
                 continue;
             seen.set(n.join(), p);
             q.push(n);
@@ -59,7 +57,7 @@ export class Enemy {
         else {
             this.body.rotation.y = Math.atan2(v.x, v.z);
             const length = Math.min(v.length(), dt * (this.state === '追逐' ? 2.6 + alert / 150 : bell ? 1 : 1.5));
-            const next = pos.clone().addScaledVector(v.normalize(), length);
+            const next = pos.clone().addScaledVector(v.normalize(), length);openForEnemy(next);
             if (clear(next.x, next.z))
                 pos.copy(next);
             else {

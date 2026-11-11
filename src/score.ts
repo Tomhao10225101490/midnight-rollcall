@@ -1,27 +1,14 @@
-// Original procedural score. Three layers: ventilation drone, sparse piano-like
-// pentatonic motif and pulse. No samples or externally licensed recordings.
+// Original score: modal plucked strings, low bowed partials, ventilation and pursuit pulse.
+// All waveforms and room impulse are synthesized locally; no samples or remote services.
 export class Score {
-    private ctx: AudioContext | null = null;
-    private bus: GainNode | null = null;
-    private drones: OscillatorNode[] = [];
-    private beat = 0;
-    private clock = 0;
-    start() { if (this.ctx) {
-        void this.ctx.resume();
-        return;
-    } this.ctx = new AudioContext(); this.bus = this.ctx.createGain(); this.bus.gain.value = .08; const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 900; this.bus.connect(filter).connect(this.ctx.destination); for (const f of [55, 82.41, 110.3]) {
-        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-        o.type = 'sine';
-        o.frequency.value = f;
-        g.gain.value = .08;
-        o.connect(g).connect(this.bus);
-        o.start();
-        this.drones.push(o);
-    } }
-    pause() { if (this.ctx)
-        void this.ctx.suspend(); }
-    update(dt: number, chase: boolean, volume: number) { if (!this.ctx || !this.bus)
-        return; this.bus.gain.setTargetAtTime(volume * .35, this.ctx.currentTime, .3); this.clock -= dt; if (this.clock > 0)
-        return; this.clock = chase ? .32 : 2.8; const notes = chase ? [146.83, 155.56, 220, 155.56] : [220, 0, 293.66, 329.63, 0, 196, 0, 146.83]; const f = notes[this.beat++ % notes.length]; if (!f)
-        return; const o = this.ctx.createOscillator(), g = this.ctx.createGain(), p = this.ctx.createStereoPanner(); o.type = chase ? 'triangle' : 'sine'; o.frequency.value = f; g.gain.setValueAtTime(.001, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(chase ? .12 : .2, this.ctx.currentTime + .025); g.gain.exponentialRampToValueAtTime(.001, this.ctx.currentTime + (chase ? .25 : 2.5)); p.pan.value = Math.sin(this.beat * 1.7) * .6; o.connect(g).connect(p).connect(this.bus); o.start(); o.stop(this.ctx.currentTime + 3); }
+ private ctx:AudioContext|null=null;private master:GainNode|null=null;private dry:GainNode|null=null;private wet:ConvolverNode|null=null;private beat=0;private clock=0;private mode=false;
+ start(){if(this.ctx){void this.ctx.resume();return}const c=this.ctx=new AudioContext();const master=this.master=c.createGain();master.gain.value=0;const limiter=c.createDynamicsCompressor();limiter.threshold.value=-18;limiter.knee.value=12;limiter.ratio.value=4;master.connect(limiter).connect(c.destination);this.dry=c.createGain();this.dry.gain.value=.7;this.dry.connect(master);const wetGain=c.createGain();wetGain.gain.value=.23;this.wet=c.createConvolver();const impulse=c.createBuffer(2,c.sampleRate*2.6,c.sampleRate);let seed=731;for(let channel=0;channel<2;channel++){const data=impulse.getChannelData(channel);for(let i=0;i<data.length;i++){seed=(seed*1664525+1013904223)>>>0;data[i]=((seed/4294967296)*2-1)*Math.exp(-i/(c.sampleRate*.48))*.3}}this.wet.buffer=impulse;this.wet.connect(wetGain).connect(master);
+ for(const [f,amount]of [[55,.025],[82.41,.018],[110.2,.009]]){const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.value=amount;o.connect(g).connect(this.dry);o.start()}
+ const buffer=c.createBuffer(1,c.sampleRate*2,c.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<data.length;i++){seed=(seed*1664525+1013904223)>>>0;data[i]=(seed/4294967296*2-1)*.025}const air=c.createBufferSource(),filter=c.createBiquadFilter();air.buffer=buffer;air.loop=true;filter.type='lowpass';filter.frequency.value=280;air.connect(filter).connect(this.dry);air.start();
+ }
+ pause(){if(this.ctx)void this.ctx.suspend()}
+ private note(f:number,length:number,pan:number,chase:boolean){if(!this.ctx||!this.dry||!this.wet)return;const c=this.ctx;for(const [ratio,level]of [[1,.14],[2.01,.035],[3.99,.012]]){const o=c.createOscillator(),g=c.createGain(),p=c.createStereoPanner();o.type='sine';o.frequency.value=f*ratio;o.frequency.exponentialRampToValueAtTime(f*ratio*.998,c.currentTime+length);g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(level*(chase?.65:1),c.currentTime+.008);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+length/Math.sqrt(ratio));p.pan.value=pan;o.connect(g).connect(p);p.connect(this.dry);p.connect(this.wet);o.start();o.stop(c.currentTime+length);o.onended=()=>{o.disconnect();g.disconnect();p.disconnect()}}}
+ update(dt:number,chase:boolean,volume:number){if(!this.ctx||!this.master)return;this.master.gain.setTargetAtTime(volume*.55,this.ctx.currentTime,.2);if(chase!==this.mode){this.mode=chase;this.clock=Math.min(this.clock,.2)}this.clock-=dt;if(this.clock>0)return;this.clock=chase?.35:1.65;
+ const motif=[220,0,293.66,329.63,0,440,392,0,293.66,0,196,220,0,146.83,0,0,220,293.66,0,392,0,329.63,293.66,0,196,0,146.83,0,110,0,0,0];const chaseLine=[146.83,0,155.56,220,146.83,0,293.66,155.56];const i=this.beat++,f=(chase?chaseLine:motif)[i%(chase?chaseLine.length:motif.length)];if(f)this.note(f,chase?.5:3.3,Math.sin(i*.63)*.45,chase);if(chase&&i%2===0)this.note(55,.19,0,true);
+ }
 }

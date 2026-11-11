@@ -1,4 +1,5 @@
 import * as T from 'three';
+export const doorBounds=new Set<T.Box3>();
 export const walls: T.Box3[] = [];
 export const scene = new T.Scene();
 scene.background = new T.Color('#111e23');
@@ -22,5 +23,5 @@ export function init() { scene.add(new T.HemisphereLight('#b3cfdb', '#30302b', 2
     l.position.set(0, 2.9, z);
     scene.add(l);
 } }
-export function clear(x: number, z: number) { return !walls.some(w => w.min.y < 1.8 && w.max.y > .1 && x > w.min.x - .3 && x < w.max.x + .3 && z > w.min.z - .3 && z < w.max.z + .3); }
+export function clear(x: number, z: number,ignoreDoors=false) { return !walls.some(w => !(ignoreDoors&&doorBounds.has(w)) && w.min.y < 1.8 && w.max.y > .1 && x > w.min.x - .3 && x < w.max.x + .3 && z > w.min.z - .3 && z < w.max.z + .3); }
 export function visible(a: T.Vector3, b: T.Vector3) { const d = b.clone().sub(a), ray = new T.Ray(a, d.clone().normalize()); return !walls.some(w => { const hit = ray.intersectBox(w, new T.Vector3()); return hit && hit.distanceTo(a) < d.length(); }); }
