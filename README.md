@@ -66,7 +66,7 @@ npm run test:mix
 ## English Quick Start
 Offline desktop game under development. [Download the 0.5.0 preview](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.5.0) for a bundled desktop app. From source: `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. Use `npm test`, `npm run build`, and `npm run dist` for tests and native packaging. Final visual/audio quality and first-player duration acceptance remain pending.
 
-当前main为未发布的0.6.0-dev.1，新增原创立体窗户和档案柜细节。本机开发应用另存于 `release/dev-0.6/mac-arm64/末铃点名.app`；公开下载及上述发布验证仍对应0.5.0。
+当前main为尚未公开发布的0.6.0候选版本，新增原创立体窗户和档案柜细节。本机开发应用另存于 `release/dev-0.6/mac-arm64/末铃点名.app`；公开下载及上述发布验证仍对应0.5.0。
 
 0.6中文字体回归：`npm run test:fonts`。构建时校验官方固定字体哈希及源码字符覆盖；界面与场景文字使用同一本地字体。公开0.5安装包尚不含该改动。
 
@@ -75,3 +75,5 @@ Offline desktop game under development. [Download the 0.5.0 preview](https://git
 0.6配乐增加五段随解谜阶段变化的原创乐句与追逐动机。`npm run test:score-reset`检查暂停及普通/追逐中重开后的音符清理；该脚本启动本机Electron，须保持测试窗口可获得焦点。音乐仍为本地合成，自动声学检查不等于主观听感验收。
 
 输入事件回归：`npm run test:pointer-transition` 在实际Electron中连续20次快速打开记录并Esc返回，同时验证正常Esc和最小化仍会暂停。
+
+0.6.0发布验收进行中：正式版本候选应用位于 `release/candidate-0.6/mac-arm64/末铃点名.app`。公开下载仍为0.5.0，新版本构建与下载包验证完成后更新入口。

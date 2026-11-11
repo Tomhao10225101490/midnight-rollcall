@@ -265,3 +265,10 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 正常gh授权重新确认：Tomhao10225101490，账号ID126887862；远端不存在v0.6.0标签，当前公开版本仍0.5.0。
 - package与lock同步0.6.0，25项测试/typecheck通过；新增真实变更范围的RELEASE_NOTES_0.6.0.md。仍为开发预览，未宣称商业音画或首次玩家时长验收。
 - 当前修复版整局78544仍在出口检查点4阶段，不能提前宣称通过。正式版本本机应用单独构建到release/candidate-0.6，不覆盖正在测试的dev-0.6应用。
+
+## 0.6.0 固定源码构建进行中
+- 修复版实际app完整断网路线78544退出0：3次捕获后正常检查点续玩，所有谜题、配乐阶段、铃声出口、最小化结局冻结与胜利通过，HTTP/页面错误均0。保存lighting-full-fixed-0.6.json及日志，先前失败记录保留。
+- 正式0.6.0候选app在release/candidate-0.6/mac-arm64/末铃点名.app；53模块/版本/字体许可检查、启动/鼠标锁定/暂停/移动/设置，以及20次快速记录开关与真实Esc/最小化暂停通过。
+- 固定源码/tag：44290b21ad99b54ea31e6987a2c37fc48cff28c6 / v0.6.0。已提交原生构建43088769893，确认headSha一致；只跟进该run，不重复dispatch：https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43088769893 。
+- 已创建0.6.0草稿预发布，target固定上述SHA；尚未上传或公开包。待五个job成功，再dispatch upload-preview.yml(version=0.6.0, build_run=43088769893, source_sha=上述SHA)，核对manifest/远端资产，下载Mac ZIP实启和完整离线通关、DMG只读挂载检查，再决定公开。
+- 本机GUI测试全部结束，只有上述CI仍在运行。没有新的自动化提醒能力，期间主动汇报。
