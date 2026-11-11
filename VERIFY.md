@@ -379,3 +379,12 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 独立网页ZIP 12403006字节（11ebde9dab72a8586a906af3ac98031b7b4edcb9bd21aaae78c426659e630904），已单独解压并由独立临时HTTP服务在无头Chrome通过启动/菜单/暂停；不是浏览器整局证明。测试服务已关闭。browser-smoke增加可选ROLLCALL_WEB_URL，默认行为不变。
 - 三个文件合并到release/local-0.7，SHA256SUMS.txt实际命令核对全部OK。当前工具环境的C.UTF-8导致Mac Perl shasum报locale错误，使用命令局部LC_ALL=C后通过，不修改系统语言。公开清单docs/LOCAL-ARTIFACTS-0.7.0.md明确本机范围与未签名状态。
 - 本轮GUI、打包和临时HTTP进程均已结束。最近查询43096405685仍status=queued、jobs=[]，pending_deployments=[]；现有v0.7.0草稿assets=[]。继续观察同一运行，不把排队当成失败或新建重复任务。公开Release仍0.6。
+
+## 0.7 服务启动失败与浏览器音频复查
+- 上轮完成本机DMG/ZIP/网页ZIP与Mac ZIP实际通关，属于真实进展。
+- 原生运行43096405685已从queued转为completed/startup_failure，jobs和check_runs均为空，日志不存在。公开运行页显示GitHub自身unexpected error，request ID b9fc18d0-de0f-11f1-822e-58351b86fe07；未提示预算或代码错误。官方status.json当时All Systems Operational。确认终态后用gh run rerun重试同一运行，服务重新排队，随后再次completed/startup_failure，没有执行任何job。当前没有活跃原生构建，不将此状态写成继续排队；待候选修复验证后重新安排构建。
+- 等待期间新增可见Mac Chrome普通键鼠回归。初次窗口未置前导致鼠标锁定未通过；bringToFront后锁定/鼠标观察/正常路线开门读取第一份试卷并获得stage1通过，但从记录立即恢复再Esc暂停，连续2秒观察：playing=false、游戏时间/敌人冻结，音乐AudioContext却仍running，暂停测试失败。不能将旧网页smoke当成音频与存档完整验证。
+- 正在修复异步resume/suspend竞争：新AudioTransport串行执行上下文切换并读取最新目标状态，配乐与音效共同使用；慢速resume后暂停单元测试及typecheck通过，实际Chrome回归13601进行中，尚未宣布修复成功。0.7草稿不发布；本机旧安装包不覆盖，下一候选需重新打包与实测。
+
+- 串行音频切换修复后的可见Chrome回归13601退出0：普通鼠标锁定/观察、键盘开门取得第一份试卷和stage1、暂停游戏/敌人/配乐/音效、800x600设置、全屏、刷新后已获得检查点与视野85保存、静音信号0均通过；无页面错误或外部HTTP请求。报告browser-regression-0.7.json。实际查看browser-record-0.7.png中文记录完整、未裁切。这是源码构建的本地浏览器回归，不是整局。
+- 新增反向异步竞争（慢速suspend期间恢复）及设备请求拒绝后重试检查，31项逻辑测试通过。实际修复后Mac app位于release/audio-fix-0.7，57模块/入口/字体/音乐检查通过。实际音频/静音回归及20次记录开关/真正Esc/最小化检查通过；连续任务25688当前正在正常断网整局，artifacts/audio-fix-full.log，不重复启动。

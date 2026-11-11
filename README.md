@@ -82,3 +82,5 @@ Offline desktop game under development. [Download the 0.6.0 preview](https://git
 0.7候选庭院已在实际桌面应用中正常断网通关，含分叉树木、叶片、铺石、栏杆、长椅与晨光阴影。[实际结局截图](docs/ending-0.7.png)。0.7发布包仍需各平台构建与下载验收，上述公开下载仍为0.6。
 
 本机已实际生成0.7安装包，位于 `release/local-0.7`（DMG、应用ZIP、独立网页ZIP）；[本机大小、SHA256与验证范围](docs/LOCAL-ARTIFACTS-0.7.0.md)。Mac ZIP解压后完整断网通关通过。该目录不提交到源码仓库，0.7远端Release尚未公开，请勿将本机路径当作GitHub下载链接。
+
+可见Chrome输入、音频和存档回归：先保持 `npm run dev` 运行，再执行 `npm run test:browser`。默认使用Mac本机Google Chrome；可通过 `BROWSER_PATH` 指定浏览器可执行文件，`ROLLCALL_WEB_URL`指定本地测试地址（包含`?qa=1`）。它通过正常键鼠完成第一道谜题、检查音频暂停/静音及刷新读档，不代表浏览器整局通关。

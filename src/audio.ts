@@ -1,10 +1,12 @@
+import {AudioTransport} from './audio-transport';
 import{type Effect,synthesize}from './sfx';
+let transport:AudioTransport|undefined;
 let ctx:AudioContext|undefined,master:GainNode,analyser:AnalyserNode,room:ConvolverNode;
 const buffers=new Map<Effect,AudioBuffer>();let stepIndex=0;
 export let volume=.3;
 function context(){
  if(ctx)return ctx;
- const c=ctx=new AudioContext();master=c.createGain();master.gain.value=volume;
+ const c=ctx=new AudioContext();transport=new AudioTransport(c);master=c.createGain();master.gain.value=volume;
  const limiter=c.createDynamicsCompressor();limiter.threshold.value=-12;limiter.knee.value=10;limiter.ratio.value=6;
  analyser=c.createAnalyser();analyser.fftSize=1024;master.connect(limiter).connect(analyser).connect(c.destination);
  room=c.createConvolver();const impulse=c.createBuffer(2,Math.ceil(c.sampleRate*.85),c.sampleRate);let seed=618;
@@ -13,14 +15,14 @@ function context(){
 }
 export function setVolume(v:number){volume=Math.max(0,Math.min(1,v));if(ctx)master.gain.setValueAtTime(volume,ctx.currentTime);if(volume===0)stopSpeech()}
 export function effect(kind:Effect,strength=1,pan=0,muffled=false){
- if(volume===0||strength<=0)return;const c=context();void c.resume();
+ if(volume===0||strength<=0)return;const c=context();void transport!.setRunning(true);
  let buffer=buffers.get(kind);if(!buffer){const samples=synthesize(kind,c.sampleRate);buffer=c.createBuffer(1,samples.length,c.sampleRate);buffer.copyToChannel(samples,0);buffers.set(kind,buffer)}
  const source=c.createBufferSource(),gain=c.createGain(),panner=c.createStereoPanner(),filter=c.createBiquadFilter();source.buffer=buffer;
  if(kind==='step')source.playbackRate.value=++stepIndex%2?1.04:.97;
  gain.gain.value=Math.max(0,Math.min(1,strength));panner.pan.value=Math.max(-1,Math.min(1,pan));filter.type='lowpass';filter.frequency.value=muffled?650:10000;
  source.connect(filter).connect(gain).connect(panner);panner.connect(master);panner.connect(room);source.start();source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();panner.disconnect()};
 }
-export function tone(f=220,d=.15){if(volume===0)return;const c=context();void c.resume();const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.connect(g).connect(master);o.start();o.stop(c.currentTime+d);o.onended=()=>{o.disconnect();g.disconnect()}}
+export function tone(f=220,d=.15){if(volume===0)return;const c=context();void transport!.setRunning(true);const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.connect(g).connect(master);o.start();o.stop(c.currentTime+d);o.onended=()=>{o.disconnect();g.disconnect()}}
 let pendingSpeech:{text:string;expires:number}|null=null;
 let localUtterance:SpeechSynthesisUtterance|null=null;
 function speakLocal(text:string){
@@ -40,6 +42,6 @@ if('speechSynthesis' in window){
 }
 export function broadcast(text:string){stopSpeech();effect('radio');if(!speakLocal(text))pendingSpeech={text,expires:performance.now()+3000}}
 export function stopSpeech(){pendingSpeech=null;localUtterance=null;if('speechSynthesis'in window)speechSynthesis.cancel()}
-export function pauseAudio(){if(ctx)void ctx.suspend();stopSpeech()}
-export function resumeAudio(){if(ctx)void ctx.resume()}
+export function pauseAudio(){void transport?.setRunning(false);stopSpeech()}
+export function resumeAudio(){void transport?.setRunning(true)}
 export function measureEffects(){if(!ctx)return{state:'uninitialized',rms:0,peak:0};const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0,peak=0;for(const value of samples){sum+=value*value;peak=Math.max(peak,Math.abs(value))}return{state:ctx.state,rms:Math.sqrt(sum/samples.length),peak}}
