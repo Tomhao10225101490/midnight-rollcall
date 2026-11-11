@@ -46,6 +46,12 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ inputs.build_run }}
           path: artifacts/release-input
+      - name: Ensure archive inspector
+        run: |
+          if ! command -v 7zz && ! command -v 7z; then
+            sudo apt-get update
+            sudo apt-get install -y 7zip
+          fi
       - run: python3 scripts/verify-downloads.py artifacts/release-input
       - name: Upload only missing, verified assets to draft
         run: python3 scripts/upload-preview.py artifacts/release-input
