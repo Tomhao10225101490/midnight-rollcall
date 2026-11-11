@@ -77,11 +77,4 @@ export function decorate() {
     const moon = new T.PointLight('#9bbecb', 20, 18);
     moon.position.set(8, 2.5, 19);
     scene.add(moon);
-    const key = new T.SpotLight('#e9dbb8', 90, 38, Math.PI / 3, .5, 1.5);
-    key.position.set(0, 3.1, -10);
-    key.target.position.set(0, 0, 4);
-    key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
-    key.shadow.bias = -.001;
-    scene.add(key, key.target);
 }

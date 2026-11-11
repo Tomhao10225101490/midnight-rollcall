@@ -44,7 +44,7 @@ renderer.toneMappingExposure = 1.2;
 const camera = new T.PerspectiveCamera(options.fov, innerWidth / innerHeight, .1, 60);
 const rendering=new Rendering(renderer,scene,camera);rendering.configure(options.ambientOcclusion);
 camera.rotation.order = 'YXZ';const player=new Player(camera);const ending=new Ending();camera.position.set(0,1.65,-19);camera.rotation.y=Math.PI;
-let windowFocused=document.hasFocus();
+let windowFocused=document.hasFocus();let lockPending=false,lockRequest=0;
 let closeOverlay:(()=>void)|null=null;let enemyStride=0;let notes:ClueId[]=[];let doorNoise=0;let enemy = new Enemy(), stage = 0, playing = false, hidden = false, alert = 0, time = 0, sens = options.sensitivity / 1000, last = 0, step = 0;
 const keys = new Set<string>(), ui = document.querySelector<HTMLElement>('#ui')!;
 const defeat=new Defeat(ui,()=>menu('点名未结束','值班人将你带回了座位。已完成的谜题保留在检查点，可继续或重新开始。'));
@@ -60,9 +60,9 @@ function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习
 function settings(back:()=>void=()=>menu()){closeOverlay=back;settingsView(ui,back,()=>{setVolume(options.volume);sens=options.sensitivity/1000;renderer.setPixelRatio(options.quality);rendering.configure(options.ambientOcclusion);camera.fov=options.fov;camera.updateProjectionMatrix()})}
 function announce(text:string){narrative.defer();broadcast(text)}
 function start(s: number,restoredNotes:ClueId[]=[]) { score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; resume(); }
-function resume() { closeOverlay=null;resumeAudio(); score.start(); playing = true; keys.clear(); renderer.domElement.requestPointerLock(); tone(440); }
+function resume() { closeOverlay=null;resumeAudio(); score.start(); playing = true; keys.clear(); const request=++lockRequest;lockPending=true;try{Promise.resolve(renderer.domElement.requestPointerLock()).then(()=>{if(request!==lockRequest)return;lockPending=false;if(playing&&!document.pointerLockElement)pause()},()=>{if(request===lockRequest){lockPending=false;pause()}})}catch{lockPending=false;pause()} tone(440); }
 function pausedMenu(){closeOverlay=resume;ui.innerHTML='<section><h2>暂停</h2><button id="resume">恢复</button><button id="paused-settings">设置 / 操作</button><button id="menu">主菜单</button></section>';ui.querySelector<HTMLButtonElement>('#resume')!.onclick=resume;ui.querySelector<HTMLButtonElement>('#paused-settings')!.onclick=()=>settings(pausedMenu);ui.querySelector<HTMLButtonElement>('#menu')!.onclick=()=>menu()}
-function pause(){if(!playing)return;pauseAudio();score.pause();playing=false;keys.clear();document.exitPointerLock();pausedMenu()}
+function pause(){lockRequest++;lockPending=false;if(!playing)return;pauseAudio();score.pause();playing=false;keys.clear();document.exitPointerLock();pausedMenu()}
 function interact() { const door=nearestDoor(camera.position);if(door){door.set(!door.open);doorNoise=1;effect('door');return} const clue=nearbyClue();if(clue){show(clue.text,()=>{if(!notes.includes(clue.id))notes.push(clue.id);save(stage,notes);resume()});return} const p = points[stage]; if (!p || Math.hypot(camera.position.x - p[0], camera.position.z - p[1]) > 2.4)
     return; if (stage === 0) {
     show(records[1], () => advance());
@@ -86,8 +86,7 @@ addEventListener('keyup', e => keys.delete(e.code));
 function setWindowFocus(focused:boolean){windowFocused=focused;if(!focused){pause();pauseAudio();score.pause()}}
 addEventListener('focus',()=>setWindowFocus(true));addEventListener('blur',()=>setWindowFocus(false));
 const desktopFocus=(window as unknown as {desktopFocus?:{onChange:(callback:(focused:boolean)=>void)=>void}}).desktopFocus;desktopFocus?.onChange(setWindowFocus);
-document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement)
-    pause(); });
+document.addEventListener('pointerlockchange', () => {if(document.pointerLockElement){if(!playing)document.exitPointerLock()}else if(!lockPending)pause()});
 addEventListener('mousemove', e => { if (playing && document.pointerLockElement) {
     camera.rotation.y -= e.movementX * sens;
     camera.rotation.x = T.MathUtils.clamp(camera.rotation.x - e.movementY * sens, -1.4, 1.4);

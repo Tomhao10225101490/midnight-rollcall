@@ -73,3 +73,5 @@ Offline desktop game under development. [Download the 0.5.0 preview](https://git
 字体缺失恢复测试：先保持 `npm run dev` 运行，再执行 `node scripts/font-failure-browser.mjs`。该脚本在Chrome中临时阻止字体请求、验证错误提示，再解除阻止并重试；不修改字体资产。
 
 0.6配乐增加五段随解谜阶段变化的原创乐句与追逐动机。`npm run test:score-reset`检查暂停及普通/追逐中重开后的音符清理；该脚本启动本机Electron，须保持测试窗口可获得焦点。音乐仍为本地合成，自动声学检查不等于主观听感验收。
+
+输入事件回归：`npm run test:pointer-transition` 在实际Electron中连续20次快速打开记录并Esc返回，同时验证正常Esc和最小化仍会暂停。

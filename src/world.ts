@@ -1,3 +1,4 @@
+import{corridorLighting}from './lighting';
 import {schoolDesk} from './furniture';
 import * as T from 'three';
 export const doorBounds=new Set<T.Box3>();
@@ -20,10 +21,6 @@ export function init() { scene.add(new T.HemisphereLight('#b3cfdb', '#30302b', 2
         shell(x, 1.7, z, 8, 3.4, .2, '#61716a', true); for (const x of [-9, -6, 6, 9])
     for (const z of [-17, -14]) {
         {const desk=schoolDesk();desk.position.set(x,0,z);scene.add(desk);walls.push(new T.Box3(new T.Vector3(x-.65,.71,z-.35),new T.Vector3(x+.65,.81,z+.35)));}
-    } for (let z = -18; z < 22; z += 10) {
-    const l = new T.PointLight('#ffdc9f', 15, 12);
-    l.position.set(0, 2.9, z);
-    scene.add(l);
-} }
+    } corridorLighting(scene); }
 export function clear(x: number, z: number,ignoreDoors=false) { return !walls.some(w => !(ignoreDoors&&doorBounds.has(w)) && w.min.y < 1.8 && w.max.y > .1 && x > w.min.x - .3 && x < w.max.x + .3 && z > w.min.z - .3 && z < w.max.z + .3); }
 export function visible(a: T.Vector3, b: T.Vector3) { const d = b.clone().sub(a), ray = new T.Ray(a, d.clone().normalize()); return !walls.some(w => { const hit = ray.intersectBox(w, new T.Vector3()); return hit && hit.distanceTo(a) < d.length(); }); }
