@@ -295,3 +295,12 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 
 - 0.6正式候选app补充检查通过：本地字体断网加载、真实字形、地图及小窗口；音乐/音效信号、静音输出为零；实际离线中文广播压低音乐并恢复。Chrome仅基础启动/菜单/暂停通过，不能当作浏览器整局或主观音质验收。
 - 原生构建43088769893仍活跃：web成功，Windows/Linux构建中，Mac arm64/x64等待runner；不属于已失败或需重启。已启动只读gh run watch，输出artifacts/build-0.6-watch.log。
+
+- CI浏览器静态包已独立下载并检查：midnight-rollcall-0.6.0-web.zip，7708575字节，SHA256 a97196c0651f4c4c0ded9136881d7c0b369b1c0b20b02c16474bb6c3f5102a49；与CI校验文件匹配，53个递归模块及离线字体/许可检查通过，报告artifacts/web-0.6/inspection.json。不等同于全部9包完成验收。
+- 同一原生CI 43088769893：Linux与web已成功，Windows继续打包，Mac任务仍等待runner；只读watch进程97672仍活跃，非失败或阻塞终态。
+
+- 原生构建43088769893终态success，五个job全部成功，headSha仍44290b21ad99b54ea31e6987a2c37fc48cff28c6。只读watch97672退出0。
+- Linux两个实际CI包已下载并独立检查，均版本0.6.0、入口正确、53模块及字体许可通过。tar.gz 134281395字节，SHA256 faf2b09024612dfd39b67dc57b3e965b41e957ff9950b09c9570bc1915159807；AppImage 142088375字节，SHA256 a6cb1cb5a74d0f6dfb6e61fa3ba3994a5b5003f5cdb5ad9ce6ae22f784d043de。报告artifacts/linux-0.6/inspection.json。未实机试玩Linux。
+- 已发起upload-preview.yml，对九个包做内容检查并上传既有草稿；下一步收取该run ID，不重复dispatch，确认终态、独立manifest及远端资产后才下载草稿Mac包验证。
+
+- 包检查/草稿上传run已确认：43089960714，https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43089960714 。下一步跟进该run，并下载verified-preview-manifest到artifacts/verified-0.6.0；随后verify-release.py核对11项远端资产，再下载Mac arm64 DMG/ZIP实际验证。
