@@ -221,3 +221,13 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 最终0.6.0-dev.1实际app整局网络禁用回归20322退出0，3次捕获后正常检查点续玩，全部谜题与胜利通过，HTTP请求0、pageerror0。已另存development-0.6-traverse.json。本轮GUI测试均已结束，0.6仍未公开发布。
 
 下一步：改善跨平台中文字体一致性。官方notofonts/noto-cjk仓库Sans/LICENSE已读取，SIL OFL 1.1允许随软件分发，须保留许可与版权，不能改用MIT。候选原版Sans/SubsetOTF/SC/NotoSansSC-Regular.otf为8331336字节，blob fc0fda9394367c16c1af7555a2ae4d5e2e6a6f02；固定仓库提交f8d157532fbfaeda587e826d4cd5b21a49186f7c。尚未下载或集成。应固定来源/哈希、保留原许可，等待字体加载后再生成画布标牌，并验证全文字覆盖和离线打包。官方许可：https://github.com/notofonts/noto-cjk/blob/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE 。
+
+## 0.6 离线中文字体
+- 从官方notofonts/noto-cjk固定提交f8d157532fbfaeda587e826d4cd5b21a49186f7c取得未修改的NotoSansSC-Regular.otf（8331336字节），Git blob及SHA256均匹配。资产保留SIL OFL 1.1、原字体Adobe版权元数据和来源；第三方字体不归本项目MIT许可。
+- 构建读取字体Unicode cmap，校验当前源码538个非ASCII字符（其中519个汉字）均有字形。UI及画布使用本地RollcallText字体，主场景在字体加载成功后才生成；失败给出中英错误和重试入口。
+- 源码和实际0.6开发app字体测试通过：断网重载、菜单/地图、小窗口退出；73次中文画布绘制均在字体ready后使用RollcallText。CDP实际标题字形报告为Noto Sans SC，isCustomFont=true、glyphCount=4。
+- 设备面板组件1280/800与800×600、提示记录、Chrome基础启动通过。菜单和试卷/黑板诊断图已观察，未见缺字；诊断相机不当作正常路线证据。
+- 包检查增加字体SHA256、OFL、版权、来源和CSS检查，五种缺失文件注入均被拒绝。浏览器实际拦截字体请求后显示错误，解除拦截并点Retry后正常启动。
+- 实际app重新构建在release/dev-0.6/mac-arm64/末铃点名.app，50个递归模块及字体/许可检查通过。完整离线回归44781仍在运行，日志artifacts/fonts-full-0.6.log；完成前不声称本次字体版已整局验证。公开下载仍0.5。
+
+- 字体版实际app完整网络禁用回归44781退出0：3次捕获后正常检查点继续，全部谜题与胜利通过，HTTP请求0、页面错误0；保存fonts-full-0.6.json。全部本轮GUI测试已结束，0.6仍未公开发布。字体失败恢复脚本需先运行npm run dev，再执行node scripts/font-failure-browser.mjs。

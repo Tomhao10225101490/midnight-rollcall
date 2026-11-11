@@ -248,3 +248,13 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 实际开发app完整网络禁用键盘回归20322正在运行，日志artifacts/development-0.6-traverse.log；勿重复启动。公开下载和已下载0.5应用均未覆盖，0.6尚未公开发布。
 
 - 最终0.6.0-dev.1实际app整局网络禁用回归20322退出0，3次捕获后正常检查点续玩，全部谜题与胜利通过，HTTP请求0、pageerror0。已另存development-0.6-traverse.json。本轮GUI测试均已结束，0.6仍未公开发布。
+
+## 0.6 离线中文字体
+- 从官方notofonts/noto-cjk固定提交f8d157532fbfaeda587e826d4cd5b21a49186f7c取得未修改的NotoSansSC-Regular.otf（8331336字节），Git blob及SHA256均匹配。资产保留SIL OFL 1.1、原字体Adobe版权元数据和来源；第三方字体不归本项目MIT许可。
+- 构建读取字体Unicode cmap，校验当前源码538个非ASCII字符（其中519个汉字）均有字形。UI及画布使用本地RollcallText字体，主场景在字体加载成功后才生成；失败给出中英错误和重试入口。
+- 源码和实际0.6开发app字体测试通过：断网重载、菜单/地图、小窗口退出；73次中文画布绘制均在字体ready后使用RollcallText。CDP实际标题字形报告为Noto Sans SC，isCustomFont=true、glyphCount=4。
+- 设备面板组件1280/800与800×600、提示记录、Chrome基础启动通过。菜单和试卷/黑板诊断图已观察，未见缺字；诊断相机不当作正常路线证据。
+- 包检查增加字体SHA256、OFL、版权、来源和CSS检查，五种缺失文件注入均被拒绝。浏览器实际拦截字体请求后显示错误，解除拦截并点Retry后正常启动。
+- 实际app重新构建在release/dev-0.6/mac-arm64/末铃点名.app，50个递归模块及字体/许可检查通过。完整离线回归44781仍在运行，日志artifacts/fonts-full-0.6.log；完成前不声称本次字体版已整局验证。公开下载仍0.5。
+
+- 字体版实际app完整网络禁用回归44781退出0：3次捕获后正常检查点继续，全部谜题与胜利通过，HTTP请求0、页面错误0；保存fonts-full-0.6.json。全部本轮GUI测试已结束，0.6仍未公开发布。字体失败恢复脚本需先运行npm run dev，再执行node scripts/font-failure-browser.mjs。

@@ -13,7 +13,7 @@ function block(g:T.Group,x:number,y:number,z:number,w:number,h:number,d:number,m
 function knob(g:T.Group,x:number,y:number,z:number,r=.04){const m=new T.Mesh(new T.CylinderGeometry(r,r,.035,16),brass);m.rotation.x=Math.PI/2;m.position.set(x,y,z);g.add(m)}
 function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:number,flat=false){
  const c=document.createElement('canvas');c.width=512;c.height=Math.max(128,Math.round(512*h/w));const a=c.getContext('2d')!;
- a.fillStyle='#d3c7a6';a.fillRect(0,0,c.width,c.height);a.fillStyle='#303e37';a.textAlign='center';const pad=Math.min(25,c.height*.1),line=(c.height-pad*2)/text.length;a.textBaseline='middle';a.font=`bold ${Math.min(40,Math.floor(line*.55))}px serif`;text.forEach((t,i)=>a.fillText(t,256,pad+line*(i+.5),460));a.strokeStyle='#8b493b';a.lineWidth=3;a.strokeRect(20,pad/2,472,c.height-pad);
+ a.fillStyle='#d3c7a6';a.fillRect(0,0,c.width,c.height);a.fillStyle='#303e37';a.textAlign='center';const pad=Math.min(25,c.height*.1),line=(c.height-pad*2)/text.length;a.textBaseline='middle';a.font=`bold ${Math.min(40,Math.floor(line*.55))}px RollcallText`;text.forEach((t,i)=>a.fillText(t,256,pad+line*(i+.5),460));a.strokeStyle='#8b493b';a.lineWidth=3;a.strokeRect(20,pad/2,472,c.height-pad);
  const map=new T.CanvasTexture(c);map.colorSpace=T.SRGBColorSpace;map.anisotropy=4;
  const mesh=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,roughness:.9}));mesh.position.set(x,y,z);if(flat)mesh.rotation.x=-Math.PI/2;g.add(mesh);
 }

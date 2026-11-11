@@ -61,9 +61,13 @@ npm run test:mix
 `test:traverse`使用正常键鼠路线、只读观察状态。macOS/Linux shell可用 `ROLLCALL_OFFLINE=1 npm run test:traverse`进行网络禁用回归。`test:mix`需要系统已安装离线中文语音。`npm run test:panels`直接挂载界面组件检查布局和输入，仅为组件验证。
 
 ## 原创与许可
-原创代码MIT。几何、标牌、材质纹理和合成音乐由项目代码生成；不使用下载模型、音频或字体。中文语音只尝试本机离线系统声音，无声音时保留提示音与完整字幕。第三方软件保持各自许可，详见[第三方声明](THIRD_PARTY_NOTICES.md)。无账号系统、后端或遥测。
+原创代码MIT。几何、标牌、材质纹理和合成音乐由项目代码生成；不使用下载模型或音频。0.6开发源码新增离线Noto Sans SC字体，按SIL OFL 1.1单独保留许可、版权与来源。中文语音只尝试本机离线系统声音，无声音时保留提示音与完整字幕。第三方软件保持各自许可，详见[第三方声明](THIRD_PARTY_NOTICES.md)。无账号系统、后端或遥测。
 
 ## English Quick Start
 Offline desktop game under development. [Download the 0.5.0 preview](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.5.0) for a bundled desktop app. From source: `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. Use `npm test`, `npm run build`, and `npm run dist` for tests and native packaging. Final visual/audio quality and first-player duration acceptance remain pending.
 
 当前main为未发布的0.6.0-dev.1，新增原创立体窗户和档案柜细节。本机开发应用另存于 `release/dev-0.6/mac-arm64/末铃点名.app`；公开下载及上述发布验证仍对应0.5.0。
+
+0.6中文字体回归：`npm run test:fonts`。构建时校验官方固定字体哈希及源码字符覆盖；界面与场景文字使用同一本地字体。公开0.5安装包尚不含该改动。
+
+字体缺失恢复测试：先保持 `npm run dev` 运行，再执行 `node scripts/font-failure-browser.mjs`。该脚本在Chrome中临时阻止字体请求、验证错误提示，再解除阻止并重试；不修改字体资产。

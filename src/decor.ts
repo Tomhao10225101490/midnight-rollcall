@@ -20,9 +20,9 @@ export function decorate() {
         const canvas=document.createElement('canvas');canvas.width=1536;canvas.height=384;const ink=canvas.getContext('2d')!;
         ink.fillStyle='#19372e';ink.fillRect(0,0,1536,384);let chalkSeed=731;
         for(let i=0;i<16000;i++){chalkSeed=(Math.imul(chalkSeed,1664525)+1013904223)>>>0;const px=chalkSeed%1536;chalkSeed=(Math.imul(chalkSeed,1664525)+1013904223)>>>0;ink.fillStyle=i%3?'rgba(215,224,198,.025)':'rgba(0,0,0,.08)';ink.fillRect(px,chalkSeed%384,2,1)}
-        ink.fillStyle='#d6d9ba';ink.font='44px serif';ink.fillText(x<0?'晚自习 · 离校复核':'高三二班 · 考场安排',75,80);ink.fillStyle='#aabbaa';ink.font='28px serif';
+        ink.fillStyle='#d6d9ba';ink.font='44px RollcallText';ink.fillText(x<0?'晚自习 · 离校复核':'高三二班 · 考场安排',75,80);ink.fillStyle='#aabbaa';ink.font='28px RollcallText';
         (x<0?['一、检查遗留试卷，核对座次','二、保持安静，等待校铃','三、不要替缺席的人应答']:['座次表已放在讲台上','请按科目核对分数与座号','应到：一人    实到：——']).forEach((line,i)=>ink.fillText(line,85,155+i*62));
-        ink.fillStyle='#a9b7a4';ink.fillRect(999,45,2,290);ink.font='32px serif';ink.fillText('值日记录',1080,90);ink.font='25px serif';ink.fillText('日期：未填写',1060,165);ink.fillText('擦净姓名栏',1060,225);
+        ink.fillStyle='#a9b7a4';ink.fillRect(999,45,2,290);ink.font='32px RollcallText';ink.fillText('值日记录',1080,90);ink.font='25px RollcallText';ink.fillText('日期：未填写',1060,165);ink.fillText('擦净姓名栏',1060,225);
         const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;const board=new T.Mesh(new T.PlaneGeometry(5.9,1.45),new T.MeshStandardMaterial({map:texture,roughness:.96}));board.position.set(x,1.9,-21.64);scene.add(board);
         for(const dx of [-3.04,3.04])box(x+dx,1.9,-21.62,.08,1.62,.08,'#514a3c');for(const y of [1.1,2.7])box(x,y,-21.62,6.16,.08,.08,'#514a3c');box(x,1.1,-21.52,6.1,.06,.22,'#514a3c');
         box(x+.8,1.15,-21.5,.2,.035,.08,'#c9bea0');box(x+1.2,1.15,-21.5,.12,.025,.03,'#d6cfb8');

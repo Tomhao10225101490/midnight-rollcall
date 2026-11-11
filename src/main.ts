@@ -1,3 +1,4 @@
+import{prepareTypography}from './typography';
 import {Defeat,threatCue} from './feedback';
 import {codePanel,circuitPanel} from './puzzle-ui';
 import {architecturalDetails} from './architecture';
@@ -27,6 +28,7 @@ import { scene, init, clear, visible, box, label, walls } from './world';
 import { Enemy } from './enemy';
 import { read, save } from './save';
 import { tone, effect, measureEffects, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
+await prepareTypography();
 init();
 decorate();props();initDoors();architecturalDetails(scene,walls);
 upgradeMaterials(scene);batchStaticBoxes(scene);

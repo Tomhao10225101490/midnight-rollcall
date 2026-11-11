@@ -15,6 +15,13 @@ def archive_asar(archive):
 def inspect_modules(read):
  """Follow shipped static ESM imports; missing transitive addons must fail a release."""
  html=read('index.html').decode('utf-8');assert './main.js' in html
+ css=read('style.css').decode('utf-8')
+ if 'NotoSansSC-Regular.otf' in css or b'prepareTypography' in read('main.js'):
+  assert '@font-face' in css and 'NotoSansSC-Regular.otf' in css and 'RollcallText' in css,'Font stylesheet missing'
+  assert hashlib.sha256(read('fonts/NotoSansSC-Regular.otf')).hexdigest()=='faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9','Font missing or changed'
+  assert b'SIL OPEN FONT LICENSE Version 1.1' in read('licenses/NOTO-OFL.txt'),'Font license missing'
+  assert b'2014-2021 Adobe' in read('licenses/NOTO-COPYRIGHT.txt'),'Font copyright missing'
+  assert b'f8d157532fbfaeda587e826d4cd5b21a49186f7c' in read('licenses/NOTO-SOURCE.md'),'Font provenance missing'
  checked=set()
  def visit(name):
   assert not name.startswith(('../','/')),name
