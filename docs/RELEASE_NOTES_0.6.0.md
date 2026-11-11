@@ -14,4 +14,8 @@ Mac 选 arm64（M 系列）或 x64（Intel）的 DMG/ZIP；Windows 选安装或�
 
 应用未提供开发者签名与苹果公证。核实来源及 SHA256 后，按项目 [安装说明](https://github.com/Tomhao10225101490/midnight-rollcall/blob/main/docs/INSTALL.md)允许单个可信应用运行，不关闭全局系统保护。
 
-验证状态：发布验收进行中。构建、包内容、实际下载试玩与校验结果将在公开前补充；此文件目前不代表跨平台包已发布。Windows/Linux/macOS Intel 若仅通过对应系统 CI，会明确标为“构建与包检查通过、未实机试玩”。自动声学测试不等于主观听感评审。
+发布验收：五个原生/静态构建job成功，九个包核对内部版本、入口、53个递归运行模块及字体许可；11项远端资产大小及SHA256与独立CI清单一致。实际下载的Mac arm64 ZIP应用完整断网键鼠通关，3次捕获后正常检查点续玩，HTTP请求和页面错误均为0；启动、输入、设置、快速记录开关及DMG只读挂载/安装入口检查通过。
+
+Windows/Linux/macOS Intel仅对应系统CI构建与包内容检查通过，未实机试玩。浏览器版仅基础启动、菜单、暂停和实际ZIP检查，未整局试玩。自动声学检查不等于主观听感评审，20—30分钟首次玩家时长仍未实测。
+
+固定源码：44290b21ad99b54ea31e6987a2c37fc48cff28c6。[原生构建](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43088769893)，[包检查与上传](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43089960714)。每个包的实际大小与SHA256见Release中的ARTIFACTS-0.6.0.md和SHA256SUMS.txt。

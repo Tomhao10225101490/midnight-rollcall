@@ -310,3 +310,8 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 从草稿实际下载Mac arm64 DMG/ZIP到release/downloads-0.6.0；本地大小和SHA256匹配独立CI清单。ZIP解到artifacts/downloaded-0.6.0/末铃点名.app，真实启动/鼠标锁定/暂停/移动/设置、20次快速开关记录与Esc/最小化暂停通过。已观察下载app的实际画面。
 - DMG只读挂载，版本0.6.0、可执行入口与/Applications链接检查通过，正常卸载。报告artifacts/dmg-0.6-inspection.json。
 - 实际下载app完整断网键鼠路线1689仍在运行，输出artifacts/downloaded-0.6-full.log；不要重复启动，尚未宣称本次下载包完整通关。下一步收取终态并另存traverse-result.json；通过后完善release notes/docs真实矩阵，再公开草稿并重新verify-release。否则先修复。
+
+## 0.6.0 已公开
+- 实际下载ZIP应用完整断网键鼠路线1689退出0：3次捕获后正常检查点续玩，全部谜题/配乐阶段/出口与胜利通过，HTTP及页面错误均0。独立保存artifacts/downloaded-0.6-full.json及日志。
+- Release已公开：https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.6.0 。公开后verify-release再次核对11项远端资产与固定源提交，isDraft=false、verified=true。
+- README、FINAL_REPORT、docs/ARTIFACTS-0.6.0.md及实际下载app截图已同步。所有本机GUI、构建、上传任务均已结束。下一步仍为商业级音画与独立首次玩家体验；整体目标未完成，0.6是可下载离线玩的开发预览。
