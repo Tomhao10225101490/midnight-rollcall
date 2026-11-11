@@ -1,5 +1,5 @@
-import pathlib,hashlib,json,zipfile,tarfile
-root=pathlib.Path('artifacts/ci-78203cf');results=[]
+import pathlib,hashlib,json,zipfile,tarfile,sys
+root=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'artifacts/ci-78203cf');results=[]
 for sums in root.glob('*/SHA256SUMS.txt'):
  for line in sums.read_text().splitlines():
   expected,name=line.split('  ',1);p=sums.parent/name
@@ -17,4 +17,4 @@ for sums in root.glob('*/SHA256SUMS.txt'):
    with tarfile.open(p,'r:gz') as t:r['containsAppAsar']=any(x.name.endswith('resources/app.asar')for x in t)
    assert r['containsAppAsar']
   results.append(r)
-pathlib.Path('artifacts/verified-ci-packages.json').write_text(json.dumps(results,indent=2));print(json.dumps(results,indent=2))
+(root/'verified-packages.json').write_text(json.dumps(results,indent=2));print(json.dumps(results,indent=2))
