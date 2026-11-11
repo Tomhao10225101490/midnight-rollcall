@@ -1,3 +1,4 @@
+import {codePanel,circuitPanel} from './puzzle-ui';
 import {architecturalDetails} from './architecture';
 import {Narrative} from './narrative';
 const narrative=new Narrative();
@@ -13,7 +14,7 @@ import{initDoors,nearestDoor,resetDoors}from './doors';
 import {Ending} from './ending';
 import {props} from './props';
 import {Player} from './player';
-import {circuitLabels,circuitClue,circuitSolved,records} from './puzzles';
+import {circuitClue,records} from './puzzles';
 import { Score } from './score';
 import { upgradeMaterials } from './materials';
 const score = new Score();
@@ -61,36 +62,19 @@ function interact() { const door=nearestDoor(camera.position);if(door){door.set(
     return; if (stage === 0) {
     show(records[1], () => advance());
     return;
-} if (stage === 1 || stage === 2) {
-    score.pause();
-    playing = false;
-    document.exitPointerLock();
-    const code = stage === 1 ? '618' : '731';
-    ui.innerHTML = `<section><h2>${stage === 1 ? '档案柜密码' : '广播频率'}</h2><input id="code" maxlength="3" aria-label="密码"><button id="ok">确认</button><button id="cancel">离开</button><p id="error"></p></section>`;
-    document.querySelector<HTMLElement>('#ok')!.onclick = () => { if ((document.querySelector<HTMLElement>('#code') as HTMLInputElement).value === code) {
-        if (stage === 1)
-            show(records[2], advance);
-        else
-            show(circuitClue, advance);
-    }
-    else
-        document.querySelector<HTMLElement>('#error')!.textContent = '不正确，请核对试卷或档案。'; };
-    document.querySelector<HTMLElement>('#cancel')!.onclick = resume;
-    return;
+ } if (stage === 1 || stage === 2) {
+    score.pause();pauseAudio();playing=false;closeOverlay=resume;document.exitPointerLock();
+    codePanel(ui,stage===1?'archive':'radio',()=>show(stage===1?records[2]:circuitClue,advance),resume);return;
 } if (stage === 3) {
-    score.pause(); playing=false; document.exitPointerLock(); const bits=[false,false,false,false];
-    ui.innerHTML=`<section><h2>侧门配电箱</h2><p>${circuitClue}</p><div id="breakers"></div><p id="error">合闸前核对广播记录。</p><button id="power">检查并领取通行证</button><button id="cancel">暂时离开</button></section>`;
-    const redraw=()=>{document.querySelector<HTMLElement>('#breakers')!.innerHTML=circuitLabels.map((n,i)=>`<button data-breaker="${i}" aria-pressed="${bits[i]}">${n}：${bits[i]?'通电':'断开'}</button>`).join('');document.querySelectorAll<HTMLButtonElement>('[data-breaker]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.breaker);bits[i]=!bits[i];tone(bits[i]?350:170);redraw()})};redraw();
-    document.querySelector<HTMLElement>('#power')!.onclick=()=>{if(circuitSolved(bits))advance();else{tone(90,.3);document.querySelector<HTMLElement>('#error')!.textContent='回路仍不正确：照明和门锁需要电源，点名和循环铃线必须断开。'}};
-    document.querySelector<HTMLElement>('#cancel')!.onclick=resume; return;
+    score.pause();pauseAudio();playing=false;closeOverlay=resume;document.exitPointerLock();circuitPanel(ui,advance,resume);return;
 } if (stage === 4) {
     if (time % 60 < 12) {ending.begin(camera);menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');broadcast('本次点名结束。你的名字，已从名单中划去。');}
     return;
 } advance(); }
 function advance() { stage++; save(stage,notes); tone(660, .4); resume(); }
-function show(text: string, next: () => void) { narrative.clearSubtitle();score.pause(); announce(text); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h2>校园记录</h2><p>${text}</p><button id="ok">记下并继续</button></section>`; document.querySelector<HTMLElement>('#ok')!.onclick = next; }
+function show(text: string, next: () => void) { closeOverlay=next;narrative.clearSubtitle();score.pause(); announce(text); playing = false; document.exitPointerLock(); ui.innerHTML = `<section class="record-panel"><div class="record-stamp">昭川中学 · 留存件</div><h2>校园记录</h2><p>${text}</p><button id="ok">记下并继续</button></section>`; document.querySelector<HTMLElement>('#ok')!.onclick = next; }
 function notebook(){pauseAudio();score.pause();playing=false;document.exitPointerLock();closeOverlay=resume;notebookView(ui,stage,notes,resume,narrative.records)}
-addEventListener('keydown', e => {if(playing&&e.code.startsWith('Arrow'))e.preventDefault(); if(playing&&!e.repeat&&e.code==='KeyJ')notebook(); if (['Control', ' '].includes(e.key))
+addEventListener('keydown', e => {if(playing&&e.code.startsWith('Arrow'))e.preventDefault(); if(playing&&!e.repeat&&e.code==='KeyJ')notebook(); if (playing && ['Control', ' '].includes(e.key))
     e.preventDefault(); keys.add(e.code); if(e.code==='Escape'){e.preventDefault();if(closeOverlay)closeOverlay();else pause()} if (playing && !e.repeat && e.code === 'KeyE')
     interact(); if(playing&&!e.repeat&&e.code==='KeyH'){if(hidden){hidingSpot.leave(camera);hidden=false;effect('door',.3)}else if(hidingSpot.enter(camera)){hidden=true;effect('door',.3)}} });
 addEventListener('keyup', e => keys.delete(e.code));
