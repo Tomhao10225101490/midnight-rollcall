@@ -1,3 +1,5 @@
+import{station}from './stations';
+import{hintSteps}from './hints';
 import{initDoors,nearestDoor,resetDoors}from './doors';
 import {Ending} from './ending';
 import {props} from './props';
@@ -32,7 +34,7 @@ let doorNoise=0;let enemy = new Enemy(), stage = 0, playing = false, hidden = fa
 const keys = new Set<string>(), ui = document.querySelector<HTMLElement>('#ui')!;
 const names = ['阅读一班试卷', '打开办公室档案柜', '校准广播频率', '修复侧门配电并领取通行证', '趁铃声离开出口'];
 const points = [[-8, -19], [-8, -8], [-8, 3], [-8, 13], [8, 18]];
-points.forEach((p, i) => { box(p[0], .7, p[1], 1, 1.4, 1, i === 4 ? '#596c56' : '#b29156'); label(['试卷：按分数从低到高排列 语文3 数学1 英语2', '档案柜：输入学科顺序（数学英语语文）', '广播台：档案写着频率 731', '通行证：完成广播后领取', '校门：铃响期间开放'][i], p[0], p[1] - .6); });
+points.forEach((p, i) => { station(i,p[0],p[1]); label(['补考遗留试卷', '年级档案柜', '校园广播控制台', '侧门配电与通行证', '校门 · 铃响时开放'][i], p[0], p[1] - .6); });
 box(8, 1, -7, 2, 2, 1, '#40535a');
 label('藏身柜 H · 被目击藏入会被搜查', 8, -8);
 function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => start(read()?.stage || 0); document.querySelector<HTMLElement>('#settings')!.onclick = settings; document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
@@ -73,7 +75,7 @@ function interact() { const door=nearestDoor(camera.position);if(door){door.set(
 } advance(); }
 function advance() { stage++; save(stage); tone(660, .4); resume(); }
 function show(text: string, next: () => void) { score.pause(); broadcast(text); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h2>校园记录</h2><p>${text}</p><button id="ok">记下并继续</button></section>`; document.querySelector<HTMLElement>('#ok')!.onclick = next; }
-function notebook(){show(records.slice(0,stage+1).join('\n\n'),resume)}
+function notebook(){let level=0;show(records.slice(0,stage+1).join('\n\n'),resume);const section=document.querySelector<HTMLElement>('section')!;const hint=document.createElement('p');const button=document.createElement('button');button.textContent='需要一点提示';button.onclick=()=>{hint.textContent=hintSteps[stage][Math.min(level++,2)];button.textContent=level>=3?'显示完整提示':'再具体一点'};section.append(button,hint)}
 addEventListener('keydown', e => { if(playing&&!e.repeat&&e.code==='KeyJ')notebook(); if (['Control', ' '].includes(e.key))
     e.preventDefault(); keys.add(e.code); if (e.code === 'Escape')
     pause(); if (playing && !e.repeat && e.code === 'KeyE')
@@ -103,7 +105,7 @@ function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((
         menu('点名未结束', '值班人将你带回了座位。可继续检查点或重新开始。');
     }
     else
-        ui.innerHTML = `<div class="hud">末铃点名 · ${names[stage]}<br>纪律 ${Math.round(alert)} · ${time % 60 < 12 ? '铃响：侧门开放' : '下次铃声 ' + Math.ceil(60 - time % 60) + '秒'}<br>随身记录：${['空', '已记下试卷', '频率档案', '广播已解除', '侧门通行证'][stage]}<br>${hidden ? (enemy.sawHide?'藏身被目击！值班人正在搜查 · H 离开':'已藏身 · H 离开') : ''}</div><div class="cross">·</div><div class="bottom">${stage === 0 ? '广播：请到一班检查遗留试卷。' : stage === 1 ? '线索：数学1 英语2 语文3；办公室在一班北侧。' : stage === 2 ? '档案记录：广播频率731。' : stage === 3 ? '广播：空白名单已接收，领取侧门通行证。' : '等铃声响起，前往东侧出口。'}<br>${Math.hypot(camera.position.x - points[stage][0], camera.position.z - points[stage][1]) < 2.4 ? '【E】' + names[stage] : nearestDoor(camera.position)?'【E】'+(nearestDoor(camera.position)!.open?'关门（会发出声音）':'开门（会发出声音）'):'寻找金色任务台'} · H 储物间躲藏 · J 线索记录</div>`;
+        ui.innerHTML = `<div class="hud">末铃点名 · ${names[stage]}<br>纪律 ${Math.round(alert)} · ${time % 60 < 12 ? '铃响：侧门开放' : '下次铃声 ' + Math.ceil(60 - time % 60) + '秒'}<br>随身记录：${['空', '已记下试卷', '频率档案', '广播已解除', '侧门通行证'][stage]}<br>${hidden ? (enemy.sawHide?'藏身被目击！值班人正在搜查 · H 离开':'已藏身 · H 离开') : ''}</div><div class="cross">·</div><div class="bottom">${stage === 0 ? '广播：请到一班检查遗留试卷。' : stage === 1 ? '试卷已收好。办公室在一班北侧；J键回看线索。' : stage === 2 ? '档案已收好。到广播室恢复空白名单；J键回看线索。' : stage === 3 ? '广播：空白名单已接收，领取侧门通行证。' : '等铃声响起，前往东侧出口。'}<br>${Math.hypot(camera.position.x - points[stage][0], camera.position.z - points[stage][1]) < 2.4 ? '【E】' + names[stage] : nearestDoor(camera.position)?'【E】'+(nearestDoor(camera.position)!.open?'关门（会发出声音）':'开门（会发出声音）'):'靠近设备查看互动提示'} · H 储物间躲藏 · J 线索记录</div>`;
 } renderer.render(scene, camera); }
 menu();
 requestAnimationFrame(frame);

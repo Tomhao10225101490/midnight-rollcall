@@ -1,0 +1,10 @@
+import{_electron as electron}from '@playwright/test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const app=await electron.launch({executablePath:'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron',args:['.'],env:{...process.env,ROLLCALL_QA:'1'}});
+try{const page=await app.firstWindow();await page.getByRole('button',{name:'新游戏',exact:true}).click();
+ const surfaces=await page.evaluate(async()=>{const {scene}=await import('./world.js');const data=[];scene.traverse(o=>{const m=o.material;if(m?.isMeshStandardMaterial)data.push({image:m.map?.image?{width:m.map.image.width,height:m.map.image.height}:null,metalness:m.metalness,roughness:m.roughness,bump:m.bumpScale})});return data});
+ assert.equal(surfaces.filter(m=>m.image?.width===512&&m.image?.height===640).length,3,'all three original notice canvases remain');assert.ok(surfaces.some(m=>m.metalness===.65&&m.roughness===.4),'brass retains authored metal response');assert.ok(surfaces.some(m=>m.bump===.008),'wood surface present');
+ await page.keyboard.down('w');await page.waitForTimeout(3600);await page.keyboard.up('w');await page.keyboard.down('d');await page.waitForTimeout(750);await page.keyboard.up('d');
+ // Pointer-lock mouse movement rotates the real player view; no camera teleport.
+ const before=await page.evaluate(()=>window.rollcallQA.yaw);const viewport=await page.evaluate(()=>({w:innerWidth,h:innerHeight}));await app.evaluate(({BrowserWindow},v)=>BrowserWindow.getAllWindows()[0].webContents.sendInputEvent({type:'mouseMove',x:Math.round(v.w/2)+785,y:Math.round(v.h/2),movementX:785,movementY:0}),viewport);await page.waitForTimeout(250);const after=await page.evaluate(()=>window.rollcallQA.yaw);assert.ok(Math.abs(before-after)>1,'real pointer-lock mouse movement rotates view');
+ fs.mkdirSync('artifacts',{recursive:true});await page.screenshot({path:'artifacts/materials-input.png'});console.log('PASS preserved three notice artworks, brass response and differentiated wood; screenshot via keyboard/mouse');
+}finally{await app.close()}
