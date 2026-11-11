@@ -1,47 +1,48 @@
-# 末铃点名 · 0.3.0开发预览交付报告
+# 末铃点名 · 0.4.0开发预览交付报告
 
-已有可独立离线运行、能够通关的桌面游戏，并已公开发布0.3.0预览。**最终目标仍未完成**：用户要求的高级商业游戏音画品质尚未达到验收，20—30分钟是设计目标，尚无独立首次玩家时长测量。不能把熟知答案的自动路线当成首次游玩体验。
+已有可独立离线运行、能够通关的桌面游戏，0.4.0已公开发布。**完整目标仍未完成**：高级商业游戏音画品质未验收，20—30分钟是设计目标，尚无独立首次玩家时长测量。熟知答案的自动路线不能代表首次体验。
 
-## 游戏内容
-虚构昭川中学的有限教学楼与出口；第一人称行走、奔跑、潜行、互动、躲藏、开关门；值班人巡逻、遮挡感知、听觉、追逐、搜索及目击藏入搜查。铃声影响安全行动与出口，纪律值影响追捕。
+## 游戏与本次变化
+虚构昭川中学包含两间教室、走廊、办公室、广播室、储物间、纪律室、楼梯口和出口。第一人称行走、奔跑、潜行、开门、互动、记录与提示；值班人巡逻、遮挡感知、听觉、追逐、搜索和目击藏入搜查。铃声影响安全行动与出口，纪律值影响追捕。
 
-一班试卷排序与二班登记组成档案密码，办公室与纪律室组合广播频率，广播指引配电，再持通行证趁铃声离开。收集线索能回看并有三级提示。包含胜败、检查点续玩、菜单、暂停、存档校验/迁移、音量/灵敏度/视野/画面精细度/全屏。
+试卷与二班登记组成档案密码，办公室与纪律室组合广播频率，广播指引配电，再持通行证趁铃声离开。包含胜败、重新开始/检查点续玩、中文菜单、暂停、存档校验、音量/灵敏度/视野/画面精细度/全屏。
 
-程序化原创校园及多部件设备、分节角色、PBR材质与静态实例化；原创合成音效和配乐，值班人脚步带方向、距离及隔墙滤波。中文离线语音依赖本机可用声音，提示音与文字始终保留；未导出系统语音资产。
+0.4新增实体柜碰撞与柜内通风缝窥视、限幅观察及原位退出；AI仍能搜查被目击的藏身者。新增原创圆角课桌、开放书斗、钢架课椅与储物柜、粉笔黑板，移除重叠悬空标牌。可关闭的GTAO接触阴影及全部依赖离线打包。拨弦采用本项目阻尼弦波导合成；配乐、音效、材质与几何不含下载素材。中文语音仅调用可用的本机离线声音，必要信息同时显示文字并配提示音。
 
 ## 运行与下载
-- 项目目录：当前仓库 `midnight-rollcall`。
-- 本机可双击：`release/mac-arm64/末铃点名.app`，版本0.3.0；无开发者签名或公证。
-- [GitHub完整源码](https://github.com/Tomhao10225101490/midnight-rollcall)
-- [0.3.0开发预览下载页](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.3.0)
-- 已下载的公开Mac安装包：`release/downloads-0.3.0/`（DMG、应用ZIP及SHA256清单）。
-- [全部9包的真实字节数与SHA256](docs/ARTIFACTS-0.3.0.md)，Release也附带统一SHA256SUMS.txt。
-- 网页试玩未部署。Web静态ZIP可独立构建，作为次要交付，不替代桌面软件。
+- 项目：当前仓库 `midnight-rollcall`。
+- 本机可双击：`release/mac-arm64/末铃点名.app`，版本0.4.0。
+- [完整源码](https://github.com/Tomhao10225101490/midnight-rollcall)
+- [0.4.0实际下载页](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.4.0)
+- 本机已下载的实际Mac DMG/ZIP及校验清单：`release/downloads-0.4.0/`。
+- 下载ZIP解压的实际CI应用：`artifacts/downloaded-0.4.0/末铃点名.app`。
+- [9个包的字节数与SHA256](docs/ARTIFACTS-0.4.0.md)，Release附带统一SHA256SUMS.txt。
+- 网页试玩未部署。独立Web ZIP为次要交付，桌面玩家无需浏览器、Node或网络。
 
 源码运行：`npm ci`、`node node_modules/electron/install.js`、`npm run desktop`。
-验证：`npm run typecheck`、`npm test`、`npm run test:desktop`、`npm run test:settings`、`npm run test:hints`、`npm run test:audio`、`npm run test:regression`、`npm run test:traverse`。
-构建：`npm run dist`；Web ZIP：`npm run dist:web`（构建工具需要Python 3，最终桌面玩家不需要）。
+验证：`npm run typecheck`、`npm test`、`npm run test:desktop`、`npm run test:traverse`、`npm run test:hiding`、`npm run test:rendering`、`npm run test:audio`、`npm run test:settings`、`npm run test:regression`。额外断网测试：`node scripts/offline-electron.mjs`。
+构建：`npm run dist`；静态包：`npm run dist:web`（构建需要Python 3，桌面玩家不需要）。
 
 ## 验证矩阵
-| 平台 | 实际0.3.0产物 | 已验证范围 |
+| 平台 | 0.4.0实际产物 | 已验证范围 |
 |---|---|---|
-| macOS Apple Silicon | DMG、应用ZIP；本机.app | 本机修复版.app完整键盘通关，3次被捕与正常续玩；设置/笔记操作验证；CI包内部检查；公开下载ZIP应用启动、输入/设置及DMG只读挂载验证 |
-| macOS Intel | DMG、应用ZIP | macOS runner构建通过、内容/哈希检查；未实机试玩 |
-| Windows x64 | 安装EXE、便携EXE | Windows runner构建通过，两个EXE内层资源/入口/版本检查；未实机试玩 |
-| Linux x64 | AppImage、tar.gz | Linux runner构建通过，两个包内资源/入口/版本检查；未实机试玩 |
-| Web | 静态ZIP | 构建与入口检查；0.3.0本机Chrome启动、菜单、游戏和暂停通过，未整局浏览器试玩 |
+| macOS Apple Silicon | DMG、应用ZIP；本机.app | 本机正式app完整键盘通关，3次被捕后正常续玩；柜内操作与断网重载通过。下载的CI ZIP应用启动、输入、设置、暂停与断网检查通过；DMG只读挂载、版本/可执行入口/Applications链接通过，已卸载 |
+| macOS Intel | DMG、应用ZIP | macOS runner构建、内部版本/入口/41模块及哈希检查；未实机试玩 |
+| Windows x64 | 安装EXE、便携EXE | Windows runner构建、两个EXE内层资源/入口/版本/41模块检查；未实机试玩 |
+| Linux x64 | AppImage、tar.gz | Linux runner构建、资源/入口/版本/41模块检查；未实机试玩 |
+| Web | 静态ZIP | 构建与41模块检查；本机Chrome启动、菜单、游戏和暂停通过，未整局浏览器试玩 |
 
-发布源提交：`c69d775b365d7afb3f88e4c74972865019b044b3`。
-原生构建：[run43065138766](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43065138766)，全部5个job成功。
-检查与转存：[run43066389031](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43066389031)，9个包逐个检查app.asar或Web入口，再上传到草稿。公开前远端11项资产（9包+2清单）的大小和SHA256全部匹配，源提交一致。
+发布源：`5301ad6e46c01790915590df84dfd70f1cdf3f50`。
+原生构建：[43070739511](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43070739511)，全部5个job成功。
+包内检查与转存：[43071428344](https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43071428344)，成功。公开前后均独立核对远端11项资产（9包+2清单）大小、SHA256及固定源提交一致。两份实际下载Mac包哈希匹配。
 
-15项逻辑测试与类型检查通过。最新新增回归证明合法外墙边缘目标可以被追到，以及铃声期间藏入不会被追溯误判。完整键盘通关使用只读QA观察坐标，未瞬移、无敌或注入物品。设置测试验证FOV及2倍采样真正应用、重载保存、暂停返回、笔记Esc关闭；中文截图已检查。
+18项逻辑测试和类型检查通过。完整键盘测试使用只读QA观察坐标，没有瞬移、无敌或注入物品。断网测试覆盖重载、资源、移动、音频上下文和暂停，HTTP请求为零；不是整局断网通关。音频信号、静音与波形测试不代表主观听感验收。
 
-静态实例化后，同一走廊绘制调用895→555；8次重开后319几何资源/42纹理稳定，短时120帧约60.26fps。不是所有设备或整局最低帧率保证。音频信号/暂停/静音验证不代表主观听感质量认证。诊断相机近景用于美术检查，不充当普通玩家截图。
+家具版本走廊短时120帧/2000ms约60FPS；8次重开资源稳定。此性能数据早于实体柜改动，不是发布版本整局或所有设备的最低帧率保证。README截图来自实际下载应用；诊断相机近景不充当普通玩家通关证据。
 
-## 未完成与真实限制
-- 高级商业游戏级美术、建模、音乐仍需完善与体验评价，目前为程序化独立游戏风格。
-- 20—30分钟首次游玩目标未实测，需要继续完善探索节奏并进行独立玩家体验测试。
-- Windows/Linux/Intel Mac缺少本次实体设备试玩，已明确限定为构建与包内容检查。
-- 未提供代码签名、公证证书；不会伪造。使用官方单应用确认方式，见[安装说明](docs/INSTALL.md)，不关闭全局安全保护。
-- 原创代码MIT；第三方软件保留自身许可，见THIRD_PARTY_NOTICES.md。没有购买资产、付费API、云主机、域名或加入遥测。
+## 未完成与限制
+- 高级商业游戏级建模、美术、音乐仍需提升与体验评价。
+- 20—30分钟首次游玩目标未实测，需要继续完善探索节奏及独立玩家体验测试。
+- Windows/Linux/Intel Mac未实机试玩；公开下载Mac应用仅上述范围检查，完整通关验证使用本机同源构建。
+- 无开发者代码签名或苹果公证证书，不能保证无系统提示。参见[安装说明](docs/INSTALL.md)，不关闭全局安全保护。
+- 原创代码MIT，第三方软件保留许可，见THIRD_PARTY_NOTICES.md。无付费API、购买素材、云主机、域名、账号系统、遥测或后端。

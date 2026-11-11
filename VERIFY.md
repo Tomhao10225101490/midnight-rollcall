@@ -153,3 +153,13 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - app.asar实际检查0.4.0-dev.1入口/41模块通过；递归校验器对缺失间接shader正确拒绝，对已下载0.3原包25模块通过。
 
 - 最新真实0.4打包app的hiding-electron检查PASS；32880已正常结束。当前没有活跃GUI测试。
+
+## 正式0.4.0发布前验证
+- 固定源5301ad6e46c01790915590df84dfd70f1cdf3f50，18项测试与typecheck通过。
+- 该版本本机打包app完整键盘通关通过，3次被捕/正常检查点续玩；柜内操作回归与禁用网络重载检查通过，HTTP请求为零。不是声称完整整局断网测试或主观听感验收。
+- Chrome WebGL启动、菜单、游戏、暂停通过；未整局浏览器试玩。
+- native CI43070739511最终success，mac-arm64/mac-x64/Windows/Linux/Web全部5个job成功。下一步逐包内部与哈希检查、上传草稿，尚未公开。
+
+- v0.4.0已公开（非草稿、prerelease），链接https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.4.0 。发布后11资产/源SHA复核仍通过。
+- 实际下载Mac DMG/ZIP校验通过，ZIP应用启动与断网检查通过；DMG只读挂载0.4.0/入口/Applications链接通过，已正常卸载。所有下载/GUI/挂载会话已正常结束。
+- README/FINAL_REPORT/ARTIFACTS-0.4.0已更新，截图来自实际下载应用。整体目标保持未完成，高级音画与首次20—30分钟未验收。
