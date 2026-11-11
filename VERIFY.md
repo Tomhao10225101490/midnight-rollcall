@@ -124,3 +124,9 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 发布检查增强：借助7-Zip解包DMG、NSIS安装/便携EXE内层app-64.7z、AppImage；ZIP/tar通过标准库读取。直接解析app.asar，确认package版本、Electron入口、核心游戏模块和许可内容，而非只检查文件名。增强脚本已对已下载的0.2.0全部9包实际执行并通过（包括两个Windows EXE、两种Mac DMG/ZIP与Linux两种包）；此证据不冒充0.3.0内容检查。
 修复后源码session73466完整通关通过，3次正常捕获后继续。实际修复版app的77983仍运行，已到最终检查点4。
 修复候选实际0.3.0 `.app`（不是源码开发模式）完整键盘通关已通过，session77983，3次真实捕获后正常检查点继续，包含新增线索和笔记回看，无状态注入。
+
+## 0.3.0实际公开发布与下载
+修复源c69d775的原生CI run43065138766全部5个job成功；转存run43066389031成功，增强脚本对9包实际解包检查了版本/入口/核心资源。
+下载该转存任务的verified-preview-manifest到artifacts/verified-0.3.0；运行verify-release.py核对远端9包+2清单全部11项大小与SHA256，以及精确源提交，全部匹配。随后草稿公开为预发布，gh确认isDraft=false、isPrerelease=true，真实地址：https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.3.0 。
+从公开Release下载arm64 DMG与ZIP到release/downloads-0.3.0，实际SHA256匹配。解压后的ZIP应用实际启动并通过菜单、鼠标锁定、移动、暂停恢复和设置保存。DMG用hdiutil只读挂载，确认0.3.0、可执行入口、Applications符号链接，然后已正常卸载。不是对Gatekeeper首次用户提示的保证。
+0.3.0当前静态构建另用本机Chrome运行，菜单/进入游戏/暂停通过；未宣称浏览器整局通关。README截图替换为本次公开下载的Electron应用实机截图。

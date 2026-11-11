@@ -3,10 +3,10 @@
 
 ![桌面实机运行截图](docs/desktop.png)
 
-主要交付是离线运行的桌面软件。当前处于开发阶段，尚未完成完整体验和发布验收，也未达到目标的高品质美术音频标准。20—30分钟是设计目标，不是已测游玩时长。
+主要交付是离线运行的桌面软件。当前为可玩开发预览，主流程已通过通关与发布验证；整体美术、音频和首次体验时长仍未达到最终验收。20—30分钟是设计目标，不是已测游玩时长。
 
 ## 本机运行
-本地0.3.0开发快照位于 `release/mac-arm64/末铃点名.app`，可双击启动，不需要Node。`release/`里已有arm64开发版ZIP及DMG，但它们可能落后于源码，暂不作为正式发行包。应用未经开发者签名与苹果公证。
+本机应用位于 `release/mac-arm64/末铃点名.app`，版本0.3.0，可双击启动，不需要Node。公开发布包请从下方Release下载，应用未经开发者签名与苹果公证。
 
 ## 源码开发
 Node.js 22及以上。首次安装：
@@ -36,17 +36,17 @@ WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜�
 恐怖追逐，无血腥，无镜头晃动或刻意闪烁。请先调低音量；出现晕动不适时暂停。
 
 ## 验证与下载
-[下载 v0.2.0 开发预览（GitHub Release）](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.2.0)。桌面包内置运行时，可离线运行，无需安装Node。M系列Mac选arm64；Intel Mac选x64；Windows可选安装版或便携版；Linux可选tar.gz或AppImage。
+[下载 v0.3.0 开发预览（GitHub Release）](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.3.0)。桌面包内置运行时，可离线运行，无需安装Node。M系列Mac选arm64；Intel Mac选x64；Windows可选安装版或便携版；Linux可选tar.gz或AppImage。
 
-这批包对应提交d3e2941。当前源码0.3.0包含新的设备模型、分步提示及跨教室线索链，正在构建新预览，尚未包含在0.2.0下载包内。全部9个包的远端大小与SHA256已逐个匹配，详见[产物清单](docs/ARTIFACTS-0.2.0.md)。应用没有开发者签名/苹果公证，安装方法见[安装说明](docs/INSTALL.md)。
+这批包对应修复后的提交c69d775，包含新设备模型、角色动作、原创音效、跨教室线索、分类笔记、视野与画面设置。全部9个包已检查内部入口/资源/版本，远端大小与SHA256逐个匹配，详见[产物清单](docs/ARTIFACTS-0.3.0.md)。安装方法见[安装说明](docs/INSTALL.md)。
 
-| 平台 | 0.2.0构建 | 试玩范围 |
+| 平台 | 0.3.0构建 | 试玩范围 |
 |---|---|---|
-| macOS arm64 | DMG、应用ZIP | 本机打包应用完整键盘通关；CI下载应用启动及输入验证 |
+| macOS arm64 | DMG、应用ZIP | 本机修复版应用完整通关；公开下载ZIP启动与DMG挂载通过 |
 | macOS x64 | DMG、应用ZIP | 构建通过、未实机试玩 |
 | Windows x64 | 安装EXE、便携EXE | 构建通过、未实机试玩 |
 | Linux x64 | AppImage、tar.gz | 构建通过、未实机试玩 |
-| Web | 静态ZIP | Chrome基础操作测试，未整局试玩 |
+| Web | 静态ZIP | Chrome基础运行、构建及入口检查；未整局试玩 |
 
 [源码仓库](https://github.com/Tomhao10225101490/midnight-rollcall)。网页试玩未部署。
 

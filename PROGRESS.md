@@ -85,3 +85,11 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 77983已结束：修复后的真实0.3.0 app完整通关通过（3次捕获后正常继续）。当前没有前台GUI测试。
 - 新CI43065138766的两种Mac任务已分配runner并进入in_progress，之前仅为正常队列等待；Windows/Linux/Web均已成功。
 - 增加只读远端验收脚本verify-release.py，使用下载的CI检验清单核对全部9包+2清单的大小/SHA256、包内版本/入口和Release源提交。尚待新CI完成及转存后执行。
+
+后续声音资源调研：huayan中文Piper模型卡的数据集许可标为Unknown，因此未下载或加入项目，也不以仓库顶层MIT标识代替数据集授权。来源：https://huggingface.co/rhasspy/piper-voices/blob/main/zh/zh_CN/huayan/medium/MODEL_CARD 。当前继续使用自有合成音效与运行时本地语音，不导出系统语音资产。
+
+## 最新可下载交付（0.3.0）
+- 43065138766、43066389031均success；v0.3.0已公开为开发预览：https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.3.0 。勿再把它当草稿或重复上传。
+- 远端9包+2清单的11项大小/SHA256/精确源c69d775已核对。docs/ARTIFACTS-0.3.0.md含真实字节数和哈希。
+- 本地公开下载DMG/ZIP位于release/downloads-0.3.0；哈希匹配，ZIP app启动输入设置测试成功，DMG挂载入口验证成功且已卸载。当前所有GUI/下载/构建/转存会话已结束。
+- FINAL_REPORT/README已统一至0.3.0事实范围，仍明确高级音画与首次20—30分钟体验未验收，不标记整体目标完成。
