@@ -21,8 +21,25 @@ export function effect(kind:Effect,strength=1,pan=0,muffled=false){
  source.connect(filter).connect(gain).connect(panner);panner.connect(master);panner.connect(room);source.start();source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();panner.disconnect()};
 }
 export function tone(f=220,d=.15){if(volume===0)return;const c=context();void c.resume();const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.connect(g).connect(master);o.start();o.stop(c.currentTime+d);o.onended=()=>{o.disconnect();g.disconnect()}}
-export function broadcast(text:string){effect('radio');if('speechSynthesis'in window){speechSynthesis.cancel();const voice=speechSynthesis.getVoices().find(v=>v.lang.startsWith('zh')&&v.localService);if(voice&&volume>0){const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.82;u.pitch=.75;u.volume=volume;u.voice=voice;speechSynthesis.speak(u)}}}
-export function stopSpeech(){if('speechSynthesis'in window)speechSynthesis.cancel()}
+let pendingSpeech:{text:string;expires:number}|null=null;
+let localUtterance:SpeechSynthesisUtterance|null=null;
+function speakLocal(text:string){
+ if(!('speechSynthesis' in window)||volume===0)return true;
+ const voice=speechSynthesis.getVoices().find(v=>v.lang.startsWith('zh')&&v.localService);
+ if(!voice)return false;
+ const u=localUtterance=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.82;u.pitch=.75;u.volume=volume;u.voice=voice;
+ const clear=()=>{if(localUtterance===u)localUtterance=null};u.onend=clear;u.onerror=clear;speechSynthesis.speak(u);return true;
+}
+if('speechSynthesis' in window){
+ // Warm the platform voice list; first click can arrive before voiceschanged.
+ speechSynthesis.getVoices();speechSynthesis.addEventListener('voiceschanged',()=>{
+  const pending=pendingSpeech;if(!pending)return;
+  if(performance.now()>pending.expires){pendingSpeech=null;return}
+  if(speakLocal(pending.text))pendingSpeech=null;
+ });
+}
+export function broadcast(text:string){stopSpeech();effect('radio');if(!speakLocal(text))pendingSpeech={text,expires:performance.now()+3000}}
+export function stopSpeech(){pendingSpeech=null;localUtterance=null;if('speechSynthesis'in window)speechSynthesis.cancel()}
 export function pauseAudio(){if(ctx)void ctx.suspend();stopSpeech()}
 export function resumeAudio(){if(ctx)void ctx.resume()}
 export function measureEffects(){if(!ctx)return{state:'uninitialized',rms:0,peak:0};const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0,peak=0;for(const value of samples){sum+=value*value;peak=Math.max(peak,Math.abs(value))}return{state:ctx.state,rms:Math.sqrt(sum/samples.length),peak}}

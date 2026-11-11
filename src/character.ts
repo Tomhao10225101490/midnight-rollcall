@@ -1,8 +1,11 @@
 import * as T from 'three';
+import {portraitGeometry,wovenCloth} from './portrait';
 /** Original adult duty proctor. All geometry is authored in metres, facing +Z. */
 export function proctor(){
  const root=new T.Group();
- const cloth=new T.MeshStandardMaterial({color:'#283338',roughness:.92}),seam=new T.MeshStandardMaterial({color:'#465052',roughness:.95}),skin=new T.MeshStandardMaterial({color:'#aa9f88',roughness:.76}),hair=new T.MeshStandardMaterial({color:'#252a29',roughness:.9}),metal=new T.MeshStandardMaterial({color:'#a29b7b',metalness:.7,roughness:.35}),leather=new T.MeshStandardMaterial({color:'#202726',roughness:.5});
+ const cloth=wovenCloth('#283338'),seam=new T.MeshStandardMaterial({color:'#465052',roughness:.95}),skin=new T.MeshStandardMaterial({color:'#b59b83',roughness:.7}),hair=new T.MeshStandardMaterial({color:'#252a29',roughness:.9}),metal=new T.MeshStandardMaterial({color:'#a29b7b',metalness:.7,roughness:.35}),leather=new T.MeshStandardMaterial({color:'#202726',roughness:.5});
+ skin.userData.authoredSurface=true;
+ const eyeWhite=new T.MeshStandardMaterial({color:'#989990',roughness:.65}),iris=new T.MeshStandardMaterial({color:'#292824',roughness:.5});
  const part=(g:T.BufferGeometry,m:T.Material,x:number,y:number,z:number,parent:T.Object3D=root)=>{const mesh=new T.Mesh(g,m);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;parent.add(mesh);return mesh};
  const block=(w:number,h:number,d:number,m:T.Material,x:number,y:number,z:number,parent:T.Object3D=root)=>part(new T.BoxGeometry(w,h,d),m,x,y,z,parent);
  const ellipse=(r:number,sx:number,sy:number,sz:number,m:T.Material,x:number,y:number,z:number,parent:T.Object3D=root)=>{const mesh=part(new T.SphereGeometry(r,24,16),m,x,y,z,parent);mesh.scale.set(sx,sy,sz);return mesh};
@@ -17,14 +20,16 @@ export function proctor(){
  block(.09,.035,.01,metal,-.18,.435,.214);
  // A narrow jaw, ears, nose, brows and wire spectacles define the face without gore.
  const head=new T.Group();head.position.set(0,.99,0);root.add(head);
- const headGeometry=new T.SphereGeometry(1,40,32),vertices=headGeometry.getAttribute('position');
- for(let i=0;i<vertices.count;i++){const x=vertices.getX(i),y=vertices.getY(i),z=vertices.getZ(i),jaw=y<-.1?1+(y+.1)*.22:1;vertices.setXYZ(i,x*.17*jaw,y*.225,z*.169*(y<-.3?.94:1))}headGeometry.computeVertexNormals();part(headGeometry,skin,0,0,0,head);
+ part(portraitGeometry(),skin,0,0,0,head);
  for(const x of [-.17,.17])ellipse(.05,.5,1,.65,skin,x,-.005,0,head);
  const hairGeometry=new T.SphereGeometry(1,40,24,0,Math.PI*2,0,Math.acos(.28)),hairVertices=hairGeometry.getAttribute('position');
  for(let i=0;i<hairVertices.count;i++){hairVertices.setXYZ(i,hairVertices.getX(i)*.174,hairVertices.getY(i)*.23,hairVertices.getZ(i)*.173)}hairGeometry.computeVertexNormals();part(hairGeometry,hair,0,0,0,head);
- ellipse(.032,.68,1.2,1.25,skin,0,-.025,.169,head);ellipse(.022,.55,1.6,.5,skin,0,.015,.165,head);
+ // Eyelid contours sit over the recessed sockets; no detached nose primitives.
+ for(const x of [-.073,.073]){
+  for(const upper of [true,false]){const lid=new T.CatmullRomCurve3([new T.Vector3(x-.02,.018,.157),new T.Vector3(x,upper?.027:.011,.166),new T.Vector3(x+.02,.018,.157)]);part(new T.TubeGeometry(lid,12,.0015,6,false),skin,0,0,0,head)}
+ }
  const mouth=new T.CatmullRomCurve3([new T.Vector3(-.032,-.109,.14),new T.Vector3(0,-.105,.15),new T.Vector3(.032,-.109,.14)]);part(new T.TubeGeometry(mouth,12,.0025,6,false),hair,0,0,0,head);
- for(const x of [-.073,.073]){ellipse(.018,1,.45,.35,hair,x,.018,.16,head);const brow=block(.068,.011,.018,hair,x,.068,.15,head);brow.rotation.z=x>0?.1:-.1;const rim=part(new T.TorusGeometry(.051,.004,8,28),metal,x,.025,.18,head);rim.scale.y=.68;block(.006,.006,.12,metal,x<0?-.129:.129,.026,.12,head)}
+ for(const x of [-.073,.073]){ellipse(.018,1,.4,.35,eyeWhite,x,.018,.16,head);ellipse(.0055,1,1,.45,iris,x,.018,.167,head);const brow=block(.068,.011,.018,hair,x,.068,.165,head);brow.rotation.z=x>0?.1:-.1;const rim=part(new T.TorusGeometry(.051,.004,8,28),metal,x,.025,.18,head);rim.scale.y=.68;block(.006,.006,.12,metal,x<0?-.129:.129,.026,.12,head)}
  block(.044,.005,.006,metal,0,.026,.183,head);
  const hips:T.Group[]=[],knees:T.Group[]=[],arms:T.Group[]=[];
  for(const [i,x]of [-.145,.145].entries()){

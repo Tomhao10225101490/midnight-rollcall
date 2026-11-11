@@ -63,3 +63,5 @@ Offline desktop game under development. Run `npm ci`, `node node_modules/electro
 设备面板独立布局与输入检查：`npm run test:panels`。该脚本直接挂载界面组件，不代表真实玩家通关；完整路线请用 `npm run test:traverse`。
 
 0.5开发版另存于 `release/dev-0.5/mac-arm64/末铃点名.app`，包含空间叙事、设备面板与追捕反馈；不覆盖上面的0.4正式预览包。被捕/窗口失焦回归：`npm run test:defeat`。
+
+人物曲面/织纹与广播时配乐压低已加入0.5开发app；本地语音混音回归：`npm run test:mix`，需系统已安装离线中文语音。高级商业音画与首次玩家20—30分钟体验仍未验收。

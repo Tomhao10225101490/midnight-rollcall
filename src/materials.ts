@@ -24,7 +24,7 @@ export function upgradeMaterials(scene:T.Scene){
   object.castShadow=true;object.receiveShadow=true;
   const materials=Array.isArray(object.material)?object.material:[object.material];
   for(const material of materials){
-   if(!(material instanceof T.MeshStandardMaterial)||material.map)continue;
+   if(!(material instanceof T.MeshStandardMaterial)||material.map||material.userData.authoredSurface)continue;
    // Preserve brass, ceramic and other intentionally authored material responses.
    if(material.metalness>0||material.roughness<.7)continue;
    const color=material.color.getHexString();

@@ -93,7 +93,7 @@ addEventListener('mousemove', e => { if (playing && document.pointerLockElement)
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);rendering.resize(); });
 function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms; defeat.update(dt,windowFocused&&!document.hidden);if(windowFocused&&!document.hidden)ending.update(dt,camera); if (playing) {
     camera.rotation.y+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*dt*1.4;camera.rotation.x=T.MathUtils.clamp(camera.rotation.x+((keys.has('ArrowUp')?1:0)-(keys.has('ArrowDown')?1:0))*dt*1.1,-1.4,1.4);
-    doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage);
+    doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage,'speechSynthesis' in window&&speechSynthesis.speaking);
     const before = time;
     time += dt;
     if (Math.floor(before / 60) !== Math.floor(time / 60)) {
