@@ -71,3 +71,5 @@ Offline desktop game under development. [Download the 0.6.0 preview](https://git
 
 
 字体缺失恢复测试：先保持 `npm run dev` 运行，再执行 `node scripts/font-failure-browser.mjs`。该脚本临时阻止字体请求，检查错误提示后解除阻止并重试。桌面测试须保持窗口可获得焦点。
+
+当前main为0.7.0-dev.1，新增门扇近景细节并修正跨门洞的装饰压条；开发应用单独放在 `release/dev-0.7/mac-arm64/末铃点名.app`。上述下载与发布验收仍对应0.6.0。

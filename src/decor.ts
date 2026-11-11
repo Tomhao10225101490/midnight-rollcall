@@ -12,7 +12,7 @@ export function decorate() {
         box(x,3.05,z,.28,.7,3.1,'#4e5c54',true);
         for(const dz of [-1.55,1.55])box(x,1.55,z+dz,.32,3.1,.12,'#514a3c');
         const sign=label(roomNames[side][i],x+(x<0?.2:-.2),z);sign.rotation.y=x<0?Math.PI/2:-Math.PI/2;sign.position.y=2.93;sign.scale.set(.75,.6,1);
-        box(x<0?-3.82:3.82,.16,z,.08,.3,2.8,'#b8ab7f');
+        box(x,.0375,z,.24,.025,2.8,'#8b8e79');
     }
     // Recognizable, original room furniture; furniture away from doorways.
     for (const x of [-8, 8]) {

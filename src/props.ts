@@ -1,7 +1,7 @@
 import * as T from 'three';import{box,scene}from './world';
 function notice(title:string,lines:string[],color:string,x:number,y:number,z:number,rotation=0){const c=document.createElement('canvas');c.width=512;c.height=640;const a=c.getContext('2d')!;a.fillStyle='#c9bea0';a.fillRect(0,0,512,640);a.strokeStyle=color;a.lineWidth=12;a.strokeRect(20,20,472,600);a.fillStyle=color;a.textAlign='center';a.font='bold 44px RollcallText';a.fillText(title,256,105);a.font='26px RollcallText';lines.forEach((line,i)=>a.fillText(line,256,185+i*65));a.font='20px RollcallText';a.fillText('昭川中学 · 校务档案',256,575);const p=new T.Mesh(new T.PlaneGeometry(1.1,1.4),new T.MeshStandardMaterial({map:new T.CanvasTexture(c),roughness:.9,side:T.DoubleSide}));p.position.set(x,y,z);p.rotation.y=rotation;scene.add(p)}
 export function props(){
- for(const x of [-3.83,3.83]){box(x,1.05,0,.07,.07,43,'#9a9a7f');box(x,.09,0,.09,.18,43,'#293c36')}
+ for(const x of [-3.83,3.83])for(const [from,to]of [[-21.5,-16.6],[-13.4,-6.6],[-3.4,3.4],[6.6,13.4],[16.6,21.5]]){box(x,1.05,(from+to)/2,.07,.07,to-from,'#9a9a7f').name='走廊护墙压条';box(x,.09,(from+to)/2,.09,.18,to-from,'#293c36').name='走廊踢脚线'}
  for(const z of [-20,-10,0,10,20])box(0,3.25,z,7.8,.25,.2,'#4b5a50');
  notice('纪律通报',['走廊禁止奔跑','发现异常，请保持安静','铃响期间，值班员听令','未经批准不得应答点名'],'#8a3931',-3.78,1.95,-9,Math.PI/2);
  notice('离校须知',['试卷归档后方可离校','广播负责名单注销','配电箱与侧门联锁','保管好你的通行证'],'#354d42',3.78,1.95,9,-Math.PI/2);

@@ -20,3 +20,5 @@ TypeScript、Vite和electron-builder：构建工具，MIT。Playwright：测试�
 `src/composition.ts`的五段探索乐句与追逐动机为本项目原创编排，以程序合成音色播放，无外部录音或曲谱引用。
 
 architectural-surfaces.ts 的抹灰和水磨石颜色、凹凸及粗糙度均由本项目原创算法生成，遵循项目 MIT 许可，无第三方照片或扫描材质。
+
+`src/door-model.ts`的木框、压条、把手、锁孔、踢脚板和合页为原创程序化模型，按材质合并并共享，无外部模型素材。
