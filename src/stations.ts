@@ -7,11 +7,13 @@ const brass=new T.MeshStandardMaterial({color:'#b9a16b',metalness:.7,roughness:.
 const wood=new T.MeshStandardMaterial({color:'#785839',roughness:.74});
 const paper=new T.MeshStandardMaterial({color:'#d9cba6',roughness:.96});
 const green=new T.MeshStandardMaterial({color:'#9ccd9d',emissive:'#36734a',emissiveIntensity:.8,roughness:.45});
-function block(g:T.Group,x:number,y:number,z:number,w:number,h:number,d:number,m:T.Material){const mesh=new T.Mesh(new T.BoxGeometry(w,h,d),m);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;g.add(mesh);return mesh}
+function block(g:T.Group,x:number,y:number,z:number,w:number,h:number,d:number,m:T.Material){let geometry:T.BufferGeometry;
+ if(Math.min(w,h,d)>.09){const r=Math.min(.018,w*.06,h*.06,d*.06),shape=new T.Shape();shape.moveTo(-w/2+r,-h/2+r);shape.lineTo(w/2-r,-h/2+r);shape.lineTo(w/2-r,h/2-r);shape.lineTo(-w/2+r,h/2-r);shape.closePath();geometry=new T.ExtrudeGeometry(shape,{depth:d-r*2,bevelEnabled:true,bevelSegments:2,bevelSize:r,bevelThickness:r,steps:1});geometry.translate(0,0,-d/2+r)}else geometry=new T.BoxGeometry(w,h,d);
+ const mesh=new T.Mesh(geometry,m);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;g.add(mesh);return mesh}
 function knob(g:T.Group,x:number,y:number,z:number,r=.04){const m=new T.Mesh(new T.CylinderGeometry(r,r,.035,16),brass);m.rotation.x=Math.PI/2;m.position.set(x,y,z);g.add(m)}
 function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:number,flat=false){
- const c=document.createElement('canvas');c.width=512;c.height=512;const a=c.getContext('2d')!;
- a.fillStyle='#d3c7a6';a.fillRect(0,0,512,512);a.fillStyle='#303e37';a.textAlign='center';a.font='bold 36px serif';text.forEach((t,i)=>a.fillText(t,256,85+i*75,470));a.strokeStyle='#8b493b';a.lineWidth=4;a.strokeRect(25,25,462,462);
+ const c=document.createElement('canvas');c.width=512;c.height=Math.max(128,Math.round(512*h/w));const a=c.getContext('2d')!;
+ a.fillStyle='#d3c7a6';a.fillRect(0,0,c.width,c.height);a.fillStyle='#303e37';a.textAlign='center';const pad=Math.min(25,c.height*.1),line=(c.height-pad*2)/text.length;a.textBaseline='middle';a.font=`bold ${Math.min(40,Math.floor(line*.55))}px serif`;text.forEach((t,i)=>a.fillText(t,256,pad+line*(i+.5),460));a.strokeStyle='#8b493b';a.lineWidth=3;a.strokeRect(20,pad/2,472,c.height-pad);
  const map=new T.CanvasTexture(c);map.colorSpace=T.SRGBColorSpace;map.anisotropy=4;
  const mesh=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,roughness:.9}));mesh.position.set(x,y,z);if(flat)mesh.rotation.x=-Math.PI/2;g.add(mesh);
 }
@@ -29,7 +31,7 @@ export function station(index:number,x:number,z:number){const g=new T.Group();g.
  }else if(index===2){
   block(g,0,.55,0,1.6,1.1,.9,wood);block(g,0,1.2,0,1.5,.28,.84,metal);
   for(const dx of [-.48,-.16,.16,.48]){block(g,dx,1.35,0,.015,.008,.42,dark);block(g,dx,1.37,(dx+.5)*.15-.1,.09,.045,.055,brass)}
-  block(g,0,1.58,-.28,1.48,.4,.25,dark);artwork(g,['调谐 / TUNING','昭川广播 731'],.72,.24,0,1.58,-.144);
+  block(g,0,1.58,-.28,1.48,.4,.25,dark);artwork(g,['调谐 / TUNING','频率待校准'],.72,.24,0,1.58,-.144);
   for(const dx of [-.58,.58])knob(g,dx,1.58,-.13,.08);
   // Curved gooseneck microphone, with no external mesh dependencies.
   const curve=new T.CatmullRomCurve3([new T.Vector3(.6,1.36,.2),new T.Vector3(.6,1.65,.2),new T.Vector3(.45,1.86,.14),new T.Vector3(.3,1.83,.1)]);

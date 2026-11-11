@@ -29,15 +29,27 @@ npm run dist:ci
 `npm run dev`可在本机4173端口运行辅助浏览器构建。最终用户无需打开浏览器。
 
 ## 操作
-WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜旁躲藏、Esc暂停。奔跑制造声音并提高纪律值；安静行动逐步降低。铃响期间出口开放十二秒。关键进度自动存档，设置保存到本机。
+WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜旁躲藏、J查看记录和逐级提示、Esc暂停。奔跑制造声音并提高纪律值；安静行动逐步降低。铃响期间出口开放十二秒。关键进度自动存档，设置保存到本机。
 
 恐怖追逐，无血腥，无镜头晃动或刻意闪烁。请先调低音量；出现晕动不适时暂停。
 
 ## 验证与下载
-macOS arm64已实际启动并通过基础桌面操作自动测试，且完成带1次失败及检查点续玩的完整键盘通关。四平台0.1.0快照均已CI构建并校验；Windows、Linux、Intel macOS未实机试玩。0.2.0本机安装包已构建并启动验证，正在准备最新跨平台包。源码仓库：[Tomhao10225101490/midnight-rollcall](https://github.com/Tomhao10225101490/midnight-rollcall)。Release与网页试玩尚未发布，因此没有正式下载链接。
+[下载 v0.2.0 开发预览（GitHub Release）](https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.2.0)。桌面包内置运行时，可离线运行，无需安装Node。M系列Mac选arm64；Intel Mac选x64；Windows可选安装版或便携版；Linux可选tar.gz或AppImage。
+
+这批包对应提交d3e2941。当前源码0.3.0-dev.1继续开发新的设备模型、分步提示及跨教室线索链，尚未包含在0.2.0下载包内。全部9个包的远端大小与SHA256已逐个匹配，详见[产物清单](docs/ARTIFACTS-0.2.0.md)。应用没有开发者签名/苹果公证，安装方法见[安装说明](docs/INSTALL.md)。
+
+| 平台 | 0.2.0构建 | 试玩范围 |
+|---|---|---|
+| macOS arm64 | DMG、应用ZIP | 本机打包应用完整键盘通关；CI下载应用启动及输入验证 |
+| macOS x64 | DMG、应用ZIP | 构建通过、未实机试玩 |
+| Windows x64 | 安装EXE、便携EXE | 构建通过、未实机试玩 |
+| Linux x64 | AppImage、tar.gz | 构建通过、未实机试玩 |
+| Web | 静态ZIP | Chrome基础操作测试，未整局试玩 |
+
+[源码仓库](https://github.com/Tomhao10225101490/midnight-rollcall)。网页试玩未部署。
 
 ## 原创与许可
 原创代码MIT。几何、标牌、材质纹理和合成音乐由项目代码生成；不使用下载模型、音频或字体。中文语音只尝试本机离线系统声音，无声音时保留提示音与文字信息。第三方软件保持各自许可，详见THIRD_PARTY_NOTICES.md。
 
 ## English Quick Start
-Offline desktop game under development. Run `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. `npm test` runs logic tests; `npm run test:desktop` tests Electron. No production release or full quality acceptance yet.
+Offline desktop game under development. Run `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. `npm test` runs logic tests; `npm run test:desktop` tests Electron. A playable development preview is available on GitHub Releases; final quality acceptance is still pending.
