@@ -32,7 +32,7 @@ WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜�
 恐怖追逐，无血腥，无镜头晃动或刻意闪烁。请先调低音量；出现晕动不适时暂停。
 
 ## 验证与下载
-macOS arm64已实际启动并通过基础桌面操作自动测试。Windows、Linux、Intel macOS尚未构建或实机验证。GitHub公开仓库、Release与网页试玩尚未发布，因此没有正式下载链接。
+macOS arm64已实际启动并通过基础桌面操作自动测试。Windows、Linux、Intel macOS尚未构建或实机验证。源码仓库：[Tomhao10225101490/midnight-rollcall](https://github.com/Tomhao10225101490/midnight-rollcall)。Release与网页试玩尚未发布，因此没有正式下载链接。
 
 ## 原创与许可
 原创代码MIT。几何、标牌、材质纹理和合成音乐由项目代码生成；不使用下载模型、音频或字体。中文语音只尝试本机离线系统声音，无声音时保留提示音与文字信息。第三方软件保持各自许可，详见THIRD_PARTY_NOTICES.md。
