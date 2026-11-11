@@ -1,0 +1,10 @@
+// Normal keyboard route into a solid clue table; no position or inventory injection.
+import {_electron as electron} from '@playwright/test';import assert from 'node:assert/strict';import fs from 'node:fs';
+const app=await electron.launch({executablePath:process.env.ELECTRON_PATH||'node_modules/electron/dist/Electron.app/Contents/MacOS/Electron',args:['.'],env:{...process.env,ROLLCALL_QA:'1'}});
+try{const page=await app.firstWindow();const state=()=>page.evaluate(()=>window.rollcallQA);await page.getByRole('button',{name:'新游戏',exact:true}).click();
+ async function go(x,z){for(let i=0;i<400;i++){const s=await state();assert.ok(s.playing);if(s.door&&!s.door.open){await page.keyboard.press('e');await page.waitForTimeout(30)}const dx=x-s.position[0],dz=z-s.position[2],d=Math.hypot(dx,dz);if(d<.2)return;const lx=Math.cos(s.yaw)*dx-Math.sin(s.yaw)*dz,lz=Math.sin(s.yaw)*dx+Math.cos(s.yaw)*dz,key=Math.abs(lx)>Math.abs(lz)?lx>0?'d':'a':lz>0?'s':'w';await page.keyboard.down('Shift');await page.keyboard.down(key);await page.waitForTimeout(Math.min(70,Math.max(15,d*180)));await page.keyboard.up(key);await page.keyboard.up('Shift')}throw Error('Route blocked')}
+ for(const [x,z] of [[-2.7,-15],[-8,-15],[-8,-18]])await go(x,z);
+ await page.keyboard.down('s');await page.waitForTimeout(800);await page.keyboard.up('s');const blocked=await state();assert.ok(blocked.position[2]>-18.26&&blocked.position[2]<-18.05,'solid table blocks entry into its footprint');
+ await page.keyboard.press('e');await page.getByRole('heading',{name:'校园记录',exact:true}).waitFor();await page.getByRole('button',{name:'记下并继续'}).click();assert.equal((await state()).stage,1,'clue remains accessible from outside table');
+ fs.writeFileSync('artifacts/prop-collision-result.json',JSON.stringify({passed:true,blockedPosition:blocked.position,stage:(await state()).stage,scope:'normal keyboard movement and interaction; no state injection'},null,2));console.log('PASS normal keyboard table collision and clue interaction');
+}finally{await app.close()}

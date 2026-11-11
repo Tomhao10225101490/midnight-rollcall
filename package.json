@@ -33,7 +33,8 @@
     "test:pointer-transition": "npm run build && node scripts/pointer-transition-electron.mjs",
     "test:door-collision": "npm run build && node scripts/door-collision-electron.mjs",
     "test:ending-music": "npm run build && node scripts/ending-music-electron.mjs",
-    "test:browser": "npm run build && node scripts/browser-regression.mjs"
+    "test:browser": "npm run build && node scripts/browser-regression.mjs",
+    "test:prop-collision": "npm run build && node scripts/prop-collision-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"

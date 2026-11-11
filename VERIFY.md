@@ -430,3 +430,12 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 ## 0.8.0候选起始验证
 - 类型检查与32项测试通过，artifacts/candidate-0.8-tests.log。实际近景检查二班登记/频道索引/值班日记，纸面取自同一clues数据，修正标点独占行首后重渲染。
 - 本机electron-builder实际生成arm64 DMG/ZIP，日志candidate-0.8-build.log；无签名。实际包完整通关仍在执行，不能把之前开发版结果冒充候选包结果。
+- 实际本机候选.app完整断网键鼠通关通过（3次正常捕获后续玩），新设备状态断言通过，HTTP与pageerrors=0，音乐/原生最小化/恢复/重开通过；candidate-0.8-traverse-result.json及对应log/trail为证据。
+- 实际候选DMG只读挂载检查通过并卸载；ZIP与实际试玩app.asar一致、CRC通过、62递归模块及字体/音乐授权资源通过。见candidate-0.8-package-inspection.json和candidate-0.8-dmg-inspection.json。
+- 独立web ZIP解压后在可见Mac Chrome正常操作首个谜题/暂停/设置/全屏/读档通过，candidate-0.8-browser.log及browser-0.8-run/artifacts为证据，不是浏览器全流程测试。
+
+## 发布前碰撞回归与修复
+- 47f63be的原生运行43103908468五job均成功，CI Mac ZIP实际完整断网通关通过；但普通轨迹证实玩家可进入广播台实体内部，station缺少walls登记。旧源产物不作为最终0.8发布包，已保留独立报告ci-0.8-full.json。
+- station-collision修复后33项测试通过，新增各设备玩家/敌人阻挡、外侧站位和寻路绕行检查。`node scripts/prop-collision-electron.mjs`正常键鼠抵达试卷桌并尝试穿入，确被挡在z=-18.1909，随后E正常读取并推进stage1；报告artifacts/prop-collision-result.json。无位置/物品注入。
+- 碰撞修复后源码Electron完整断网正常键鼠通关通过，3次捕获后用真实检查点继续，全部设备外侧互动与绕行路径通过，HTTP/页面错误0；报告collision-0.8-traverse-result.json、trail.json与log。旧的设备内部站位不再用于此路线。
+- release/collision-fix-0.8实际生成修复版DMG/ZIP，ZIP CRC及app.asar与打包.app一致，63递归模块、字体/音乐资源与许可检查通过；大小与SHA见docs/FIXED-LOCAL-ARTIFACTS-0.8.0.md。

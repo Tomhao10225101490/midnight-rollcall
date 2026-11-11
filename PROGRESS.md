@@ -414,3 +414,17 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 修复二班登记、频道索引和值班日记均显示一班试卷的问题；新增record-print，直接使用clues.ts同源文字，按宽度换行并避免结束标点独占行首。实体纸面与弹窗不再是不同资料。实际三份近景均已查看，seating-paper-0.8-dev.png为诊断相机图。
 - package/lock升为0.8.0候选，公开下载仍0.7.0。typecheck及32项测试通过。实际生成release/candidate-0.8的Mac arm64 DMG和ZIP，无签名；正在对内置.app做断网完整键鼠通关，尚未将它记为通过。
 - RELEASE-NOTES-0.8.0明确保留候选范围，跨平台构建/下载包检查/公开发布尚未完成。
+
+## 0.8.0候选本机验证通过，原生CI进行中
+- 固定候选源47f63be41ed32226e639639ce34d83ae75c96045。原生运行43103908468已真实启动，非仅编写workflow；当前Intel Mac/Web成功，其余job仍实际打包/上传中。不得重复启动同一候选。
+- v0.8.0草稿已创建，isDraft=true、assets=[]、targetCommitish为上述完整SHA。最初传入缩写SHA被GitHub422拒绝，使用完整SHA后成功，未创建重复Release。未公开新版。
+- 本机candidate-0.8包内.app完整断网正常键鼠通关19554退出0：3次捕获与真实检查点继续，未注入道具/位置，HTTP/pageerrors均0，设备状态、结局音乐/最小化暂停恢复/新局清理通过。报告candidate-0.8-traverse-result.json、trail.json与log。
+- 实际DMG只读挂载、版本/入口/Applications链接检查通过并正常卸载；ZIP CRC、内含app.asar与实际试玩app逐字节一致；62模块/字体/音乐及许可检查通过。候选本机产物大小和SHA256在docs/LOCAL-ARTIFACTS-0.8.0.md，不能冒充未来CI包校验值。
+- 独立web ZIP实际解压到artifacts/candidate-0.8-web，CRC及62模块通过；可见Mac Chrome正常键鼠首个谜题、鼠标锁定/观察、暂停音频、设置/800×600/全屏和刷新读档通过。输出隔离于artifacts/browser-0.8-run，避免覆盖历史0.7证据；不是浏览器整局通关。HTTP服务与GUI正常退出。
+
+## 发布前发现交互设备碰撞缺失，候选暂不发布
+- 原生43103908468的五job最终全部success；实际下载CI Mac包哈希/CRC/62模块/字体与音乐检查通过，DMG只读挂载通过、app.asar与ZIP一致。CI ZIP实际完整断网通关86247退出0，3次真实捕获后续玩，报告ci-0.8-full.json；未进行检查上传或公开发布。
+- 然而发布前审查发现stations没有登记world.walls，普通通关轨迹确有stage2位置[-7.9024,1.65,3.0964]位于广播台实体内部。完整通关本身不足以证明道具碰撞正确，因此保留草稿，不将47f63be候选公开。
+- 新增station-collision给五类交互家具及三份线索桌注册实体包围盒，玩家/敌人共用碰撞与导航。通关脚本改从设备外侧接近、绕开索引桌与出口读卡器，不再依靠穿入设备的路线。
+- typecheck、33项测试通过；新增各设备阻挡/可互动站位/完整绕行路径检查。实际普通键鼠prop-collision脚本通过：桌前z=-18.1909被阻挡，E阅读仍正常推进stage1，无坐标或物品注入。新增npm run test:prop-collision。
+- 修复版源码整局验证66142及本机打包4653已退出0，完整断网通关通过，3次捕获后正常检查点继续，HTTP/页面错误均0。修复包输出release/collision-fix-0.8，与历史candidate-0.8及原生旧源产物分开，后续需新的固定源原生构建与检查。不对已完成旧run重试来冒充新源码。

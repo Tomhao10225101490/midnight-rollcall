@@ -1,5 +1,6 @@
 import * as T from 'three';
-import {scene} from './world';
+import {scene,walls} from './world';
+import {stationBounds} from './station-collision';
 import {examPaper} from './exam-paper';
 import {deskTools} from './desk-tools';
 import {propSurface} from './prop-surfaces';
@@ -24,7 +25,7 @@ function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:n
  const map=new T.CanvasTexture(c);map.colorSpace=T.SRGBColorSpace;map.anisotropy=4;
  const mesh=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,roughness:.9}));mesh.position.set(x,y,z);if(flat)mesh.rotation.x=-Math.PI/2;g.add(mesh);
 }
-export function station(index:number,x:number,z:number,record?:PaperRecord){const g=new T.Group();g.position.set(x,0,z);scene.add(g);let update=(_stage:number,_bell:boolean)=>{};
+export function station(index:number,x:number,z:number,record?:PaperRecord){const g=new T.Group();g.position.set(x,0,z);scene.add(g);walls.push(stationBounds(index,x,z));let update=(_stage:number,_bell:boolean)=>{};
  if(index===0){
   block(g,0,.78,0,1.5,.08,.95,wood);for(const dx of [-.64,.64])for(const dz of [-.35,.35])block(g,dx,.38,dz,.055,.76,.055,metal);
   for(let i=0;i<4;i++){const sheet=block(g,-.18,.83+i*.006,0,.43,.005,.6,paper);sheet.rotation.y=i*.025}
