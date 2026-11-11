@@ -53,7 +53,8 @@ const keys = new Set<string>(), ui = document.querySelector<HTMLElement>('#ui')!
 const defeat=new Defeat(ui,()=>menu('点名未结束','值班人将你带回了座位。已完成的谜题保留在检查点，可继续或重新开始。'));
 const names = ['阅读一班试卷', '打开办公室档案柜', '校准广播频率', '修复侧门配电并领取通行证', '趁铃声离开出口'];
 const points = [[-8, -19], [-8, -8], [-8, 3], [-8, 13], [8, 18]];
-points.forEach((p, i) => station(i,p[0],p[1]));
+const stations=points.map((p,i)=>station(i,p[0],p[1]));
+function syncStations(){stations.forEach(s=>s.update(stage,time%60<12))}
 clues.forEach(c=>station(0,c.x,c.z));
 function nearbyClue(){return clues.find(c=>Math.hypot(camera.position.x-c.x,camera.position.z-c.z)<2.2)}
 const hidingSpot=new HidingSpot();walls.push(hidingSpot.bounds);
@@ -62,7 +63,7 @@ const hideSign=label('储物柜 · H 藏身',8,-6.49);hideSign.position.y=1.88;h
 function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { if(title!=='天亮之前')endingMusic.stop(); closeOverlay=null;score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = ()=>settings(); document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
 function settings(back:()=>void=()=>menu()){closeOverlay=back;settingsView(ui,back,()=>{setVolume(options.volume);sens=options.sensitivity/1000;renderer.setPixelRatio(options.quality);rendering.configure(options.ambientOcclusion);camera.fov=options.fov;camera.updateProjectionMatrix()})}
 function announce(text:string){narrative.defer();broadcast(text)}
-function start(s: number,restoredNotes:ClueId[]=[]) { endingMusic.stop(); score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0;doorBlocked=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; resume(); }
+function start(s: number,restoredNotes:ClueId[]=[]) { endingMusic.stop(); score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0;doorBlocked=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; syncStations(); resume(); }
 function resume() { closeOverlay=null;resumeAudio(); score.start(); playing = true; keys.clear(); const request=++lockRequest;lockPending=true;try{Promise.resolve(renderer.domElement.requestPointerLock()).then(()=>{if(request!==lockRequest)return;lockPending=false;if(playing&&!document.pointerLockElement)pause()},()=>{if(request===lockRequest){lockPending=false;pause()}})}catch{lockPending=false;pause()} tone(440); }
 function pausedMenu(){closeOverlay=resume;ui.innerHTML='<section><h2>暂停</h2><button id="resume">恢复</button><button id="paused-settings">设置 / 操作</button><button id="menu">主菜单</button></section>';ui.querySelector<HTMLButtonElement>('#resume')!.onclick=resume;ui.querySelector<HTMLButtonElement>('#paused-settings')!.onclick=()=>settings(pausedMenu);ui.querySelector<HTMLButtonElement>('#menu')!.onclick=()=>menu()}
 function pause(){lockRequest++;lockPending=false;if(!playing)return;pauseAudio();score.pause();playing=false;keys.clear();document.exitPointerLock();pausedMenu()}
@@ -79,7 +80,7 @@ function interact() { const door=nearestDoor(camera.position);if(door){if(door.s
     if (time % 60 < 12) {ending.begin(camera);menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');broadcast('本次点名结束。你的名字，已从名单中划去。');endingMusic.begin();}
     return;
 } advance(); }
-function advance() { stage++; score.reset(stage);save(stage,notes); tone(660, .4); resume(); }
+function advance() { stage++; syncStations(); score.reset(stage);save(stage,notes); tone(660, .4); resume(); }
 function show(text: string, next: () => void) { closeOverlay=next;narrative.clearSubtitle();score.pause(); announce(text); playing = false; document.exitPointerLock(); ui.innerHTML = `<section class="record-panel"><div class="record-stamp">昭川中学 · 留存件</div><h2>校园记录</h2><p>${text}</p><button id="ok">记下并继续</button></section>`; document.querySelector<HTMLElement>('#ok')!.onclick = next; }
 function notebook(){pauseAudio();score.pause();playing=false;document.exitPointerLock();closeOverlay=resume;notebookView(ui,stage,notes,resume,narrative.records,[camera.position.x,camera.position.z])}
 addEventListener('keydown', e => {if(playing&&e.code.startsWith('Arrow'))e.preventDefault(); if(playing&&!e.repeat&&e.code==='KeyJ')notebook(); if (playing && ['Control', ' '].includes(e.key))
@@ -101,7 +102,7 @@ function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((
     camera.rotation.y+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*dt*1.4;camera.rotation.x=T.MathUtils.clamp(camera.rotation.x+((keys.has('ArrowUp')?1:0)-(keys.has('ArrowDown')?1:0))*dt*1.1,-1.4,1.4);
     doorBlocked=Math.max(0,doorBlocked-dt);doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage,'speechSynthesis' in window&&speechSynthesis.speaking);
     const before = time;
-    time += dt;
+    time += dt;syncStations();
     if (Math.floor(before / 60) !== Math.floor(time / 60)) {
         narrative.clearSubtitle();effect('bell');
         announce("铃声期间，侧门开放十二秒。值班人员原地听令。请保持距离。");
@@ -126,4 +127,4 @@ menu();
 requestAnimationFrame(frame);
 // Opt-in read-only telemetry for automated keyboard-driven traversal. No state mutation.
 if (new URLSearchParams(location.search).has('qa'))
-    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, notes:[...notes], storyRecords:narrative.records.map(r=>r.text), subtitle:narrative.subtitle, windowFocused,captureActive:defeat.active,captureTime:defeat.elapsed, playing, hidden, hideAvailable:hidingSpot.canEnter(camera.position), alert, time, fov:camera.fov,pixelRatio:renderer.getPixelRatio(),ambientOcclusion:rendering.enabled,audio:score.measure(),endingMusic:endingMusic.measure(),effects:measureEffects(), position: camera.position.toArray(), yaw: camera.rotation.y,pitch:camera.rotation.x, enemy: enemy.body.position.toArray(), enemyEvidence:enemy.last.toArray(), enemyState: enemy.state, door:nearestDoor(camera.position)?{open:nearestDoor(camera.position)!.open}:null, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });
+    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, stations:stations.map(s=>s.snapshot()), notes:[...notes], storyRecords:narrative.records.map(r=>r.text), subtitle:narrative.subtitle, windowFocused,captureActive:defeat.active,captureTime:defeat.elapsed, playing, hidden, hideAvailable:hidingSpot.canEnter(camera.position), alert, time, fov:camera.fov,pixelRatio:renderer.getPixelRatio(),ambientOcclusion:rendering.enabled,audio:score.measure(),endingMusic:endingMusic.measure(),effects:measureEffects(), position: camera.position.toArray(), yaw: camera.rotation.y,pitch:camera.rotation.x, enemy: enemy.body.position.toArray(), enemyEvidence:enemy.last.toArray(), enemyState: enemy.state, door:nearestDoor(camera.position)?{open:nearestDoor(camera.position)!.open}:null, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });

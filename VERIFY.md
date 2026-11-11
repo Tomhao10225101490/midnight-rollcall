@@ -420,3 +420,9 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 类型检查/构建通过；实际Electron诊断渲染观察了试卷桌面与档案柜，首版过强木纹修正后重渲染检查。
 - `node scripts/regression-electron.mjs`通过，报告artifacts/surfaces-0.8-regression.json：8重开344几何/65纹理稳定，暂停、800×600、全屏通过，pageerrors=[]；120帧约2000.3ms，非全地图性能承诺。
 - `npx electron-builder --mac --arm64 --dir --publish never --config.directories.output=release/materials-0.8`实际生成未签名.app；指定其Contents/MacOS/末铃点名执行smoke-electron通过，日志surfaces-0.8-packaged-smoke.log。已有包检查函数实际读取app.asar确认0.8.0-dev.1、入口与60递归模块、字体/音乐资源及许可证，报告surfaces-0.8-package-inspection.json。此为启动与资源验证，不是该包完整通关。
+
+## 0.8.0-dev.1 设备进度反馈
+- `npm run typecheck`通过，`npm run test`32/32通过，artifacts/stations-0.8-tests.log。
+- 新增station-state测试：检查点恢复/重开、广播完成文字、配电实体开关、出口授权与铃声组合；同状态重复更新不重新上传显示纹理。此为组件逻辑测试。
+- 实际Electron诊断相机观察初始广播台与配电箱，未解谜时四开关均断开，中文状态可见。不是普通通关证据。
+- `ROLLCALL_OFFLINE=1 node scripts/traverse-electron.mjs`实际完成全流程，3次捕获后真实检查点继续，无物品栏/位置注入，新增广播/配电/出口状态断言通过，HTTP与pageerrors均0，结局最小化/恢复/重开通过。报告artifacts/stations-0.8-traverse-result.json、trail.json与log。源码Electron版本验证，不是0.8发布包验证。

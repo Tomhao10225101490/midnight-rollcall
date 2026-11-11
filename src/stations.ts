@@ -4,6 +4,7 @@ import {examPaper} from './exam-paper';
 import {deskTools} from './desk-tools';
 import {propSurface} from './prop-surfaces';
 import {metricBoxUV} from './architectural-surfaces';
+import {stationDisplay} from './station-display';
 // Original multi-part props in metres. Interaction coordinates stay unchanged.
 const metal=propSurface('enamel');
 const dark=new T.MeshStandardMaterial({color:'#192321',metalness:.35,roughness:.55});
@@ -22,7 +23,7 @@ function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:n
  const map=new T.CanvasTexture(c);map.colorSpace=T.SRGBColorSpace;map.anisotropy=4;
  const mesh=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map,roughness:.9}));mesh.position.set(x,y,z);if(flat)mesh.rotation.x=-Math.PI/2;g.add(mesh);
 }
-export function station(index:number,x:number,z:number){const g=new T.Group();g.position.set(x,0,z);scene.add(g);
+export function station(index:number,x:number,z:number){const g=new T.Group();g.position.set(x,0,z);scene.add(g);let update=(_stage:number,_bell:boolean)=>{};
  if(index===0){
   block(g,0,.78,0,1.5,.08,.95,wood);for(const dx of [-.64,.64])for(const dz of [-.35,.35])block(g,dx,.38,dz,.055,.76,.055,metal);
   for(let i=0;i<4;i++){const sheet=block(g,-.18,.83+i*.006,0,.43,.005,.6,paper);sheet.rotation.y=i*.025}
@@ -35,18 +36,19 @@ export function station(index:number,x:number,z:number){const g=new T.Group();g.
  }else if(index===2){
   block(g,0,.55,0,1.6,1.1,.9,wood);block(g,0,1.2,0,1.5,.28,.84,metal);
   for(const dx of [-.48,-.16,.16,.48]){block(g,dx,1.35,0,.015,.008,.42,dark);block(g,dx,1.37,(dx+.5)*.15-.1,.09,.045,.055,brass)}
-  block(g,0,1.58,-.28,1.48,.4,.25,dark);artwork(g,['调谐 / TUNING','频率待校准'],.72,.24,0,1.58,-.144);
+  block(g,0,1.58,-.28,1.48,.4,.25,dark);const display=stationDisplay(g,.72,.24,0,1.58,-.144);update=stage=>display(stage>=3?'空白名单已接收':'频率待校准',stage>=3);
   for(const dx of [-.58,.58])knob(g,dx,1.58,-.13,.08);
   // Curved gooseneck microphone, with no external mesh dependencies.
   const curve=new T.CatmullRomCurve3([new T.Vector3(.6,1.36,.2),new T.Vector3(.6,1.65,.2),new T.Vector3(.45,1.86,.14),new T.Vector3(.3,1.83,.1)]);
   g.add(new T.Mesh(new T.TubeGeometry(curve,16,.012,8,false),dark));const mic=block(g,.26,1.83,.1,.15,.055,.055,dark);mic.rotation.z=.2;
  }else if(index===3){
   block(g,0,.6,0,.18,1.2,.18,metal);block(g,0,1.37,0,1.2,.82,.35,metal);block(g,0,1.37,.181,1.05,.67,.018,dark);
-  for(let i=0;i<4;i++){const dx=-.36+i*.24;block(g,dx,1.38,.22,.18,.32,.08,paper);block(g,dx,1.42,.28,.1,.1,.08,i%2?dark:green);knob(g,dx,1.25,.27,.025);
+  const switches:T.Mesh[]=[];
+  for(let i=0;i<4;i++){const dx=-.36+i*.24;block(g,dx,1.38,.22,.18,.32,.08,paper);switches.push(block(g,dx,1.34,.28,.1,.1,.08,dark));knob(g,dx,1.25,.27,.025);
    const cable=new T.CatmullRomCurve3([new T.Vector3(dx,1.8,0),new T.Vector3(dx,1.92,-.04),new T.Vector3(dx*.4,2.06,-.06)]);g.add(new T.Mesh(new T.TubeGeometry(cable,8,.014,6,false),i%2?dark:brass));}
-  artwork(g,['侧门联锁','先核对广播，再合闸'],.65,.16,0,1.67,.195);block(g,.47,1.03,.23,.16,.02,.24,paper);
+  const display=stationDisplay(g,.88,.16,0,1.67,.195);update=stage=>{display(stage>=4?'联锁通过 · 通行证已签发':'联锁待检 · 回路断开',stage>=4);switches.forEach((lever,i)=>{const on=stage>=4&&i%2===0;lever.material=on?green:dark;lever.position.y=on?1.42:1.34;lever.userData.powered=on})};block(g,.47,1.03,.23,.16,.02,.24,paper);
  }else{
-  block(g,0,.65,0,.12,1.3,.12,metal);block(g,0,1.37,0,.35,.36,.19,dark);block(g,0,1.44,.101,.23,.08,.01,green);artwork(g,['通行证感应区'],.25,.12,0,1.3,.101);block(g,0,.04,0,.5,.08,.4,metal);
+  block(g,0,.65,0,.12,1.3,.12,metal);block(g,0,1.37,0,.35,.36,.19,dark);const lamp=block(g,0,1.44,.101,.23,.08,.01,dark);const display=stationDisplay(g,.29,.12,0,1.3,.107);update=(stage,bell)=>{const ready=stage>=4&&bell;lamp.material=ready?green:dark;display(stage<4?'尚未授权':bell?'铃响可通行':'请等铃声',ready)};block(g,0,.04,0,.5,.08,.4,metal);
  }
- const light=new T.PointLight('#ead5a2',1.8,3);light.position.set(0,2.15,.4);g.add(light);return g;
+ const light=new T.PointLight('#ead5a2',1.8,3);light.position.set(0,2.15,.4);g.add(light);update(0,true);return {group:g,update,snapshot:()=>{const displays:string[]=[],powered:boolean[]=[];g.traverse(o=>{if(typeof o.userData.status==='string')displays.push(o.userData.status);if(typeof o.userData.powered==='boolean')powered.push(o.userData.powered)});return{displays,powered}}};
 }
