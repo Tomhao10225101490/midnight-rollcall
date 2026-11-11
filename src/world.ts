@@ -1,3 +1,4 @@
+import {schoolDesk} from './furniture';
 import * as T from 'three';
 export const doorBounds=new Set<T.Box3>();
 export const walls: T.Box3[] = [];
@@ -17,7 +18,7 @@ export function init() { scene.add(new T.HemisphereLight('#b3cfdb', '#30302b', 2
     for (const z of [-10, 0, 10])
         box(x, 1.7, z, 8, 3.4, .2, '#61716a', true); for (const x of [-9, -6, 6, 9])
     for (const z of [-17, -14]) {
-        {box(x,.76,z,1.3,.1,.7,'#907349',true);box(x,.57,z,1.15,.28,.55,'#66543c');for(const dx of [-.5,.5])for(const dz of [-.24,.24])box(x+dx,.35,z+dz,.05,.7,.05,'#434e48');box(x+.1,.82,z,.35,.012,.45,'#d6cfb8');}
+        {const desk=schoolDesk();desk.position.set(x,0,z);scene.add(desk);walls.push(new T.Box3(new T.Vector3(x-.65,.71,z-.35),new T.Vector3(x+.65,.81,z+.35)));}
     } for (let z = -18; z < 22; z += 10) {
     const l = new T.PointLight('#ffdc9f', 15, 12);
     l.position.set(0, 2.9, z);

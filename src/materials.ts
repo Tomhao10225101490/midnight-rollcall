@@ -16,7 +16,7 @@ function surfaceTexture(kind: Surface) {
  texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=4;
  return texture;
 }
-const woodColors=new Set(['907349','66543c','554734','66523c','6d5035','584936','403c35','b29156','514a3c']);
+const woodColors=new Set(['806445','5b4936','907349','66543c','554734','66523c','6d5035','584936','403c35','b29156','514a3c']);
 export function upgradeMaterials(scene:T.Scene){
  const textures={plaster:surfaceTexture('plaster'),wood:surfaceTexture('wood'),paint:surfaceTexture('paint')};
  scene.traverse(object=>{

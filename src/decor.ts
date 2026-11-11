@@ -1,3 +1,4 @@
+import {schoolChair} from './furniture';
 import * as T from 'three';
 import { box, label, scene } from './world';
 export function decorate() {
@@ -20,14 +21,13 @@ export function decorate() {
         for(let i=0;i<16000;i++){chalkSeed=(Math.imul(chalkSeed,1664525)+1013904223)>>>0;const px=chalkSeed%1536;chalkSeed=(Math.imul(chalkSeed,1664525)+1013904223)>>>0;ink.fillStyle=i%3?'rgba(215,224,198,.025)':'rgba(0,0,0,.08)';ink.fillRect(px,chalkSeed%384,2,1)}
         ink.fillStyle='#d6d9ba';ink.font='44px serif';ink.fillText(x<0?'晚自习 · 离校复核':'高三二班 · 考场安排',75,80);ink.fillStyle='#aabbaa';ink.font='28px serif';
         (x<0?['一、检查遗留试卷，核对座次','二、保持安静，等待校铃','三、不要替缺席的人应答']:['座次表已放在讲台上','请按科目核对分数与座号','应到：一人    实到：——']).forEach((line,i)=>ink.fillText(line,85,155+i*62));
-        ink.strokeStyle='#a9b7a4';ink.lineWidth=2;ink.beginPath();ink.moveTo(1000,45);ink.lineTo(1000,335);ink.stroke();ink.font='32px serif';ink.fillText('值日记录',1080,90);ink.font='25px serif';ink.fillText('日期：未填写',1060,165);ink.fillText('擦净姓名栏',1060,225);
+        ink.fillStyle='#a9b7a4';ink.fillRect(999,45,2,290);ink.font='32px serif';ink.fillText('值日记录',1080,90);ink.font='25px serif';ink.fillText('日期：未填写',1060,165);ink.fillText('擦净姓名栏',1060,225);
         const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;const board=new T.Mesh(new T.PlaneGeometry(5.9,1.45),new T.MeshStandardMaterial({map:texture,roughness:.96}));board.position.set(x,1.9,-21.64);scene.add(board);
         for(const dx of [-3.04,3.04])box(x+dx,1.9,-21.62,.08,1.62,.08,'#514a3c');for(const y of [1.1,2.7])box(x,y,-21.62,6.16,.08,.08,'#514a3c');box(x,1.1,-21.52,6.1,.06,.22,'#514a3c');
         box(x+.8,1.15,-21.5,.2,.035,.08,'#c9bea0');box(x+1.2,1.15,-21.5,.12,.025,.03,'#d6cfb8');
         for (const z of [-17, -14])
             for (const a of [x - 1, x + 2]) {
-                box(a, .34, z + 1, .7, .65, .7, '#554734');
-                box(a, .8, z + 1.3, .7, .7, .08, '#66523c');
+                const chair=schoolChair();chair.position.set(a,0,z+1);scene.add(chair);
             }
     }
     for (let z = -20; z < 21; z += 3) {

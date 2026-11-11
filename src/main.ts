@@ -1,3 +1,4 @@
+import {storageCabinet} from './furniture';
 import{Rendering}from './rendering';
 import{settingsView}from './settings-ui';
 import{notebookView}from './notebook-ui';
@@ -42,8 +43,8 @@ const points = [[-8, -19], [-8, -8], [-8, 3], [-8, 13], [8, 18]];
 points.forEach((p, i) => station(i,p[0],p[1]));
 clues.forEach(c=>station(0,c.x,c.z));
 function nearbyClue(){return clues.find(c=>Math.hypot(camera.position.x-c.x,camera.position.z-c.z)<2.2)}
-box(8, 1, -7, 2, 2, 1, '#40535a');
-const hideSign=label('储物柜 · H 藏身',8,-6.49);hideSign.position.y=1.5;hideSign.scale.set(.5,.5,1);
+const hideCabinet=storageCabinet();hideCabinet.position.set(8,0,-7);scene.add(hideCabinet);
+const hideSign=label('储物柜 · H 藏身',8,-6.49);hideSign.position.y=1.88;hideSign.position.z=-6.46;hideSign.scale.set(.5,.22,1);
 function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { closeOverlay=null;score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = ()=>settings(); document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
 function settings(back:()=>void=()=>menu()){closeOverlay=back;settingsView(ui,back,()=>{setVolume(options.volume);sens=options.sensitivity/1000;renderer.setPixelRatio(options.quality);rendering.configure(options.ambientOcclusion);camera.fov=options.fov;camera.updateProjectionMatrix()})}
 function start(s: number,restoredNotes:ClueId[]=[]) { notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0; ending.reset(); player.reset(); broadcast(s===0?"晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.body.position.set(0, 1, 15); enemy.memory = 0; enemy.wasHidden=false; enemy.sawHide=false; enemy.path = []; enemy.timer = 0; enemy.index = 0; alert = 0; hidden = false; time = 0; resume(); }
