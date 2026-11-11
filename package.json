@@ -1,6 +1,6 @@
 {
   "name": "midnight-rollcall",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -9,12 +9,14 @@
     "build": "node scripts/build.mjs",
     "test": "npm run build && node --test tests/*.test.mjs",
     "desktop": "npm run build && electron .",
-    "dist": "npm run build && node scripts/package-mac.mjs",
+    "dist": "npm run build && electron-builder --publish never",
     "typecheck": "tsc --noEmit",
     "test:desktop": "npm run build && node scripts/smoke-electron.mjs",
     "test:traverse": "npm run build && node scripts/traverse-electron.mjs",
     "dist:ci": "npm run build && electron-builder",
-    "test:regression": "npm run build && node scripts/regression-electron.mjs"
+    "test:regression": "npm run build && node scripts/regression-electron.mjs",
+    "test:audio": "npm run build && node scripts/audio-electron.mjs",
+    "dist:web": "npm run build && python3 scripts/package-web.py"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"
@@ -22,7 +24,7 @@
   "devDependencies": {
     "@playwright/test": "1.65.0",
     "@types/three": "0.187.0",
-    "electron": "43.3.0",
+    "electron": "43.8.8",
     "electron-builder": "26.18.0",
     "typescript": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
     "vite": "8.3.8"
@@ -44,19 +46,22 @@
       "target": [
         "dmg",
         "zip"
-      ]
+      ],
+      "icon": "build/icon.png"
     },
     "win": {
       "target": [
         "nsis",
         "portable"
-      ]
+      ],
+      "icon": "build/icon.png"
     },
     "linux": {
       "target": [
         "AppImage",
         "tar.gz"
-      ]
+      ],
+      "icon": "build/icon.png"
     },
     "artifactName": "midnight-rollcall-${version}-${os}-${arch}.${ext}",
     "nsis": {
@@ -68,5 +73,8 @@
   },
   "license": "MIT",
   "description": "Original offline Chinese campus horror escape game",
-  "author": "Midnight Rollcall contributors"
+  "author": "Midnight Rollcall contributors",
+  "overrides": {
+    "minimatch@>=7 <11.0.1": "11.0.3"
+  }
 }

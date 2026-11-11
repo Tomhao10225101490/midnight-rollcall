@@ -1,4 +1,4 @@
-import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import{execFileSync as run}from 'node:child_process';
-if(process.platform!=='darwin'||process.arch!=='arm64')throw Error('此离线打包脚本仅支持 macOS arm64');
-const cache=path.join(os.homedir(),'Library/Caches/electron');const zip=fs.readdirSync(cache).map(x=>path.join(cache,x,'electron-v43.3.0-darwin-arm64.zip')).find(x=>fs.existsSync(x));if(!zip)throw Error('缺少 Electron 43.3.0 官方运行时缓存');
-const app='release/末铃点名.app';fs.mkdirSync('release/runtime',{recursive:true});if(!fs.existsSync(app)){run('ditto',['-x','-k',zip,'release/runtime']);fs.renameSync('release/runtime/Electron.app',app)}const root=app+'/Contents/Resources/app';fs.mkdirSync(root,{recursive:true});for(const p of ['dist','electron','package.json'])fs.cpSync(p,root+'/'+p,{recursive:true});for(const [k,v]of Object.entries({CFBundleDisplayName:'末铃点名',CFBundleIdentifier:'org.midnightrollcall.game',CFBundleShortVersionString:'0.1.0'}))run('/usr/libexec/PlistBuddy',['-c',`Set :${k} ${v}`,app+'/Contents/Info.plist']);run('ditto',['-c','-k','--sequesterRsrc','--keepParent',app,'release/midnight-rollcall-0.1.0-mac-arm64-dev.zip']);console.log('应用与ZIP已生成；尚未签名或公证。');
+// Compatibility entry point. Use the installed, locked Electron version via electron-builder.
+import{execFileSync}from'node:child_process';
+if(process.platform!=='darwin')throw Error('This command is for macOS; use npm run dist for the current OS');
+execFileSync(process.execPath,['node_modules/electron-builder/cli.js','--mac','--arm64','--publish','never'],{stdio:'inherit',env:{...process.env,CSC_IDENTITY_AUTO_DISCOVERY:'false'}});
