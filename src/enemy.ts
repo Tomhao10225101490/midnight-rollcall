@@ -37,7 +37,7 @@ export class Enemy {
             p = seen.get(p.join())!;
         }
     } }
-    update(dt: number, p: T.Vector3, noise: boolean, hidden: boolean, alert: number, bell: boolean) { this.walkTime += dt; this.model.animate(this.walkTime, this.path.length > 0); const pos = this.body.position, d = pos.distanceTo(p); const facing = new T.Vector3(Math.sin(this.body.rotation.y), 0, Math.cos(this.body.rotation.y)); const sight = d < 11 && visible(pos, p) && (d < 2 || facing.dot(p.clone().sub(pos).normalize()) > 0.25); if (hidden && !this.wasHidden) this.sawHide = sight; if (!hidden) this.sawHide = false; this.wasHidden = hidden; if ((sight && !hidden) || (noise && d < 13) || (hidden && this.sawHide && this.memory > 0)) {
+    update(dt: number, p: T.Vector3, noise: boolean, hidden: boolean, alert: number, bell: boolean) { this.walkTime += dt; this.model.animate(this.walkTime, this.path.length > 0); const pos = this.body.position, d = pos.distanceTo(p); if(bell){this.state='听铃';this.memory=0;this.path=[];this.timer=0;this.sawHide=false;this.model.animate(this.walkTime,false);return d<.85&&visible(pos,p)&&!hidden;} const facing = new T.Vector3(Math.sin(this.body.rotation.y), 0, Math.cos(this.body.rotation.y)); const sight = d < 11 && visible(pos, p) && (d < 2 || facing.dot(p.clone().sub(pos).normalize()) > 0.25); if (hidden && !this.wasHidden) this.sawHide = sight; if (!hidden) this.sawHide = false; this.wasHidden = hidden; if ((sight && !hidden) || (noise && d < 13) || (hidden && this.sawHide && this.memory > 0)) {
         this.last.copy(p);
         this.memory = 9;
         this.state = '追逐';

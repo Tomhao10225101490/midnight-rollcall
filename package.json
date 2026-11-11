@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test:desktop": "npm run build && node scripts/smoke-electron.mjs",
     "test:traverse": "npm run build && node scripts/traverse-electron.mjs",
-    "dist:ci": "npm run build && electron-builder"
+    "dist:ci": "npm run build && electron-builder",
+    "test:regression": "npm run build && node scripts/regression-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"

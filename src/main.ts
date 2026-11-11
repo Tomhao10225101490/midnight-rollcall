@@ -1,3 +1,6 @@
+import {Ending} from './ending';
+import {props} from './props';
+import {Player} from './player';
 import {circuitLabels,circuitClue,circuitSolved,records} from './puzzles';
 import { Score } from './score';
 import { upgradeMaterials } from './materials';
@@ -11,7 +14,7 @@ import { Enemy } from './enemy';
 import { read, save } from './save';
 import { tone, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
 init();
-decorate();
+decorate();props();
 upgradeMaterials(scene);
 setVolume(options.volume);
 const renderer = new T.WebGLRenderer({ antialias: true });
@@ -23,7 +26,7 @@ renderer.shadowMap.type = T.PCFSoftShadowMap;
 renderer.toneMapping = T.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 const camera = new T.PerspectiveCamera(75, innerWidth / innerHeight, .1, 60);
-camera.rotation.order = 'YXZ';
+camera.rotation.order = 'YXZ';const player=new Player(camera);const ending=new Ending();camera.position.set(0,1.65,-19);camera.rotation.y=Math.PI;
 let enemy = new Enemy(), stage = 0, playing = false, hidden = false, alert = 0, time = 0, sens = options.sensitivity / 1000, last = 0, step = 0;
 const keys = new Set<string>(), ui = document.querySelector<HTMLElement>('#ui')!;
 const names = ['阅读一班试卷', '打开办公室档案柜', '校准广播频率', '修复侧门配电并领取通行证', '趁铃声离开出口'];
@@ -32,8 +35,8 @@ points.forEach((p, i) => { box(p[0], .7, p[1], 1, 1.4, 1, i === 4 ? '#596c56' : 
 box(8, 1, -7, 2, 2, 1, '#40535a');
 label('藏身柜 H · 被目击藏入会被搜查', 8, -8);
 function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => start(read()?.stage || 0); document.querySelector<HTMLElement>('#settings')!.onclick = settings; document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
-function settings() { ui.innerHTML = '<section><h2>操作与设置</h2><p>WASD 移动 · 鼠标观察 · Shift 奔跑 · Ctrl 潜行 · E 互动 · H 藏身 · Esc 暂停。奔跑增加纪律值；安静移动降低纪律值。每60秒响铃，开放出口12秒并减慢巡逻。</p><p>音量 <input id="vol" type="range" min="0" max="1" step=".01" value=".3"></p><p>灵敏度 <input id="sens" type="range" min="1" max="5" value="2"></p><button id="quality">切换低画质</button><button id="full">全屏</button><button id="back">返回</button></section>'; (document.querySelector<HTMLElement>('#vol') as HTMLInputElement).value = String(options.volume); (document.querySelector<HTMLElement>('#sens') as HTMLInputElement).value = String(options.sensitivity); document.querySelector<HTMLElement>('#vol')!.oninput = e => { options.volume = +(e.target as HTMLInputElement).value; setVolume(options.volume); persist(); }; document.querySelector<HTMLElement>('#sens')!.oninput = e => { options.sensitivity = +(e.target as HTMLInputElement).value; sens = options.sensitivity / 1000; persist(); }; document.querySelector<HTMLElement>('#quality')!.onclick = () => { options.quality = options.quality === 1 ? .75 : 1; renderer.setPixelRatio(options.quality); persist(); }; document.querySelector<HTMLElement>('#full')!.onclick = () => document.documentElement.requestFullscreen(); document.querySelector<HTMLElement>('#back')!.onclick = () => menu(); }
-function start(s: number) { broadcast("晚自习结束。请安静行走。请到一班检查遗留试卷。"); stage = s; save(stage); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.body.position.set(0, 1, 15); enemy.memory = 0; enemy.wasHidden=false; enemy.sawHide=false; enemy.path = []; enemy.timer = 0; enemy.index = 0; alert = 0; hidden = false; time = 0; resume(); }
+function settings() { ui.innerHTML = '<section><h2>操作与设置</h2><p>WASD 移动 · 鼠标观察 · Shift 奔跑 · Ctrl 潜行 · E 互动 · H 藏身 · Esc 暂停。奔跑增加纪律值；安静移动降低纪律值。每60秒响铃，开放出口12秒，值班人停步听令（不要触碰他）。</p><p>音量 <input id="vol" type="range" min="0" max="1" step=".01" value=".3"></p><p>灵敏度 <input id="sens" type="range" min="1" max="5" value="2"></p><button id="quality">切换低画质</button><button id="full">全屏</button><button id="back">返回</button></section>'; (document.querySelector<HTMLElement>('#vol') as HTMLInputElement).value = String(options.volume); (document.querySelector<HTMLElement>('#sens') as HTMLInputElement).value = String(options.sensitivity); document.querySelector<HTMLElement>('#vol')!.oninput = e => { options.volume = +(e.target as HTMLInputElement).value; setVolume(options.volume); persist(); }; document.querySelector<HTMLElement>('#sens')!.oninput = e => { options.sensitivity = +(e.target as HTMLInputElement).value; sens = options.sensitivity / 1000; persist(); }; document.querySelector<HTMLElement>('#quality')!.onclick = () => { options.quality = options.quality === 1 ? .75 : 1; renderer.setPixelRatio(options.quality); persist(); }; document.querySelector<HTMLElement>('#full')!.onclick = () => document.documentElement.requestFullscreen(); document.querySelector<HTMLElement>('#back')!.onclick = () => menu(); }
+function start(s: number) { ending.reset(); player.reset(); broadcast("晚自习结束。请安静行走。请到一班检查遗留试卷。"); stage = s; save(stage); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.body.position.set(0, 1, 15); enemy.memory = 0; enemy.wasHidden=false; enemy.sawHide=false; enemy.path = []; enemy.timer = 0; enemy.index = 0; alert = 0; hidden = false; time = 0; resume(); }
 function resume() { resumeAudio(); score.start(); playing = true; keys.clear(); renderer.domElement.requestPointerLock(); tone(440); }
 function pause() { if (!playing)
     return; pauseAudio(); score.pause(); playing = false; keys.clear(); document.exitPointerLock(); ui.innerHTML = '<section><h2>暂停</h2><button id="resume">恢复</button><button id="menu">主菜单</button></section>'; document.querySelector<HTMLElement>('#resume')!.onclick = resume; document.querySelector<HTMLElement>('#menu')!.onclick = () => menu(); }
@@ -64,8 +67,7 @@ function interact() { const p = points[stage]; if (!p || Math.hypot(camera.posit
     document.querySelector<HTMLElement>('#power')!.onclick=()=>{if(circuitSolved(bits))advance();else{tone(90,.3);document.querySelector<HTMLElement>('#error')!.textContent='回路仍不正确：照明和门锁需要电源，点名和循环铃线必须断开。'}};
     document.querySelector<HTMLElement>('#cancel')!.onclick=resume; return;
 } if (stage === 4) {
-    if (time % 60 < 12)
-        menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');
+    if (time % 60 < 12) {ending.begin(camera);menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');broadcast('本次点名结束。你的名字，已从名单中划去。');}
     return;
 } advance(); }
 function advance() { stage++; save(stage); tone(660, .4); resume(); }
@@ -85,31 +87,15 @@ addEventListener('mousemove', e => { if (playing && document.pointerLockElement)
     camera.rotation.x = T.MathUtils.clamp(camera.rotation.x - e.movementY * sens, -1.4, 1.4);
 } });
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
-function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms; if (playing) {
+function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms; ending.update(dt,camera); if (playing) {
     score.update(dt, enemy.state === '追逐', options.volume);
     const before = time;
     time += dt;
     if (Math.floor(before / 60) !== Math.floor(time / 60)) {
         tone(880, 2);
-        broadcast("铃声期间，侧门开放十二秒。请勿奔跑。");
+        broadcast("铃声期间，侧门开放十二秒。值班人员原地听令。请保持距离。");
     }
-    const run = keys.has('ShiftLeft'), crouch = keys.has('ControlLeft');
-    const v = new T.Vector3(Number(keys.has('KeyD')) - Number(keys.has('KeyA')), 0, Number(keys.has('KeyS')) - Number(keys.has('KeyW'))).normalize().applyAxisAngle(new T.Vector3(0, 1, 0), camera.rotation.y);
-    const moving = v.length() > 0 && !hidden;
-    const speed = crouch ? 1.4 : run ? 4 : 2.5;
-    if (moving) {
-        const p = camera.position, x = p.x + v.x * speed * dt, z = p.z + v.z * speed * dt;
-        if (clear(x, p.z))
-            p.x = x;
-        if (clear(p.x, z))
-            p.z = z;
-        step += dt;
-        if (step > (run ? .28 : .55)) {
-            tone(crouch ? 70 : 100, .07);
-            step = 0;
-        }
-    }
-    camera.position.y = hidden ? .8 : crouch ? 1 : 1.65;
+    const {run,crouch,moving,footstep}=player.update(dt,keys,hidden);if(footstep)tone(crouch?70:100,.07);
     alert = T.MathUtils.clamp(alert + dt * (run && moving ? 4 : -1), 0, 100);
     if (enemy.update(dt, camera.position, run && moving, hidden, alert, time % 60 < 12)) {
         tone(65, 1);
@@ -122,4 +108,4 @@ menu();
 requestAnimationFrame(frame);
 // Opt-in read-only telemetry for automated keyboard-driven traversal. No state mutation.
 if (new URLSearchParams(location.search).has('qa'))
-    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, playing, hidden, alert, time, position: camera.position.toArray(), yaw: camera.rotation.y, enemy: enemy.body.position.toArray(), enemyState: enemy.state }) });
+    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, playing, hidden, alert, time, position: camera.position.toArray(), yaw: camera.rotation.y, enemy: enemy.body.position.toArray(), enemyState: enemy.state, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });
