@@ -372,3 +372,10 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 正常gh auth status与gh api user确认Tomhao10225101490/id126887862。v0.7.0草稿已创建，isDraft=true、targetCommitish等于固定源SHA、assets=[]；实际草稿URL https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/untagged-7bff70e23a6f7f7184e7 。未公开、不展示为下载入口。
 - 实际本机0.7.0候选app位于release/candidate-0.7/mac-arm64/末铃点名.app；56运行模块、版本、入口、字体与音频来源检查通过（candidate-0.7-package-inspection.json）。实际应用smoke会话69553退出0，菜单/鼠标锁定/暂停恢复/键盘/设置保存通过，日志candidate-0.7-smoke.log；整局证据仍为相同游戏逻辑的0.7.0-dev.1庭院app，不把smoke称为整局。
 - 当前本机GUI和打包进程均结束。下一步等待43096405685真实完成，成功后对现有草稿使用upload-preview.yml，参数version=0.7.0、build_run=43096405685、source_sha=上述固定SHA；随后取得9包大小/SHA256清单、远端核验、下载Mac包整局验证与DMG只读检查，再发布。不得把workflow存在或排队写成已发布。
+
+## 0.7 本机安装包实际完成，原生CI继续排队
+- 59710本机构建完成：release/local-0.7下实际DMG 140080183字节（SHA256 de0ea935f0bf08c2752ea5231fae591c03280d8390b572512c39bdfb6034d41a），ZIP 135544842字节（a30f9c5250f61ab51f9d54bc77d2e1612979b01bd2a4a92110cf04099839cf6c）。本机生成，不冒充CI产物。
+- DMG会话92817只读挂载后验证0.7.0版本/可执行入口/Applications链接/56运行模块及音频字体来源，正常卸载。ZIP通过CRC及资源检查，ditto解压到artifacts/local-0.7-extracted；实际解压app启动检查17933及完整断网键鼠路线27214均退出0。整局3次捕获后正常检查点续玩、HTTP/页面错误0，全部谜题、铃声出口、结局曲/原生最小化冻结/恢复/重开通过，报告local-0.7-zip-full.json。
+- 独立网页ZIP 12403006字节（11ebde9dab72a8586a906af3ac98031b7b4edcb9bd21aaae78c426659e630904），已单独解压并由独立临时HTTP服务在无头Chrome通过启动/菜单/暂停；不是浏览器整局证明。测试服务已关闭。browser-smoke增加可选ROLLCALL_WEB_URL，默认行为不变。
+- 三个文件合并到release/local-0.7，SHA256SUMS.txt实际命令核对全部OK。当前工具环境的C.UTF-8导致Mac Perl shasum报locale错误，使用命令局部LC_ALL=C后通过，不修改系统语言。公开清单docs/LOCAL-ARTIFACTS-0.7.0.md明确本机范围与未签名状态。
+- 本轮GUI、打包和临时HTTP进程均已结束。最近查询43096405685仍status=queued、jobs=[]，pending_deployments=[]；现有v0.7.0草稿assets=[]。继续观察同一运行，不把排队当成失败或新建重复任务。公开Release仍0.6。

@@ -80,3 +80,5 @@ Offline desktop game under development. [Download the 0.6.0 preview](https://git
 0.7开发版加入原创结局曲《末铃之后》，33秒本地WAV随应用分发；音量、播报压低、失焦暂停及重开清理均由独立模块管理。`test:ending-music`是播放器组件验证，`test:traverse`另从正常操作路线验证逃生触发，均不等同于主观音乐品质评审。
 
 0.7候选庭院已在实际桌面应用中正常断网通关，含分叉树木、叶片、铺石、栏杆、长椅与晨光阴影。[实际结局截图](docs/ending-0.7.png)。0.7发布包仍需各平台构建与下载验收，上述公开下载仍为0.6。
+
+本机已实际生成0.7安装包，位于 `release/local-0.7`（DMG、应用ZIP、独立网页ZIP）；[本机大小、SHA256与验证范围](docs/LOCAL-ARTIFACTS-0.7.0.md)。Mac ZIP解压后完整断网通关通过。该目录不提交到源码仓库，0.7远端Release尚未公开，请勿将本机路径当作GitHub下载链接。
