@@ -375,3 +375,8 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 新独立网页ZIP57833单独解压后可见Chrome普通键鼠回归通过，含第一道谜题、音频暂停/静音、设置/全屏/刷新读档，不是整局。三包真实大小/SHA256见docs/FIXED-LOCAL-ARTIFACTS-0.7.0.md和release/fixed-0.7/SHA256SUMS.txt。
 - 旧43096405685两次服务startup_failure已终止。新运行43098439265（https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43098439265）已提交并确认headSha=e411ca05f9eea347de25e527c450c98c08ec0080，最近status=queued、jobs=[]；后续只跟踪此新运行，不重新提交。v0.7.0现有草稿targetCommitish已更新为e411ca05f9eea347de25e527c450c98c08ec0080，isDraft=true、assets=[]；实际草稿URL变为https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/untagged-1174f18a5ac0aee4891b。
 - 本轮所有GUI、打包、临时HTTP已结束。下一步新原生构建成功后调用upload-preview.yml，参数version=0.7.0/build_run=43098439265/source_sha=e411ca05f9eea347de25e527c450c98c08ec0080；仍需9包与远端11资产核验、实际下载Mac包复验，再公开。已向用户发出可选首次试玩时长/体验反馈请求，尚无回复，不把缺少回复当成验收。
+
+## 新原生构建已创建五个job
+- 本轮先核对43098439265与工作树，运行确实仍活跃，未重复提交。等待期间整理README，删除相互叠加的历史候选说明，将公开0.6、本机fixed-0.7和平台验证范围合并为清晰入口；未修改固定候选运行代码。
+- 2026-11-11 20:59 UTC查询：43098439265仍queued，但已创建五个job（此前为空）：Windows130784692361、Mac arm64130784693033、Mac x64130784698203、Linux130784713716、Web130784721001，各自queued、steps=[]。这是同一运行的真实状态推进，不是完成或失败，继续观察，不触发重复构建。
+- 0.7草稿仍固定源e411ca05f9eea347de25e527c450c98c08ec0080，assets=[]。若将来服务再次终止，可保留已验证本机产物并明确平台缺口；目前五job仍活跃，继续完整构建路线，不提前把部分发布当全部完成。
