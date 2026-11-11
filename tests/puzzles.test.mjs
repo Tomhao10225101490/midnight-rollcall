@@ -1,0 +1,1 @@
+import test from 'node:test';import assert from 'node:assert/strict';import{circuitSolved}from '../dist/puzzles.js';test('配电谜题只有一组与文字线索一致的答案',()=>{let solutions=0;for(let i=0;i<16;i++){const b=[0,1,2,3].map(n=>Boolean(i&(1<<n)));if(circuitSolved(b)){solutions++;assert.deepEqual(b,[true,false,true,false])}}assert.equal(solutions,1);assert.equal(circuitSolved([]),false)});

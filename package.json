@@ -1,0 +1,59 @@
+{
+  "name": "midnight-rollcall",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "npm run build && node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "desktop": "npm run build && electron .",
+    "dist": "npm run build && node scripts/package-mac.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:desktop": "npm run build && node scripts/smoke-electron.mjs",
+    "test:traverse": "npm run build && node scripts/traverse-electron.mjs",
+    "dist:ci": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "@types/three": "0.187.0",
+    "electron": "43.3.0",
+    "electron-builder": "26.18.0",
+    "typescript": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
+    "vite": "8.3.8"
+  },
+  "build": {
+    "appId": "org.midnightrollcall.game",
+    "productName": "末铃点名",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    }
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+import * as T from 'three';
+export const walls: T.Box3[] = [];
+export const scene = new T.Scene();
+scene.background = new T.Color('#111e23');
+scene.fog = new T.Fog('#111e23', 12, 45);
+export function box(x: number, y: number, z: number, w: number, h: number, d: number, c: string, solid = false) { const m = new T.Mesh(new T.BoxGeometry(w, h, d), new T.MeshStandardMaterial({ color: c, roughness: .9 })); m.position.set(x, y, z); scene.add(m); if (solid)
+    walls.push(new T.Box3().setFromObject(m)); return m; }
+export function label(text: string, x: number, z: number) { const c = document.createElement('canvas'); c.width = 512; c.height = 128; const a = c.getContext('2d')!; a.fillStyle = '#243e39'; a.fillRect(0, 0, 512, 128); a.fillStyle = '#eadfb9'; a.font = `${Math.min(40, Math.floor(470 / Math.max(1, text.length)))}px sans-serif`; a.textAlign = 'center'; a.fillText(text, 256, 78); const p = new T.Mesh(new T.PlaneGeometry(3, .75), new T.MeshBasicMaterial({ map: new T.CanvasTexture(c), side: T.DoubleSide })); p.position.set(x, 2.4, z); scene.add(p); return p; }
+export function init() { scene.add(new T.HemisphereLight('#b3cfdb', '#30302b', 2)); box(0, -.15, 0, 24, .3, 44, '#454f4b'); box(0, 3.4, 0, 24, .2, 44, '#3c4540'); for (const x of [-12, 12])
+    box(x, 1.7, 0, .3, 3.4, 44, '#68756c', true); for (const z of [-22, 22])
+    box(0, 1.7, z, 24, 3.4, .3, '#69776f', true); for (const x of [-4, 4])
+    for (let z = -21; z < 22; z += 1) {
+        if ([-15, -5, 5, 15].some(n => Math.abs(n - z) <= 1))
+            continue;
+        box(x, 1.7, z, .2, 3.4, 1, '#65766f', true);
+    } for (const x of [-8, 8])
+    for (const z of [-10, 0, 10])
+        box(x, 1.7, z, 8, 3.4, .2, '#61716a', true); ['高三一班', '档案办公室', '广播室', '侧门值班室'].forEach((n, i) => label(n, -8, -20 + i * 10)); ['高三二班', '卫生储物间', '纪律室', '出口'].forEach((n, i) => label(n, 8, -20 + i * 10)); for (const x of [-9, -6, 6, 9])
+    for (const z of [-17, -14]) {
+        box(x, .6, z, 1.3, 1.2, .7, '#725d43', true);
+    } for (let z = -18; z < 22; z += 10) {
+    const l = new T.PointLight('#ffdc9f', 15, 12);
+    l.position.set(0, 2.9, z);
+    scene.add(l);
+} }
+export function clear(x: number, z: number) { return !walls.some(w => w.min.y < 1.8 && w.max.y > .1 && x > w.min.x - .3 && x < w.max.x + .3 && z > w.min.z - .3 && z < w.max.z + .3); }
+export function visible(a: T.Vector3, b: T.Vector3) { const d = b.clone().sub(a), ray = new T.Ray(a, d.clone().normalize()); return !walls.some(w => { const hit = ray.intersectBox(w, new T.Vector3()); return hit && hit.distanceTo(a) < d.length(); }); }
