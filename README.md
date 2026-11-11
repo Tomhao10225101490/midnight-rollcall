@@ -73,8 +73,10 @@ Offline desktop game under development. [Download the 0.6.0 preview](https://git
 
 字体缺失恢复测试：先保持 `npm run dev` 运行，再执行 `node scripts/font-failure-browser.mjs`。该脚本临时阻止字体请求，检查错误提示后解除阻止并重试。桌面测试须保持窗口可获得焦点。
 
-当前main为0.7.0-dev.1，新增门扇近景细节并修正跨门洞的装饰压条；最新含结局曲的开发应用放在 `release/music-0.7/mac-arm64/末铃点名.app`。上述下载与发布验收仍对应0.6.0。
+当前main为0.7.0候选版，新增门扇近景细节并修正跨门洞的装饰压条；已验证的庭院开发应用（元数据0.7.0-dev.1）放在 `release/courtyard-0.7/mac-arm64/末铃点名.app`。上述下载与发布验收仍对应0.6.0。
 
 0.7门扇碰撞回归：`npm run test:door-collision` 使用正常键盘检查防夹、打开门扇阻挡和绕行；公开0.6尚不含该修复。
 
 0.7开发版加入原创结局曲《末铃之后》，33秒本地WAV随应用分发；音量、播报压低、失焦暂停及重开清理均由独立模块管理。`test:ending-music`是播放器组件验证，`test:traverse`另从正常操作路线验证逃生触发，均不等同于主观音乐品质评审。
+
+0.7候选庭院已在实际桌面应用中正常断网通关，含分叉树木、叶片、铺石、栏杆、长椅与晨光阴影。[实际结局截图](docs/ending-0.7.png)。0.7发布包仍需各平台构建与下载验收，上述公开下载仍为0.6。
