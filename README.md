@@ -22,6 +22,7 @@ npm test
 npm run test:desktop
 npm run test:traverse
 npm run test:settings
+npm run test:rendering
 npm run test:hints
 npm run build
 npm run dist:ci
@@ -55,3 +56,5 @@ WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜�
 
 ## English Quick Start
 Offline desktop game under development. Run `npm ci`, `node node_modules/electron/install.js`, then `npm run desktop`. `npm test` runs logic tests; `npm run test:desktop` tests Electron. A playable development preview is available on GitHub Releases; final quality acceptance is still pending.
+
+当前 main 的 0.4.0-dev.1 为未发布开发版本：新增可关闭的接触阴影、方向键观察、实体黑板与场景标识清理。公开下载仍为上方 0.3.0，不能将开发版本测试视为发布包验证。

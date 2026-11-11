@@ -130,3 +130,10 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 下载该转存任务的verified-preview-manifest到artifacts/verified-0.3.0；运行verify-release.py核对远端9包+2清单全部11项大小与SHA256，以及精确源提交，全部匹配。随后草稿公开为预发布，gh确认isDraft=false、isPrerelease=true，真实地址：https://github.com/Tomhao10225101490/midnight-rollcall/releases/tag/v0.3.0 。
 从公开Release下载arm64 DMG与ZIP到release/downloads-0.3.0，实际SHA256匹配。解压后的ZIP应用实际启动并通过菜单、鼠标锁定、移动、暂停恢复和设置保存。DMG用hdiutil只读挂载，确认0.3.0、可执行入口、Applications符号链接，然后已正常卸载。不是对Gatekeeper首次用户提示的保证。
 0.3.0当前静态构建另用本机Chrome运行，菜单/进入游戏/暂停通过；未宣称浏览器整局通关。README截图替换为本次公开下载的Electron应用实机截图。
+
+## 0.4.0-dev.1 本地源码验证
+- `npm test`：15项通过；`npm run typecheck`通过。
+- `npm run test:rendering`：正常键盘走入一班并用方向键观察，通过游戏设置开关AO，三轮切换后纹理/几何稳定、无console/pageerror。最终数据见artifacts/rendering-regression.json；ao-on/off.png为真实桌面截图，已检查。新增黑板截图展示位置正确且不再重叠悬空标牌；没有宣称商业画质达标。
+- `npm run test:settings`：FOV、2倍渲染、重载持久化、暂停设置返回、记录Esc、800×600均通过。设置面板可滚动，底部按钮需下滚。
+- 早期0.4走廊回归120帧约60FPS、8次重启资源稳定；此数据并非全地图性能保证，也不是最终黑板版本重新计时。
+- 未做0.4打包或跨平台CI，当前发布仍0.3.0。新增渲染未验证完整逃生通关。
