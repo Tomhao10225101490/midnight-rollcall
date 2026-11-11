@@ -43,6 +43,7 @@ def inspect_asar(data,expected):
   return data[start:end]
  package=json.loads(read('package.json'));assert package['version']==expected
  assert package['main']=='electron/main.cjs' and b'contextIsolation:true'in read(package['main'])
+ if b'preload.cjs' in read(package['main']):assert b'contextBridge.exposeInMainWorld' in read('electron/preload.cjs')
  for name in ['dist/index.html','dist/main.js','dist/world.js','dist/enemy.js','dist/player.js','dist/audio.js','dist/three.module.js','dist/three.core.js','dist/licenses/PROJECT-LICENSE.txt']:
   assert len(read(name))>0,name
  return {'appVersion':package['version'],'containsGameModules':True,'entry':package['main'],'verifiedModuleCount':inspect_modules(lambda name:read('dist/'+name))}

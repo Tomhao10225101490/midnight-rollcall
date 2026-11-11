@@ -47,5 +47,5 @@ export class Enemy {
                 this.timer = 0;
             }
         }
-    } return d < .85 && visible(pos, p) && (!hidden || this.sawHide); }
+    } return d < 1.1 && visible(pos, p) && (!hidden || this.sawHide); }
 }

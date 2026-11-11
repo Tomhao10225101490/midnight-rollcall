@@ -185,3 +185,12 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 完整正常键盘路线PASS（3次捕获/续玩），增加密码错误反馈/无跳关、Esc退出重入、鼠标数字键、Enter、配电错误检查、Space切换验证，仍未使用状态注入。
 - 最终横排标签/清除陈旧反馈后，`scripts/panel-layout-electron.mjs`组件检查PASS，1280/800宽度、800×600窗口，所有底部按钮滚动可达，无pageerror；实际截图已观察。该脚本直接挂载组件，仅为组件证据。
 - 文件：artifacts/archive-panel.png、circuit-panel.png为实际路线；panel-*-800.png为组件检查。小窗口有面板内滚动，非所有内容同时可见。
+
+## 0.5 追捕反馈与原生窗口暂停
+- 新增不闪烁的追逐/搜索/目击藏身提示；被捕后2.6秒可跳过文字演出，再进入检查点菜单。正常捕获距离从0.85调为1.1，避免人物贴进镜头；仍要求视线通畅。
+- 发现并复现Mac原生窗口已最小化，但渲染层document.hasFocus仍true、document.hidden仍false。单纯DOM blur修复不足。新增sandbox预加载的只读焦点通知，保持contextIsolation、关闭Node访问，不开放命令接口。
+- 源码与实际独立开发app的被捕回归均PASS：正常键盘跑向巡逻、威胁提示、被捕、最小化冻结游戏/敌人/演出、跳过、继续；无pageerror。
+- 源码完整路线到达胜利画面，3次捕获/检查点恢复；原运行工具输出丢失，仅保留了路线JSON与胜利截图，后续用实际app重新跑并保存明确结果文件。
+- 另将胜利镜头接入窗口失焦暂停。实际开发app整局回归待完成；公开0.4包不变。开发包位于release/dev-0.5/mac-arm64/末铃点名.app，未经签名/公证。
+
+- 实际开发app完整键鼠通关PASS（78139退出0），3次捕获/正常检查点继续；胜利时原生最小化镜头冻结断言通过。结果保留artifacts/traverse-result.json及packaged-traverse-0.5.log。19项测试与typecheck通过。该app尚不含随后进行的人物曲面/织纹改动。

@@ -19,10 +19,11 @@ await route([[-2.7,z],[-8,z],[-8,[-18,-7,3,13][current.stage]]]);await solve(cur
 // Exit planning: restore the earned checkpoint after capture if necessary. No injected progress.
 if(!fresh){await route([[-8,16],[-2.7,16],[2.7,16],[8,16],[8,18]]);if((await state()).time%60>=12)throw Error('Need a safe waiting place before next bell');}
 else{await route([[2.7,-5],[8,-5],[8,-5.9]]);await page.keyboard.press('h');assert.equal((await state()).hidden,true);while((await state()).time<60.1){if(!(await state()).playing)throw Error('Caught while hiding');await page.waitForTimeout(100)}await page.keyboard.press('h');await route([[8,-5],[2.7,-5],[2.7,15],[8,15],[8,18]])}
-await page.keyboard.press('e');await page.getByRole('heading',{name:'天亮之前',exact:true}).waitFor({timeout:2000});await page.waitForTimeout(6500);await page.screenshot({path:'artifacts/victory.png'});assert.deepEqual(errors,[]);console.log(`PASS full keyboard playthrough; ${deaths} captures and normal checkpoint continuations; no inventory/state mutation`);break;
+await page.keyboard.press('e');await page.getByRole('heading',{name:'天亮之前',exact:true}).waitFor({timeout:2000});await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].minimize());await page.waitForFunction(()=>!window.rollcallQA.windowFocused);const inactive=await state();await page.waitForTimeout(500);assert.deepEqual((await state()).position,inactive.position,'ending camera freezes when minimized');await app.evaluate(({BrowserWindow})=>{const w=BrowserWindow.getAllWindows()[0];w.restore();w.focus()});await page.waitForTimeout(6500);await page.screenshot({path:'artifacts/victory.png'});assert.deepEqual(errors,[]);fs.writeFileSync('artifacts/traverse-result.json',JSON.stringify({passed:true,deaths,errors,scope:'normal keyboard route, earned checkpoints, no state mutation, native minimized ending freeze'},null,2));console.log(`PASS full keyboard playthrough; ${deaths} captures and normal checkpoint continuations; no inventory/state mutation`);break;
 }catch(error){const s=await state();trail.push({...s,error:String(error)});if(s.playing){ // Keep playing to observe capture before using the real checkpoint UI.
  await page.waitForTimeout(12000);
 }
+if((await state()).captureActive)await page.getByRole('heading',{name:'点名未结束',exact:true}).waitFor({timeout:5000});
 if(!await page.getByRole('heading',{name:'点名未结束',exact:true}).count())throw error;
 deaths++;console.log(`Capture ${deaths}, earned checkpoint ${s.stage}`);await page.getByRole('button',{name:'继续游戏',exact:true}).click();fresh=true;
 }}

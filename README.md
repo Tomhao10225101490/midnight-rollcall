@@ -61,3 +61,5 @@ Offline desktop game under development. Run `npm ci`, `node node_modules/electro
 当前 main 为未发布的 0.5.0-dev.1：新增开场身份与空间叙事、可回看的本局途中记录、建筑细节和设备谜题面板。公开下载安装包仍为 0.4.0；本机 release/mac-arm64 应用也仍是已验证的 0.4.0。开发版叙事回归：`npm run test:narrative`。
 
 设备面板独立布局与输入检查：`npm run test:panels`。该脚本直接挂载界面组件，不代表真实玩家通关；完整路线请用 `npm run test:traverse`。
+
+0.5开发版另存于 `release/dev-0.5/mac-arm64/末铃点名.app`，包含空间叙事、设备面板与追捕反馈；不覆盖上面的0.4正式预览包。被捕/窗口失焦回归：`npm run test:defeat`。

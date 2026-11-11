@@ -23,7 +23,8 @@
     "test:rendering": "npm run build && node scripts/rendering-electron.mjs",
     "test:hiding": "npm run build && node scripts/hiding-electron.mjs",
     "test:narrative": "npm run build && node scripts/narrative-electron.mjs",
-    "test:panels": "npm run build && node scripts/panel-layout-electron.mjs"
+    "test:panels": "npm run build && node scripts/panel-layout-electron.mjs",
+    "test:defeat": "npm run build && node scripts/defeat-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"
