@@ -10,7 +10,7 @@ async function solve(stage){await page.keyboard.press('e');if(stage===0)await pa
  }else{
  await page.getByRole('button',{name:'检查并领取通行证'}).click();assert.match(await page.locator('#error').innerText(),/未通过/);await page.locator('summary').click();assert.match(await page.locator('.circuit-record p').innerText(),/保留走廊照明/);
  await page.locator('[data-breaker="0"]').focus();await page.keyboard.press('Space');assert.equal(await page.locator('[data-breaker="0"]').getAttribute('aria-pressed'),'true');await page.locator('[data-breaker="2"]').click();await page.screenshot({path:'artifacts/circuit-panel.png'});await page.getByRole('button',{name:'检查并领取通行证'}).click()}
- assert.equal((await state()).stage,stage+1)}
+ assert.equal((await state()).stage,stage+1);assert.equal((await state()).audio.chapter,stage+1,'music follows earned puzzle chapter')}
 
 try{await page.getByRole('button',{name:'新游戏',exact:true}).click();let fresh=true;
 while(deaths<8){const current=await state();try{if(current.stage<4){const z=[-15,-5,5,15][current.stage];if(!fresh)await route([[-8,[-15,-5,5][current.stage-1]],[-2.7,[-15,-5,5][current.stage-1]]]);if(current.stage===1&&!current.notes.includes('seating')){await route([[-2.7,-15],[2.7,-15],[8,-15],[8,-18]]);await page.keyboard.press('e');await page.getByRole('button',{name:'记下并继续'}).click();assert.ok((await state()).notes.includes('seating'));await page.keyboard.press('j');await page.getByRole('button',{name:'二班监考登记',exact:true}).click();assert.match(await page.locator('#record-text').innerText(),/67分/);await page.getByRole('button',{name:'返回探索',exact:true}).click();await route([[8,-15],[2.7,-15],[-2.7,-15]])}

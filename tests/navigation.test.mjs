@@ -27,3 +27,8 @@ test('搜索路程消耗记忆后，抵达证据仍留出有限的周边搜查�
  assert.equal(e.state,'搜索','长路程后仍有检查附近的时间');assert.ok(e.memory<=6,'检查时间有上限');
  for(let i=0;i<400;i++)e.update(.016,hidden,false,true,0,false);assert.equal(e.state,'巡逻','不能无限延长记忆');
 });
+
+test('追逐后重开与新敌人具有相同首帧和后续巡逻行为',()=>{
+ const reused=new Enemy(),fresh=new Enemy();reused.body.position.set(0,1,0);reused.update(.1,new T.Vector3(0,1,2),true,false,60,false);assert.equal(reused.state,'追逐');reused.reset();assert.equal(reused.state,fresh.state);
+ for(let i=0;i<100;i++){const p=new T.Vector3(0,1,-19);reused.update(.1,p,false,false,0,i<20);fresh.update(.1,p,false,false,0,i<20);assert.equal(reused.state,fresh.state);assert.ok(reused.body.position.distanceTo(fresh.body.position)<1e-8);assert.equal(reused.body.rotation.y,fresh.body.rotation.y)}
+});

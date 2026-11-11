@@ -18,6 +18,7 @@ export class Enemy {
     wasHidden = false;
     sawHide = false;
     constructor() { this.body.visible = true; this.body.material.visible = false; this.body.add(this.model.root); }
+    reset(){this.body.position.set(0,1,15);this.body.rotation.set(0,0,0);this.state='巡逻';this.search.reset();this.last.set(0,0,0);this.memory=0;this.index=0;this.path=[];this.timer=0;this.walkTime=0;this.wasHidden=false;this.sawHide=false;this.model.animate(0,false,this.state)}
     route(target:T.Vector3){this.path=findPath(this.body.position,target)}
     update(dt: number, p: T.Vector3, noise: boolean, hidden: boolean, alert: number, bell: boolean) { this.walkTime += dt; this.model.animate(this.walkTime, this.path.length > 0,this.state); const pos = this.body.position, d = pos.distanceTo(p); if(bell){this.search.reset();this.state='听铃';this.memory=0;this.path=[];this.timer=0;this.sawHide=false;this.wasHidden=hidden;this.model.animate(this.walkTime,false,'听铃');return d<.85&&visible(pos,p)&&!hidden;} const facing = new T.Vector3(Math.sin(this.body.rotation.y), 0, Math.cos(this.body.rotation.y)); const sight = d < 11 && visible(pos, p) && (d < 2 || facing.dot(p.clone().sub(pos).normalize()) > 0.25); if (hidden && !this.wasHidden) this.sawHide = sight; if (!hidden) this.sawHide = false; this.wasHidden = hidden; if ((sight && !hidden) || (noise && d < 13) || (hidden && this.sawHide && this.memory > 0)) {
         this.search.reset();

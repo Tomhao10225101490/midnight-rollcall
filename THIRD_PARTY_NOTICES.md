@@ -16,3 +16,5 @@ TypeScript、Vite和electron-builder：构建工具，MIT。Playwright：测试�
 `src/architecture.ts`包含原创双管荧光灯、暖气片、管路阀门和校钟几何，使用共享网格实例化，无外部模型或纹理。
 
 `src/windows.ts`的闭合窗户几何与磨砂纹理、`src/decor.ts`的档案柜细节和分类牌为本项目原创程序化资产，无外部素材。
+
+`src/composition.ts`的五段探索乐句与追逐动机为本项目原创编排，以程序合成音色播放，无外部录音或曲谱引用。

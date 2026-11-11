@@ -28,7 +28,8 @@
     "test:mix": "npm run build && node scripts/mix-electron.mjs",
     "test:map": "npm run build && node scripts/map-electron.mjs",
     "test:search": "npm run build && node scripts/search-electron.mjs",
-    "test:fonts": "npm run build && node scripts/fonts-electron.mjs"
+    "test:fonts": "npm run build && node scripts/fonts-electron.mjs",
+    "test:score-reset": "npm run build && node scripts/score-reset-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"
