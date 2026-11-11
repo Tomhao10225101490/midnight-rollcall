@@ -36,8 +36,12 @@ export function storageCabinet(){const root=new T.Group();root.name='原创储�
  part(root,2,.08,1,0,.1,0,steel);part(root,2,.08,1,0,2,0,steel);
  for(const x of [-.96,.96])part(root,.08,1.84,1,x,1.04,0,steel);
  part(root,1.85,1.84,.045,0,1.04,-.48,steel);
- for(const x of [-.475,.475]){part(root,.92,1.78,.055,x,1.04,.48,steel);
-  for(const y of [1.5,1.57,1.64,1.71])part(root,.58,.018,.007,x,y,.511,rubber);
+ for(const x of [-.475,.475]){
+  // Actual openings between angled louvres, visible from the concealed viewpoint.
+  part(root,.92,1.28,.055,x,.79,.48,steel);part(root,.92,.18,.055,x,1.84,.48,steel);
+  for(const dx of [-.405,.405])part(root,.11,.32,.055,x+dx,1.59,.48,steel);
+  for(const y of [1.44,1.515,1.59,1.665,1.74]){const louvre=part(root,.7,.018,.07,x,y,.49,steel);louvre.rotation.x=-.28;}
+
   part(root,.04,.17,.04,x+(x<0?.32:-.32),1.04,.53,screw);
   for(const y of [.32,1.72])part(root,.035,.09,.035,x+(x<0?-.44:.44),y,.51,screw);
  }

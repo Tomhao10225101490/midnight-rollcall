@@ -1,4 +1,5 @@
 """Check hashes, archive payloads, app version and entry modules without running binaries."""
+import posixpath
 import pathlib,hashlib,json,zipfile,tarfile,sys,os,struct,re,shutil,subprocess,tempfile
 root=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'artifacts/ci-78203cf');results=[]
 seven=os.environ.get('SEVEN_ZIP') or shutil.which('7zz') or shutil.which('7z')
@@ -11,6 +12,25 @@ def archive_asar(archive):
  names=[line[7:] for line in listing.splitlines() if line.startswith('Path = ') and line.endswith('/app.asar')]
  assert len(names)==1,(archive.name,'expected one app.asar',names)
  return unpack(archive,names[0])
+def inspect_modules(read):
+ """Follow shipped static ESM imports; missing transitive addons must fail a release."""
+ html=read('index.html').decode('utf-8');assert './main.js' in html
+ checked=set()
+ def visit(name):
+  assert not name.startswith(('../','/')),name
+  if name in checked:return
+  checked.add(name);source=read(name).decode('utf-8');assert source.strip(),name
+  for spec in re.findall(r"(?:from|import)\s*['\"]([^'\"]+)['\"]",source):
+   if spec.startswith('.'):
+    target=posixpath.normpath(posixpath.join(posixpath.dirname(name),spec))
+   elif spec=='three':target='three.module.js'
+   elif spec.startswith('three/addons/'):
+    assert '"three/addons/":"./addons/"' in html
+    target='addons/'+spec[len('three/addons/'):]
+   else:raise AssertionError('Unbundled import '+spec+' in '+name)
+   visit(target)
+ visit('main.js')
+ return len(checked)
 def inspect_asar(data,expected):
  header_size=struct.unpack_from('<I',data,4)[0];json_size=struct.unpack_from('<I',data,12)[0]
  assert 16+json_size<=8+header_size<=len(data)
@@ -25,7 +45,7 @@ def inspect_asar(data,expected):
  assert package['main']=='electron/main.cjs' and b'contextIsolation:true'in read(package['main'])
  for name in ['dist/index.html','dist/main.js','dist/world.js','dist/enemy.js','dist/player.js','dist/audio.js','dist/three.module.js','dist/three.core.js','dist/licenses/PROJECT-LICENSE.txt']:
   assert len(read(name))>0,name
- return {'appVersion':package['version'],'containsGameModules':True,'entry':package['main']}
+ return {'appVersion':package['version'],'containsGameModules':True,'entry':package['main'],'verifiedModuleCount':inspect_modules(lambda name:read('dist/'+name))}
 for sums in sorted(root.glob('*/SHA256SUMS.txt')):
  for line in sums.read_text().splitlines():
   expected,name=line.split('  ',1);assert pathlib.Path(name).name==name
@@ -38,7 +58,7 @@ for sums in sorted(root.glob('*/SHA256SUMS.txt')):
   r={'file':name,'size':p.stat().st_size,'sha256':actual,'checksumVerified':True};data=None
   if name.endswith('-web.zip'):
    with zipfile.ZipFile(p) as z:
-    r['containsWebEntry']={'index.html','main.js','three.module.js','three.core.js','world.js','enemy.js','audio.js'}<=set(z.namelist());assert r['containsWebEntry']
+    r['containsWebEntry']={'index.html','main.js','three.module.js','three.core.js','world.js','enemy.js','audio.js'}<=set(z.namelist());assert r['containsWebEntry'];r['verifiedModuleCount']=inspect_modules(z.read)
   elif name.endswith('.zip'):
    with zipfile.ZipFile(p) as z:
     names=z.namelist();asar=[n for n in names if n.endswith('Resources/app.asar')];assert len(asar)==1

@@ -23,6 +23,7 @@ npm run test:desktop
 npm run test:traverse
 npm run test:settings
 npm run test:rendering
+npm run test:hiding
 npm run test:hints
 npm run build
 npm run dist:ci
@@ -32,7 +33,7 @@ npm run dist:ci
 `npm run dev`可在本机4173端口运行辅助浏览器构建。最终用户无需打开浏览器。
 
 ## 操作
-WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜旁躲藏、J查看记录和逐级提示、Esc暂停。奔跑制造声音并提高纪律值；安静行动逐步降低。铃响期间出口开放十二秒。关键进度自动存档，设置保存到本机。
+WASD移动、鼠标观察、Shift奔跑、Ctrl潜行、E互动、H在储物柜前藏入/退出（柜内只能通过通风缝观察，被目击藏入会遭搜查）、J查看记录和逐级提示、Esc暂停。奔跑制造声音并提高纪律值；安静行动逐步降低。铃响期间出口开放十二秒。关键进度自动存档，设置保存到本机。
 
 恐怖追逐，无血腥，无镜头晃动或刻意闪烁。请先调低音量；出现晕动不适时暂停。
 

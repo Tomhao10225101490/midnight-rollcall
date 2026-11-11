@@ -9,7 +9,7 @@ if(current.stage===2&&!current.notes.includes('channels')){await route([[-2.7,5]
 await route([[-2.7,z],[-8,z],[-8,[-18,-7,3,13][current.stage]]]);await solve(current.stage);fresh=false;continue}
 // Exit planning: restore the earned checkpoint after capture if necessary. No injected progress.
 if(!fresh){await route([[-8,16],[-2.7,16],[2.7,16],[8,16],[8,18]]);if((await state()).time%60>=12)throw Error('Need a safe waiting place before next bell');}
-else{await route([[2.7,-5],[8,-5],[8,-7]]);await page.keyboard.press('h');assert.equal((await state()).hidden,true);while((await state()).time<60.1){if(!(await state()).playing)throw Error('Caught while hiding');await page.waitForTimeout(100)}await page.keyboard.press('h');await route([[8,-5],[2.7,-5],[2.7,15],[8,15],[8,18]])}
+else{await route([[2.7,-5],[8,-5],[8,-5.9]]);await page.keyboard.press('h');assert.equal((await state()).hidden,true);while((await state()).time<60.1){if(!(await state()).playing)throw Error('Caught while hiding');await page.waitForTimeout(100)}await page.keyboard.press('h');await route([[8,-5],[2.7,-5],[2.7,15],[8,15],[8,18]])}
 await page.keyboard.press('e');await page.getByRole('heading',{name:'天亮之前',exact:true}).waitFor({timeout:2000});await page.waitForTimeout(6500);await page.screenshot({path:'artifacts/victory.png'});assert.deepEqual(errors,[]);console.log(`PASS full keyboard playthrough; ${deaths} captures and normal checkpoint continuations; no inventory/state mutation`);break;
 }catch(error){const s=await state();trail.push({...s,error:String(error)});if(s.playing){ // Keep playing to observe capture before using the real checkpoint UI.
  await page.waitForTimeout(12000);

@@ -11,7 +11,7 @@ export class Player {
   if(!hidden){const x=p.x+v.x*speed*dt,z=p.z+v.z*speed*dt;if(this.canMove(x,p.z))p.x=x;if(this.canMove(p.x,z))p.z=z}
   const moving=Math.hypot(p.x-before.x,p.z-before.z)>.0001;
   let footstep=false;if(moving){this.step+=dt;if(this.step>(run?.28:.55)){footstep=true;this.step=0}}
-  p.y=hidden?.8:crouch?1:1.65;
+  if(!hidden)p.y=crouch?1:1.65;
   return {moving,run,crouch,noise:run&&moving,footstep};
  }
 }
