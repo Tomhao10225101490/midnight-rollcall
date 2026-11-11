@@ -1,6 +1,6 @@
 {
   "name": "midnight-rollcall",
-  "version": "0.3.0-dev.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "main": "electron/main.cjs",
@@ -18,7 +18,8 @@
     "test:audio": "npm run build && node scripts/audio-electron.mjs",
     "dist:web": "npm run build && python3 scripts/package-web.py",
     "test:hints": "npm run build && node scripts/hints-electron.mjs",
-    "test:materials": "npm run build && node scripts/materials-electron.mjs"
+    "test:materials": "npm run build && node scripts/materials-electron.mjs",
+    "test:settings": "npm run build && node scripts/settings-electron.mjs"
   },
   "dependencies": {
     "three": "https://registry.npmjs.org/three/-/three-0.187.0.tgz"

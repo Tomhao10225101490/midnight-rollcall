@@ -1,6 +1,17 @@
 name: Upload verified preview packages
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Package version, without v
+        required: true
+        default: '0.3.0'
+      build_run:
+        description: Successful native build workflow run ID
+        required: true
+      source_sha:
+        description: Exact 40-character source commit of that build
+        required: true
 permissions:
   contents: read
 jobs:
@@ -13,17 +24,36 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
+      PREVIEW_VERSION: ${{ inputs.version }}
+      BUILD_RUN: ${{ inputs.build_run }}
+      SOURCE_SHA: ${{ inputs.source_sha }}
     steps:
       - uses: actions/checkout@v4
       - name: Verify immutable source build
         run: |
-          gh api repos/$GH_REPO/actions/runs/43055992500 > run.json
-          python3 -c "import json; r=json.load(open('run.json')); assert r['conclusion']=='success' and r['head_sha']=='d3e2941aebb233d598c51fe90f19aa0717fc0e82'"
+          python3 - <<'PY'
+          import json,os,re,subprocess
+          assert re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',os.environ['PREVIEW_VERSION'])
+          assert re.fullmatch(r'[0-9]+',os.environ['BUILD_RUN'])
+          assert re.fullmatch(r'[a-f0-9]{40}',os.environ['SOURCE_SHA'])
+          route='repos/'+os.environ['GH_REPO']+'/actions/runs/'+os.environ['BUILD_RUN']
+          r=json.loads(subprocess.check_output(['gh','api',route]))
+          assert r['conclusion']=='success' and r['head_sha']==os.environ['SOURCE_SHA']
+          assert r['path']=='.github/workflows/build.yml'
+          PY
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 43055992500
+          run-id: ${{ inputs.build_run }}
           path: artifacts/release-input
       - run: python3 scripts/verify-downloads.py artifacts/release-input
       - name: Upload only missing, verified assets to draft
         run: python3 scripts/upload-preview.py artifacts/release-input
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-preview-manifest
+          path: |
+            artifacts/release-input/verified-packages.json
+            artifacts/release-input/SHA256SUMS.txt
+            artifacts/release-input/ARTIFACTS-*.md
+          if-no-files-found: error
