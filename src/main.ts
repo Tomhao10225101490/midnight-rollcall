@@ -13,10 +13,10 @@ import { decorate } from './decor';
 import { options, persist } from './settings';
 import * as T from 'three';
 import './style.css';
-import { scene, init, clear, box, label } from './world';
+import { scene, init, clear, visible, box, label } from './world';
 import { Enemy } from './enemy';
 import { read, save } from './save';
-import { tone, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
+import { tone, effect, measureEffects, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
 init();
 decorate();props();initDoors();
 upgradeMaterials(scene);
@@ -31,7 +31,7 @@ renderer.toneMapping = T.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 const camera = new T.PerspectiveCamera(75, innerWidth / innerHeight, .1, 60);
 camera.rotation.order = 'YXZ';const player=new Player(camera);const ending=new Ending();camera.position.set(0,1.65,-19);camera.rotation.y=Math.PI;
-let notes:ClueId[]=[];let doorNoise=0;let enemy = new Enemy(), stage = 0, playing = false, hidden = false, alert = 0, time = 0, sens = options.sensitivity / 1000, last = 0, step = 0;
+let enemyStride=0;let notes:ClueId[]=[];let doorNoise=0;let enemy = new Enemy(), stage = 0, playing = false, hidden = false, alert = 0, time = 0, sens = options.sensitivity / 1000, last = 0, step = 0;
 const keys = new Set<string>(), ui = document.querySelector<HTMLElement>('#ui')!;
 const names = ['阅读一班试卷', '打开办公室档案柜', '校准广播频率', '修复侧门配电并领取通行证', '趁铃声离开出口'];
 const points = [[-8, -19], [-8, -8], [-8, 3], [-8, 13], [8, 18]];
@@ -42,11 +42,11 @@ box(8, 1, -7, 2, 2, 1, '#40535a');
 label('藏身柜 H · 被目击藏入会被搜查', 8, -8);
 function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = settings; document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
 function settings() { ui.innerHTML = '<section><h2>操作与设置</h2><p>WASD 移动 · 鼠标观察 · Shift 奔跑 · Ctrl 潜行 · E 互动 · H 藏身 · J 记录与提示 · Esc 暂停。奔跑增加纪律值；安静移动降低纪律值。每60秒响铃，开放出口12秒，值班人停步听令（不要触碰他）。</p><p>音量 <input id="vol" type="range" min="0" max="1" step=".01" value=".3"></p><p>灵敏度 <input id="sens" type="range" min="1" max="5" value="2"></p><button id="quality">切换低画质</button><button id="full">全屏</button><button id="back">返回</button></section>'; (document.querySelector<HTMLElement>('#vol') as HTMLInputElement).value = String(options.volume); (document.querySelector<HTMLElement>('#sens') as HTMLInputElement).value = String(options.sensitivity); document.querySelector<HTMLElement>('#vol')!.oninput = e => { options.volume = +(e.target as HTMLInputElement).value; setVolume(options.volume); persist(); }; document.querySelector<HTMLElement>('#sens')!.oninput = e => { options.sensitivity = +(e.target as HTMLInputElement).value; sens = options.sensitivity / 1000; persist(); }; document.querySelector<HTMLElement>('#quality')!.onclick = () => { options.quality = options.quality === 1 ? .75 : 1; renderer.setPixelRatio(options.quality); persist(); }; document.querySelector<HTMLElement>('#full')!.onclick = () => document.documentElement.requestFullscreen(); document.querySelector<HTMLElement>('#back')!.onclick = () => menu(); }
-function start(s: number,restoredNotes:ClueId[]=[]) { notes=[...restoredNotes]; resetDoors();doorNoise=0; ending.reset(); player.reset(); broadcast(s===0?"晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.body.position.set(0, 1, 15); enemy.memory = 0; enemy.wasHidden=false; enemy.sawHide=false; enemy.path = []; enemy.timer = 0; enemy.index = 0; alert = 0; hidden = false; time = 0; resume(); }
+function start(s: number,restoredNotes:ClueId[]=[]) { notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0; ending.reset(); player.reset(); broadcast(s===0?"晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.body.position.set(0, 1, 15); enemy.memory = 0; enemy.wasHidden=false; enemy.sawHide=false; enemy.path = []; enemy.timer = 0; enemy.index = 0; alert = 0; hidden = false; time = 0; resume(); }
 function resume() { resumeAudio(); score.start(); playing = true; keys.clear(); renderer.domElement.requestPointerLock(); tone(440); }
 function pause() { if (!playing)
     return; pauseAudio(); score.pause(); playing = false; keys.clear(); document.exitPointerLock(); ui.innerHTML = '<section><h2>暂停</h2><button id="resume">恢复</button><button id="menu">主菜单</button></section>'; document.querySelector<HTMLElement>('#resume')!.onclick = resume; document.querySelector<HTMLElement>('#menu')!.onclick = () => menu(); }
-function interact() { const door=nearestDoor(camera.position);if(door){door.set(!door.open);doorNoise=1;tone(150,.25);return} const clue=nearbyClue();if(clue){show(clue.text,()=>{if(!notes.includes(clue.id))notes.push(clue.id);save(stage,notes);resume()});return} const p = points[stage]; if (!p || Math.hypot(camera.position.x - p[0], camera.position.z - p[1]) > 2.4)
+function interact() { const door=nearestDoor(camera.position);if(door){door.set(!door.open);doorNoise=1;effect('door');return} const clue=nearbyClue();if(clue){show(clue.text,()=>{if(!notes.includes(clue.id))notes.push(clue.id);save(stage,notes);resume()});return} const p = points[stage]; if (!p || Math.hypot(camera.position.x - p[0], camera.position.z - p[1]) > 2.4)
     return; if (stage === 0) {
     show(records[1], () => advance());
     return;
@@ -94,24 +94,27 @@ addEventListener('mousemove', e => { if (playing && document.pointerLockElement)
 } });
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
 function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms; ending.update(dt,camera); if (playing) {
-    doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume);
+    doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage);
     const before = time;
     time += dt;
     if (Math.floor(before / 60) !== Math.floor(time / 60)) {
-        tone(880, 2);
+        effect('bell');
         broadcast("铃声期间，侧门开放十二秒。值班人员原地听令。请保持距离。");
     }
-    const {run,crouch,moving,footstep}=player.update(dt,keys,hidden);if(footstep)tone(crouch?70:100,.07);
+    const {run,crouch,moving,footstep}=player.update(dt,keys,hidden);if(footstep)effect('step',crouch?.18:run?.7:.45);
     alert = T.MathUtils.clamp(alert + dt * (run && moving ? 4 : -1), 0, 100);
+    const oldEnemy=enemy.body.position.clone();
     if (enemy.update(dt, camera.position, (run && moving)||doorNoise>0, hidden, alert, time % 60 < 12)) {
         tone(65, 1);
         menu('点名未结束', '值班人将你带回了座位。可继续检查点或重新开始。');
     }
     else
         ui.innerHTML = `<div class="hud">末铃点名 · ${names[stage]}<br>纪律 ${Math.round(alert)} · ${time % 60 < 12 ? '铃响：侧门开放' : '下次铃声 ' + Math.ceil(60 - time % 60) + '秒'}<br>随身记录：${['空', '已记下试卷', '频率档案', '广播已解除', '侧门通行证'][stage]}<br>${hidden ? (enemy.sawHide?'藏身被目击！值班人正在搜查 · H 离开':'已藏身 · H 离开') : ''}</div><div class="cross">·</div><div class="bottom">${stage === 0 ? '广播：请到一班检查遗留试卷。' : stage === 1 ? '试卷已收好。先核对二班登记，再前往办公室；J键回看线索。' : stage === 2 ? '档案已收好。去纪律室查找频道索引，再到广播室；J键回看线索。' : stage === 3 ? '广播：空白名单已接收，领取侧门通行证。' : '等铃声响起，前往东侧出口。'}<br>${nearbyClue()?'【E】阅读'+nearbyClue()!.name:Math.hypot(camera.position.x - points[stage][0], camera.position.z - points[stage][1]) < 2.4 ? '【E】' + names[stage] : nearestDoor(camera.position)?'【E】'+(nearestDoor(camera.position)!.open?'关门（会发出声音）':'开门（会发出声音）'):'靠近设备查看互动提示'} · H 储物间躲藏 · J 线索记录</div>`;
+    enemyStride+=enemy.body.position.distanceTo(oldEnemy);
+    if(playing&&enemyStride>1.25){enemyStride=0;const dx=enemy.body.position.x-camera.position.x,dz=enemy.body.position.z-camera.position.z,distance=Math.hypot(dx,dz);effect('step',Math.max(0,1-distance/18)*.55,(Math.cos(camera.rotation.y)*dx-Math.sin(camera.rotation.y)*dz)/Math.max(1,distance),!visible(camera.position,enemy.body.position));}
 } renderer.render(scene, camera); }
 menu();
 requestAnimationFrame(frame);
 // Opt-in read-only telemetry for automated keyboard-driven traversal. No state mutation.
 if (new URLSearchParams(location.search).has('qa'))
-    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, notes:[...notes], playing, hidden, alert, time, audio:score.measure(), position: camera.position.toArray(), yaw: camera.rotation.y, enemy: enemy.body.position.toArray(), enemyState: enemy.state, door:nearestDoor(camera.position)?{open:nearestDoor(camera.position)!.open}:null, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });
+    Object.defineProperty(window, 'rollcallQA', { get: () => Object.freeze({ stage, notes:[...notes], playing, hidden, alert, time, audio:score.measure(),effects:measureEffects(), position: camera.position.toArray(), yaw: camera.rotation.y, enemy: enemy.body.position.toArray(), enemyState: enemy.state, door:nearestDoor(camera.position)?{open:nearestDoor(camera.position)!.open}:null, render:{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures} }) });

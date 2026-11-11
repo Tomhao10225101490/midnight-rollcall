@@ -15,7 +15,7 @@
 
 ## 本地入口与源码
 项目目录：当前仓库目录 `midnight-rollcall`。
-可双击应用：`release/mac-arm64/末铃点名.app`。
+可双击应用：`release/mac-arm64/末铃点名.app`（本机已更新至0.3.0-dev.1，区别于GitHub的0.2.0包）。
 源码运行：`npm ci`、`node node_modules/electron/install.js`、`npm run desktop`。
 验证：`npm run typecheck`、`npm test`、`npm run test:desktop`、`npm run test:regression`、`npm run test:audio`、`npm run test:traverse`。
 打包：`npm run dist`；Web ZIP：`npm run dist:web`（需要Python 3）。
@@ -38,6 +38,8 @@ Release：[v0.2.0开发预览](https://github.com/Tomhao10225101490/midnight-rol
 - 一班排序规则与二班监考登记组成档案密码；办公室频道顺序与纪律室索引组成广播频率。增加值班日记和可持久化收集记录，旧版存档可迁移。
 - 扩展路线实际键盘通关通过，包含3次捕获与正常检查点续玩。不能将测试熟知答案的路线当作首次玩家体验。
 - 对道具进行了诊断相机渲染检查，修正标签拉伸和直接泄露谜底；这些诊断画面不是玩家通关截图。
+
+- 新音效、脚步距离/方向/遮挡以及随进度变化的配乐已接入；11项逻辑测试通过，源代码及本机0.3.0-dev.1打包应用的播放、静音、暂停信号验证通过。没有将信号验证当作主观听感验收。
 
 ## 尚未完成与边界
 - 用户追加的高级商业游戏级建模与音乐目标尚未达到验收；目前仍是程序化独立游戏风格。
