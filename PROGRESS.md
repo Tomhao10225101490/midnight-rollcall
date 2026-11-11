@@ -284,3 +284,9 @@ CI43055992500全部成功，0.2.0九个包已校验，Windows嵌入资源检查�
 - 已发起upload-preview.yml，对九个包做内容检查并上传既有草稿；下一步收取该run ID，不重复dispatch，确认终态、独立manifest及远端资产后才下载草稿Mac包验证。
 
 - 包检查/草稿上传run已确认：43089960714，https://github.com/Tomhao10225101490/midnight-rollcall/actions/runs/43089960714 。下一步跟进该run，并下载verified-preview-manifest到artifacts/verified-0.6.0；随后verify-release.py核对11项远端资产，再下载Mac arm64 DMG/ZIP实际验证。
+
+## 0.6.0 草稿下载验收
+- 包检查/上传43089960714终态success；独立下载verified-preview-manifest到artifacts/verified-0.6.0，verify-release.py确认9包+2清单全部大小/SHA256/source匹配，isDraft=true。九包均含53个递归模块，合计1055548781字节。
+- 从草稿实际下载Mac arm64 DMG/ZIP到release/downloads-0.6.0；本地大小和SHA256匹配独立CI清单。ZIP解到artifacts/downloaded-0.6.0/末铃点名.app，真实启动/鼠标锁定/暂停/移动/设置、20次快速开关记录与Esc/最小化暂停通过。已观察下载app的实际画面。
+- DMG只读挂载，版本0.6.0、可执行入口与/Applications链接检查通过，正常卸载。报告artifacts/dmg-0.6-inspection.json。
+- 实际下载app完整断网键鼠路线1689仍在运行，输出artifacts/downloaded-0.6-full.log；不要重复启动，尚未宣称本次下载包完整通关。下一步收取终态并另存traverse-result.json；通过后完善release notes/docs真实矩阵，再公开草稿并重新verify-release。否则先修复。
