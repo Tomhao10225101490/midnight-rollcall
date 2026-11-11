@@ -439,3 +439,4 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - station-collision修复后33项测试通过，新增各设备玩家/敌人阻挡、外侧站位和寻路绕行检查。`node scripts/prop-collision-electron.mjs`正常键鼠抵达试卷桌并尝试穿入，确被挡在z=-18.1909，随后E正常读取并推进stage1；报告artifacts/prop-collision-result.json。无位置/物品注入。
 - 碰撞修复后源码Electron完整断网正常键鼠通关通过，3次捕获后用真实检查点继续，全部设备外侧互动与绕行路径通过，HTTP/页面错误0；报告collision-0.8-traverse-result.json、trail.json与log。旧的设备内部站位不再用于此路线。
 - release/collision-fix-0.8实际生成修复版DMG/ZIP，ZIP CRC及app.asar与打包.app一致，63递归模块、字体/音乐资源与许可检查通过；大小与SHA见docs/FIXED-LOCAL-ARTIFACTS-0.8.0.md。
+- 实际修复版.app执行prop-collision通过正常键鼠桌体阻挡与桌外交互，随后smoke通过菜单/锁鼠/暂停/输入/设置；不是修复发行包完整通关。待新原生43105561085完成后下载真实CI包继续验证。
