@@ -2,6 +2,9 @@ import {campusWindows} from './windows';
 import {schoolChair} from './furniture';
 import * as T from 'three';
 import { box, label, scene } from './world';
+import {campusGrounds} from './campus-grounds';
+import {nightSky} from './night-sky';
+import {ceilings} from './ceilings';
 export function decorate() {
     const tileGeo=new T.BoxGeometry(.98,.018,.98);
     const tileMat=new T.MeshStandardMaterial({color:'#737e73',roughness:.78});
@@ -28,7 +31,7 @@ export function decorate() {
         box(x+.8,1.15,-21.5,.2,.035,.08,'#c9bea0');box(x+1.2,1.15,-21.5,.12,.025,.03,'#d6cfb8');
         for (const z of [-17, -14])
             for (const a of [x - 1, x + 2]) {
-                const chair=schoolChair();chair.position.set(a,0,z+1);scene.add(chair);
+                const chair=schoolChair();chair.position.set(a,0,z+1);chair.rotation.y=Math.PI;scene.add(chair);
             }
     }
     campusWindows(scene);
@@ -77,4 +80,7 @@ export function decorate() {
     const moon = new T.PointLight('#9bbecb', 20, 18);
     moon.position.set(8, 2.5, 19);
     scene.add(moon);
+    campusGrounds();
+    nightSky(scene);
+    ceilings(scene);
 }

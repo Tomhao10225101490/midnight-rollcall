@@ -3,6 +3,7 @@ import {scene,walls} from './world';
 import {stationBounds} from './station-collision';
 import {examPaper} from './exam-paper';
 import {deskTools} from './desk-tools';
+import {schoolDesk,scannedFurniture} from './furniture';
 import {propSurface} from './prop-surfaces';
 import {metricBoxUV} from './architectural-surfaces';
 import {stationDisplay} from './station-display';
@@ -27,10 +28,12 @@ function artwork(g:T.Group,text:string[],w:number,h:number,x:number,y:number,z:n
 }
 export function station(index:number,x:number,z:number,record?:PaperRecord){const g=new T.Group();g.position.set(x,0,z);scene.add(g);walls.push(stationBounds(index,x,z));let update=(_stage:number,_bell:boolean)=>{};
  if(index===0){
-  block(g,0,.78,0,1.5,.08,.95,wood);for(const dx of [-.64,.64])for(const dz of [-.35,.35])block(g,dx,.38,dz,.055,.76,.055,metal);
-  for(let i=0;i<4;i++){const sheet=block(g,-.18,.83+i*.006,0,.43,.005,.6,paper);sheet.rotation.y=i*.025}
-  const exam=examPaper(record);exam.position.set(-.18,.858,0);exam.rotation.y=-.045;g.add(exam);
-  g.add(deskTools());
+  const scanned=scannedFurniture(),lift=scanned?.062:0;
+  if(scanned){for(const dx of [-.36,.36]){const desk=schoolDesk();desk.position.set(dx,0,0);g.add(desk)}}
+  else{block(g,0,.78,0,1.5,.08,.95,wood);for(const dx of [-.64,.64])for(const dz of [-.35,.35])block(g,dx,.38,dz,.055,.76,.055,metal)}
+  for(let i=0;i<4;i++){const sheet=block(g,-.18,.83+lift+i*.006,0,.43,.005,.6,paper);sheet.rotation.y=i*.025}
+  const exam=examPaper(record);exam.position.set(-.18,.858+lift,0);exam.rotation.y=-.045;g.add(exam);
+  const tools=deskTools();tools.position.y+=lift;g.add(tools);
  }else if(index===1){
   block(g,0,.92,0,1.05,1.84,.6,metal);
   for(let i=0;i<4;i++){const y=.29+i*.42;block(g,0,y,.311,.97,.38,.025,dark);block(g,0,y,.33,.93,.35,.018,metal);block(g,0,y+.04,.36,.28,.04,.05,brass);artwork(g,[['未归档','待复核','空白名单','离校许可'][i]],.2,.085,0,y-.07,.345)}

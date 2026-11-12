@@ -6,7 +6,7 @@ export function settingsView(ui:HTMLElement,back:()=>void,apply:()=>void){
  <div class="setting-row"><label for="fov">视野角度</label><input id="fov" type="range" min="65" max="100" step="1"><output id="fov-value"></output></div>
  <div class="setting-row"><label for="quality">画面精细度</label><select id="quality"><option value="0.75">节能 · 0.75倍</option><option value="1">标准 · 1倍</option><option value="1.5">精细 · 1.5倍</option><option value="2">超清 · 2倍</option></select></div>
  <div class="setting-row"><label for="ao">接触阴影</label><select id="ao"><option value="on">开启</option><option value="off">关闭</option></select></div>
- <p class="setting-help">视野角度可按舒适程度调整。游戏无镜头晃动与刻意闪烁；高精细度会增加显卡负载。<br>奔跑会引起警戒。铃响12秒内，值班人停步听令，侧门开放。</p>
+ <p class="setting-help">视野角度可按舒适程度调整。镜头会随走路和跑步的步频轻微晃动，跑步时更明显；无刻意闪烁。如感不适请暂停。高精细度会增加显卡负载。<br>奔跑会引起警戒。铃响12秒内，值班人停步听令，侧门开放。</p>
  <button id="full">全屏</button><button id="back">返回</button></section>`;
  const inputs=[['vol','volume'],['sens','sensitivity'],['fov','fov']] as const;
  for(const[id,key]of inputs){const input=ui.querySelector<HTMLInputElement>('#'+id)!,output=ui.querySelector<HTMLOutputElement>('#'+id+'-value')!;input.value=String(options[key]);const refresh=()=>{output.value=key==='volume'?Math.round(options[key]*100)+'%':key==='fov'?options[key]+'°':options[key].toFixed(1)};refresh();input.oninput=()=>{options[key]=Number(input.value);refresh();persist();apply()}}

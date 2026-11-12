@@ -1,0 +1,6 @@
+Poly Haven models in this folder are dedicated to the public domain under CC0 1.0.
+
+https://creativecommons.org/publicdomain/zero/1.0/
+
+School Desk 01 and School Chair 01: https://polyhaven.com/a/SchoolDesk_01 and https://polyhaven.com/a/SchoolChair_01
+Authors as listed on those pages (Ethan Place). No changes were made to the official 2K glTF, binary mesh, or JPEG texture files.

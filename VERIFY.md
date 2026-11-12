@@ -440,3 +440,8 @@ session55315已成功结束：包含新音效与探索链的实际0.3.0-dev.1 `.
 - 碰撞修复后源码Electron完整断网正常键鼠通关通过，3次捕获后用真实检查点继续，全部设备外侧互动与绕行路径通过，HTTP/页面错误0；报告collision-0.8-traverse-result.json、trail.json与log。旧的设备内部站位不再用于此路线。
 - release/collision-fix-0.8实际生成修复版DMG/ZIP，ZIP CRC及app.asar与打包.app一致，63递归模块、字体/音乐资源与许可检查通过；大小与SHA见docs/FIXED-LOCAL-ARTIFACTS-0.8.0.md。
 - 实际修复版.app执行prop-collision通过正常键鼠桌体阻挡与桌外交互，随后smoke通过菜单/锁鼠/暂停/输入/设置；不是修复发行包完整通关。待新原生43105561085完成后下载真实CI包继续验证。
+
+## 修复候选固定源CI验证继续
+- 原生43105561085固定源5f22c5f1aec8b698b6470197098d5e3f871f1eb6的web产物已实际下载并解压；SHA/CRC/63递归模块及字体/音频许可通过，报告fixed-ci-0.8-web-inspection.json。
+- 在可见Mac Chrome正常键鼠验证该独立CI网页包：首个谜题、鼠标锁定/观察、音频暂停、设置/800×600/全屏与读档通过，日志fixed-ci-0.8-browser.log及fixed-ci-0.8-browser-run/artifacts。不是浏览器整局。
+- 实际release/collision-fix-0.8内.app执行8次重开回归通过，几何344、纹理65始终稳定，暂停/窗口/全屏/pageerrors通过。120帧约1996.4ms仅为该机短时固定视点。报告collision-fix-0.8-regression.json。

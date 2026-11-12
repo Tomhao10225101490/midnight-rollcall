@@ -1,0 +1,235 @@
+{
+  "title": "末铃点名 original spoken lines",
+  "format": "WAVE PCM 16-bit mono 22050 Hz",
+  "note": "Rendered from original game dialogue using macOS system voices. Voice model files are not included.",
+  "files": {
+    "open": {
+      "file": "open.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 313854,
+      "duration": 7.023991,
+      "sha256": "d47d82277991c288f857d203a57cedf17c86458eac4abc95b2c38094263a61de",
+      "text": "林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。",
+      "aliases": []
+    },
+    "resume-1": {
+      "file": "resume-1.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 354072,
+      "duration": 7.935964,
+      "sha256": "af6ebd7d6f8347869f9eaed954ab46454a027bfd79ae88b83059c98dcdce4599",
+      "text": "检查点已恢复。当前任务：打开办公室档案柜。按J查看已经收集的记录。",
+      "aliases": []
+    },
+    "resume-2": {
+      "file": "resume-2.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 343488,
+      "duration": 7.695964,
+      "sha256": "f64b8df2218f67ea7c3c88c282a0fbe9b1e1eb140b3fd8045ee5d6553f637872",
+      "text": "检查点已恢复。当前任务：校准广播频率。按J查看已经收集的记录。",
+      "aliases": []
+    },
+    "resume-3": {
+      "file": "resume-3.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 399232,
+      "duration": 8.96,
+      "sha256": "b42c302f8552086844a0b3665e98bdc50f22dfcfef733d73c7ee7bcd138c056f",
+      "text": "检查点已恢复。当前任务：修复侧门配电并领取通行证。按J查看已经收集的记录。",
+      "aliases": []
+    },
+    "resume-4": {
+      "file": "resume-4.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 354072,
+      "duration": 7.935964,
+      "sha256": "ce35ccc3e2612d3fef6f9a0b1edca2b5e02f33ef24ef82ad348826d55e4ec370",
+      "text": "检查点已恢复。当前任务：趁铃声离开出口。按J查看已经收集的记录。",
+      "aliases": []
+    },
+    "name": {
+      "file": "name.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 165,
+      "bytes": 337844,
+      "duration": 7.567982,
+      "sha256": "822dc9549cd42e0749bc5e1916dbd9b5654a2bd6cb39c95616644a4021e5d4a0",
+      "text": "林序。林序。应到一人，实到零人。请不要替空座位上的人应答。",
+      "aliases": [
+        "广播：林序。林序。应到一人，实到零人。请不要替空座位上的人应答。"
+      ]
+    },
+    "unlisted": {
+      "file": "unlisted.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 165,
+      "bytes": 313854,
+      "duration": 7.023991,
+      "sha256": "cc3ff987917cb9cb4d03163c0ed248b145c4402e886afd04f3bcc5355a8b8e24",
+      "text": "名单接收失败……名单接收成功。林序，这次请按你自己的名字离校。",
+      "aliases": [
+        "广播：名单接收失败……名单接收成功。林序，这次请按你自己的名字离校。"
+      ]
+    },
+    "dawn": {
+      "file": "dawn.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 165,
+      "bytes": 283512,
+      "duration": 6.335964,
+      "sha256": "de9c4993e5983f97746ab70491ffde7f35cea6a676140ab4bfd5d99dd209e556",
+      "text": "最后一位同学，请保留走廊照明。有人还需要看见回去的路。",
+      "aliases": [
+        "广播：最后一位同学，请保留走廊照明。有人还需要看见回去的路。"
+      ]
+    },
+    "bell": {
+      "file": "bell.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 314560,
+      "duration": 7.04,
+      "sha256": "5142cfa7d7275ea585b1531456dec3409bbafbc818c74191ab998be7feebd3e3",
+      "text": "铃声期间，侧门开放十二秒。值班人员原地听令。请保持距离。",
+      "aliases": []
+    },
+    "victory": {
+      "file": "victory.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 160,
+      "bytes": 236238,
+      "duration": 5.263991,
+      "sha256": "aaf86c3ad35acdd659c03e373b08f799ab0ddaff2560863bf1f0905221016301",
+      "text": "本次点名结束。你的名字，已从名单中划去。",
+      "aliases": []
+    },
+    "after-exam": {
+      "file": "after-exam.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 228476,
+      "duration": 5.087982,
+      "sha256": "7b5909d4a47665524e2a8f68a828684c312b659b5a86f139d068da5e6169be27",
+      "text": "试卷已登记。请核对二班记录，再前往办公室。",
+      "aliases": []
+    },
+    "after-archive": {
+      "file": "after-archive.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 289158,
+      "duration": 6.463991,
+      "sha256": "d323fadf1c586985cbd79c6df5b774bbbab301074d956dd8e596da2712ac21a8",
+      "text": "档案已核验。请前往纪律室核对频道，再到广播室发送空白名单。",
+      "aliases": []
+    },
+    "after-radio": {
+      "file": "after-radio.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 242588,
+      "duration": 5.407982,
+      "sha256": "fd0771690657765bd084d3c0ee1c6fac3ed4e973d9a22bb176ce0746368d8dc7",
+      "text": "空白名单已接收。请到配电值班室领取侧门通行证。",
+      "aliases": []
+    },
+    "after-pass": {
+      "file": "after-pass.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 244704,
+      "duration": 5.455964,
+      "sha256": "a523729d808e796bdbb86c17a1fb78f3d7e1132ef9cf37e55c56a23ff2ea025a",
+      "text": "通行证已签发。等铃声响起，从东侧出口离校。",
+      "aliases": []
+    },
+    "read-record": {
+      "file": "read-record.wav",
+      "style": "pa",
+      "voice": "Flo (Chinese (China mainland))",
+      "rate": 170,
+      "bytes": 105702,
+      "duration": 2.303991,
+      "sha256": "903993c68035351538e632af92e402a78414202262cf9c6a88cab659ac2a6fe6",
+      "text": "请阅读这份校园记录。",
+      "aliases": []
+    },
+    "capture": {
+      "file": "capture.wav",
+      "style": "proctor",
+      "voice": "Reed (Chinese (China mainland))",
+      "rate": 160,
+      "bytes": 213658,
+      "duration": 4.751973,
+      "sha256": "218607be84b23dd6abd61c233b978b7a5e1c32c3ec2ac13e0cf1904ac28d8cc4",
+      "text": "林序，你的名字还在名单上。请回到座位。",
+      "aliases": []
+    },
+    "chase": {
+      "file": "chase.wav",
+      "style": "proctor",
+      "voice": "Reed (Chinese (China mainland))",
+      "rate": 168,
+      "bytes": 126870,
+      "duration": 2.783991,
+      "sha256": "2941ca0d03d3f8c7c9ce40944876d389a774766f77cbd2a315ca178384941f3f",
+      "text": "林序，不要在走廊奔跑。",
+      "aliases": []
+    },
+    "halt": {
+      "file": "halt.wav",
+      "style": "proctor",
+      "voice": "Reed (Chinese (China mainland))",
+      "rate": 165,
+      "bytes": 141688,
+      "duration": 3.12,
+      "sha256": "992f084f8a875e25a8c2ccb7e30a20cbc6ef5574b5c4910728d7ae50afc5ba2f",
+      "text": "站住。晚自习还没有结束。",
+      "aliases": []
+    },
+    "search-hide": {
+      "file": "search-hide.wav",
+      "style": "proctor",
+      "voice": "Reed (Chinese (China mainland))",
+      "rate": 160,
+      "bytes": 222126,
+      "duration": 4.943991,
+      "sha256": "bec2b741dde98c767c1d584a1f2bcb80db21fa4a613ba103e6f94417c0f728a1",
+      "text": "储物柜也要检查。不要以为躲起来就可以离校。",
+      "aliases": []
+    },
+    "empty-class": {
+      "file": "empty-class.wav",
+      "style": "whisper",
+      "voice": "Sandy (Chinese (China mainland))",
+      "rate": 148,
+      "bytes": 177672,
+      "duration": 3.935964,
+      "sha256": "d4db85a6eab5d1d663c09b7fda2b3dae3f0c5396027d32cc75068e1fbffb661f",
+      "text": "有人吗？教室里，怎么没人应？",
+      "aliases": [
+        "隔壁传来三声轻敲。教室里没有应答，门也没有打开。"
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+import test from 'node:test';import assert from 'node:assert/strict';import * as T from 'three';
+globalThis.document={createElement:()=>({width:0,height:0,getContext:()=>({fillRect(){},fillText(){},strokeRect(){},beginPath(){},moveTo(){},lineTo(){},arc(){},stroke(){},createRadialGradient:()=>({addColorStop(){}}),fillStyle:'',strokeStyle:'',font:'',textAlign:'',textBaseline:'',lineWidth:0})})};
+const {scene,init}=await import('../dist/world.js');
+init();
+const {nightSky,setAtmosphere,NIGHT_FOG,DAWN_FOG}=await import('../dist/night-sky.js');
+const {ceilings}=await import('../dist/ceilings.js');
+test('夜空有星月与月光阴影，晨光可淡出并还原',()=>{
+ nightSky(scene);
+ const sky=scene.getObjectByName('原创夜空');
+ const moon=scene.getObjectByName('原创月亮');
+ const light=scene.children.find(o=>o.name==='月光');
+ assert.ok(sky&&moon&&light,'应有夜空、月亮和月光');
+ assert.equal(sky.material.fog,false);
+ assert.equal(light.castShadow,true);
+ assert.equal(light.intensity,1.85);
+ assert.equal(scene.background.getHexString(),new T.Color(NIGHT_FOG).getHexString());
+ setAtmosphere(1);
+ assert.ok(light.intensity<0.05);
+ assert.equal(scene.background.getHexString(),new T.Color(DAWN_FOG).getHexString());
+ setAtmosphere(0);
+ assert.equal(light.intensity,1.85);
+ assert.equal(scene.background.getHexString(),new T.Color(NIGHT_FOG).getHexString());
+});
+test('吊顶扣板覆盖教学楼与南翼',()=>{
+ ceilings(scene);
+ const panels=scene.children.filter(o=>o.name==='原创吊顶扣板');
+ assert.ok(panels.length>=5,'应有主楼和南翼吊顶');
+ assert.ok(scene.children.some(o=>o.name==='原创吊顶配件'));
+ assert.ok(scene.children.some(o=>o.name==='原创吊顶管线'));
+});

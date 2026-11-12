@@ -7,7 +7,7 @@ import {architecturalDetails} from './architecture';
 import {Narrative} from './narrative';
 const narrative=new Narrative();
 import {HidingSpot} from './hiding';
-import {storageCabinet} from './furniture';
+import {storageCabinet,loadFurnitureModels} from './furniture';
 import{Rendering}from './rendering';
 import{settingsView}from './settings-ui';
 import{notebookView}from './notebook-ui';
@@ -16,6 +16,7 @@ import{clues,type ClueId}from './clues';
 import{station}from './stations';
 import{initDoors,nearestDoor,resetDoors,setDoorOccupants}from './doors';
 import {Ending} from './ending';
+import {updateSky} from './night-sky';
 import {props} from './props';
 import {Player} from './player';
 import {circuitClue,records} from './puzzles';
@@ -29,8 +30,9 @@ import './style.css';
 import { scene, init, clear, visible, box, label, walls } from './world';
 import { Enemy } from './enemy';
 import { read, save } from './save';
-import { tone, effect, measureEffects, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio } from './audio';
+import { tone, effect, measureEffects, setVolume, broadcast, stopSpeech, pauseAudio, resumeAudio, isSpeaking, updatePresence } from './audio';
 await prepareTypography();
+await loadFurnitureModels();
 init();
 decorate();props();initDoors();architecturalDetails(scene,walls);
 upgradeMaterials(scene);batchStaticBoxes(scene);
@@ -42,11 +44,13 @@ document.body.append(renderer.domElement);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = T.PCFSoftShadowMap;
 renderer.toneMapping = T.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
-const camera = new T.PerspectiveCamera(options.fov, innerWidth / innerHeight, .1, 60);
+renderer.toneMappingExposure = 1.12;
+const camera = new T.PerspectiveCamera(options.fov, innerWidth / innerHeight, .1, 140);
 const rendering=new Rendering(renderer,scene,camera);rendering.configure(options.ambientOcclusion);
 camera.rotation.order = 'YXZ';const player=new Player(camera);const ending=new Ending();camera.position.set(0,1.65,-19);camera.rotation.y=Math.PI;
-let windowFocused=document.hasFocus();let lockPending=false,lockRequest=0;
+const qaMode=new URLSearchParams(location.search).has('qa');
+const calmMode=new URLSearchParams(location.search).has('calm');
+let windowFocused=document.hasFocus();let lockPending=false,lockRequest=0;let voiceCool=0,chaseSaid=0;
 let closeOverlay:(()=>void)|null=null;let enemyStride=0;let notes:ClueId[]=[];let doorNoise=0,doorBlocked=0;let enemy = new Enemy(), stage = 0, playing = false, hidden = false, alert = 0, time = 0, sens = options.sensitivity / 1000, last = 0, step = 0;
 setDoorOccupants(()=>[camera.position,enemy.body.position]);
 const keys = new Set<string>(), ui = document.querySelector<HTMLElement>('#ui')!;
@@ -60,11 +64,11 @@ function nearbyClue(){return clues.find(c=>Math.hypot(camera.position.x-c.x,came
 const hidingSpot=new HidingSpot();walls.push(hidingSpot.bounds);
 const hideCabinet=storageCabinet();hideCabinet.position.set(8,0,-7);scene.add(hideCabinet);
 const hideSign=label('储物柜 · H 藏身',8,-6.49);hideSign.position.y=1.88;hideSign.position.z=-6.46;hideSign.scale.set(.5,.22,1);
-function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { if(title!=='天亮之前')endingMusic.stop(); closeOverlay=null;score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；无镜头晃动与闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = ()=>settings(); document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
+function menu(title = '末铃点名', text = '昭川中学 · 第零次晚自习。你的名字仍在广播名单上。') { if(title!=='天亮之前')endingMusic.stop(); closeOverlay=null;score.pause(); playing = false; document.exitPointerLock(); ui.innerHTML = `<section><h1>${title}</h1><p>${text}</p><p>虚构校园恐怖，无血腥。建议低音量；镜头会随步伐轻微晃动，无刻意闪烁。</p><button id="new">新游戏</button><button id="load">继续游戏</button><button id="settings">设置 / 操作</button><button id="quit">退出</button></section>`; document.querySelector<HTMLElement>('#new')!.onclick = () => start(0); document.querySelector<HTMLElement>('#load')!.onclick = () => {const checkpoint=read();start(checkpoint?.stage||0,checkpoint?.notes||[])}; document.querySelector<HTMLElement>('#settings')!.onclick = ()=>settings(); document.querySelector<HTMLElement>('#quit')!.onclick = () => window.close(); }
 function settings(back:()=>void=()=>menu()){closeOverlay=back;settingsView(ui,back,()=>{setVolume(options.volume);sens=options.sensitivity/1000;renderer.setPixelRatio(options.quality);rendering.configure(options.ambientOcclusion);camera.fov=options.fov;camera.updateProjectionMatrix()})}
 function announce(text:string){narrative.defer();broadcast(text)}
-function start(s: number,restoredNotes:ClueId[]=[]) { endingMusic.stop(); score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;resetDoors();doorNoise=0;doorBlocked=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; syncStations(); resume(); }
-function resume() { closeOverlay=null;resumeAudio(); score.start(); playing = true; keys.clear(); const request=++lockRequest;lockPending=true;try{Promise.resolve(renderer.domElement.requestPointerLock()).then(()=>{if(request!==lockRequest)return;lockPending=false;if(playing&&!document.pointerLockElement)pause()},()=>{if(request===lockRequest){lockPending=false;pause()}})}catch{lockPending=false;pause()} tone(440); }
+function start(s: number,restoredNotes:ClueId[]=[]) { endingMusic.stop(); score.reset(s);defeat.reset();notes=[...restoredNotes]; enemyStride=0;voiceCool=0;chaseSaid=0;resetDoors();doorNoise=0;doorBlocked=0; ending.reset(); player.reset();hidingSpot.reset();narrative.reset(s===0?"你叫林序。晚自习结束后，整栋楼只剩下你的名字。校门没有打开。":"你回到了走廊。已记录的线索仍在，按 J 回看。"); announce(s===0?"林序同学，晚自习结束。请安静行走。请到一班检查遗留试卷。":"检查点已恢复。当前任务："+names[s]+"。按J查看已经收集的记录。"); stage = s; save(stage,notes); camera.position.set(0, 1.65, -19); camera.rotation.set(0, Math.PI, 0); enemy.reset(); alert = 0; hidden = false; time = 0; syncStations(); resume(); }
+function resume() { closeOverlay=null;resumeAudio(); score.start(); playing = true; keys.clear(); if(qaMode){lockPending=false;tone(440);return} const request=++lockRequest;lockPending=true;try{Promise.resolve(renderer.domElement.requestPointerLock()).then(()=>{if(request!==lockRequest)return;lockPending=false;if(playing&&!document.pointerLockElement)pause()},()=>{if(request===lockRequest){lockPending=false;pause()}})}catch{lockPending=false;pause()} tone(440); }
 function pausedMenu(){closeOverlay=resume;ui.innerHTML='<section><h2>暂停</h2><button id="resume">恢复</button><button id="paused-settings">设置 / 操作</button><button id="menu">主菜单</button></section>';ui.querySelector<HTMLButtonElement>('#resume')!.onclick=resume;ui.querySelector<HTMLButtonElement>('#paused-settings')!.onclick=()=>settings(pausedMenu);ui.querySelector<HTMLButtonElement>('#menu')!.onclick=()=>menu()}
 function pause(){lockRequest++;lockPending=false;if(!playing)return;pauseAudio();score.pause();playing=false;keys.clear();document.exitPointerLock();pausedMenu()}
 function interact() { const door=nearestDoor(camera.position);if(door){if(door.set(!door.open)){doorNoise=1;doorBlocked=0;effect('door')}else{doorBlocked=3;tone(160,.08)}return} const clue=nearbyClue();if(clue){show(clue.text,()=>{if(!notes.includes(clue.id))notes.push(clue.id);save(stage,notes);resume()});return} const p = points[stage]; if (!p || Math.hypot(camera.position.x - p[0], camera.position.z - p[1]) > 2.4)
@@ -80,27 +84,28 @@ function interact() { const door=nearestDoor(camera.position);if(door){if(door.s
     if (time % 60 < 12) {ending.begin(camera);menu('天亮之前', '你走出了昭川中学。最后一声点名消散在晨雾里。没有人应答。');broadcast('本次点名结束。你的名字，已从名单中划去。');endingMusic.begin();}
     return;
 } advance(); }
-function advance() { stage++; syncStations(); score.reset(stage);save(stage,notes); tone(660, .4); resume(); }
-function show(text: string, next: () => void) { closeOverlay=next;narrative.clearSubtitle();score.pause(); announce(text); playing = false; document.exitPointerLock(); ui.innerHTML = `<section class="record-panel"><div class="record-stamp">昭川中学 · 留存件</div><h2>校园记录</h2><p>${text}</p><button id="ok">记下并继续</button></section>`; document.querySelector<HTMLElement>('#ok')!.onclick = next; }
+const stageLines=['','试卷已登记。请核对二班记录，再前往办公室。','档案已核验。请前往纪律室核对频道，再到广播室发送空白名单。','空白名单已接收。请到配电值班室领取侧门通行证。','通行证已签发。等铃声响起，从东侧出口离校。'];
+function advance() { stage++; syncStations(); score.reset(stage);save(stage,notes); tone(660, .4); if(stageLines[stage])announce(stageLines[stage]); resume(); }
+function show(text: string, next: () => void) { closeOverlay=next;narrative.clearSubtitle();score.pause(); announce('请阅读这份校园记录。'); playing = false; document.exitPointerLock(); ui.innerHTML = `<section class="record-panel"><div class="record-stamp">昭川中学 · 留存件</div><h2>校园记录</h2><p>${text}</p><button id="ok">记下并继续</button></section>`; document.querySelector<HTMLElement>('#ok')!.onclick = next; }
 function notebook(){pauseAudio();score.pause();playing=false;document.exitPointerLock();closeOverlay=resume;notebookView(ui,stage,notes,resume,narrative.records,[camera.position.x,camera.position.z])}
 addEventListener('keydown', e => {if(playing&&e.code.startsWith('Arrow'))e.preventDefault(); if(playing&&!e.repeat&&e.code==='KeyJ')notebook(); if (playing && ['Control', ' '].includes(e.key))
     e.preventDefault(); keys.add(e.code); if(e.code==='Escape'){e.preventDefault();if(closeOverlay)closeOverlay();else pause()} if (playing && !e.repeat && e.code === 'KeyE')
     interact(); if(playing&&!e.repeat&&e.code==='KeyH'){if(hidden){hidingSpot.leave(camera);hidden=false;effect('door',.3)}else if(hidingSpot.enter(camera)){hidden=true;effect('door',.3)}} });
 addEventListener('keyup', e => keys.delete(e.code));
 function syncEndingFocus(){endingMusic.update(0,options.volume,windowFocused&&!document.hidden,false)}
-function setWindowFocus(focused:boolean){windowFocused=focused;syncEndingFocus();if(!focused){pause();pauseAudio();score.pause()}}
-document.addEventListener('visibilitychange',()=>{syncEndingFocus();if(document.hidden){pause();pauseAudio();score.pause()}});
+function setWindowFocus(focused:boolean){windowFocused=focused;syncEndingFocus();if(!focused&&!qaMode){pause();pauseAudio();score.pause()}}
+document.addEventListener('visibilitychange',()=>{syncEndingFocus();if(document.hidden&&!qaMode){pause();pauseAudio();score.pause()}});
 addEventListener('focus',()=>setWindowFocus(true));addEventListener('blur',()=>setWindowFocus(false));
 const desktopFocus=(window as unknown as {desktopFocus?:{onChange:(callback:(focused:boolean)=>void)=>void}}).desktopFocus;desktopFocus?.onChange(setWindowFocus);
-document.addEventListener('pointerlockchange', () => {if(document.pointerLockElement){if(!playing)document.exitPointerLock()}else if(!lockPending)pause()});
+document.addEventListener('pointerlockchange', () => {if(document.pointerLockElement){if(!playing)document.exitPointerLock()}else if(!lockPending&&!qaMode)pause()});
 addEventListener('mousemove', e => { if (playing && document.pointerLockElement) {
     camera.rotation.y -= e.movementX * sens;
     camera.rotation.x = T.MathUtils.clamp(camera.rotation.x - e.movementY * sens, -1.4, 1.4);
 } });
 addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);rendering.resize(); });
-function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms;endingMusic.update(dt,options.volume,windowFocused&&!document.hidden,'speechSynthesis' in window&&speechSynthesis.speaking); defeat.update(dt,windowFocused&&!document.hidden);if(windowFocused&&!document.hidden)ending.update(dt,camera); if (playing) {
+function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((ms - last) / 1000, .05); last = ms;endingMusic.update(dt,options.volume,windowFocused&&!document.hidden,isSpeaking()); defeat.update(dt,windowFocused&&!document.hidden);if(windowFocused&&!document.hidden)ending.update(dt,camera); if (playing) {
     camera.rotation.y+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*dt*1.4;camera.rotation.x=T.MathUtils.clamp(camera.rotation.x+((keys.has('ArrowUp')?1:0)-(keys.has('ArrowDown')?1:0))*dt*1.1,-1.4,1.4);
-    doorBlocked=Math.max(0,doorBlocked-dt);doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage,'speechSynthesis' in window&&speechSynthesis.speaking);
+    doorBlocked=Math.max(0,doorBlocked-dt);doorNoise=Math.max(0,doorNoise-dt);score.update(dt, enemy.state === '追逐', options.volume,stage,isSpeaking());
     const before = time;
     time += dt;syncStations();
     if (Math.floor(before / 60) !== Math.floor(time / 60)) {
@@ -109,11 +114,14 @@ function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((
     }
     hidingSpot.constrain(camera);
     const {run,crouch,moving,footstep}=player.update(dt,keys,hidden);if(footstep)effect('step',crouch?.18:run?.7:.45);
+    updatePresence(dt,{running:!!(run&&moving),moving,distance:camera.position.distanceTo(enemy.body.position),chasing:enemy.state==='追逐',hidden,active:playing,speaking:isSpeaking(),volume:options.volume});
     alert = T.MathUtils.clamp(alert + dt * (run && moving ? 4 : -1), 0, 100);
-    const story=narrative.update(dt,stage,camera.position.x,camera.position.z,hidden||enemy.state==='追逐'||time%60<12||('speechSynthesis' in window&&speechSynthesis.speaking));
-    if(story){if(story.kind==='radio')broadcast(story.text);else{const dx=story.x-camera.position.x,dz=story.z-camera.position.z,distance=Math.hypot(dx,dz);effect(story.kind,.3,(Math.cos(camera.rotation.y)*dx-Math.sin(camera.rotation.y)*dz)/Math.max(1,distance),true)}}
+    const story=narrative.update(dt,stage,camera.position.x,camera.position.z,hidden||enemy.state==='追逐'||time%60<12||isSpeaking());
+    if(story){if(story.kind==='radio'||story.id==='empty-class')broadcast(story.text);if(story.kind!=='radio'){const dx=story.x-camera.position.x,dz=story.z-camera.position.z,distance=Math.hypot(dx,dz);effect(story.kind,.3,(Math.cos(camera.rotation.y)*dx-Math.sin(camera.rotation.y)*dz)/Math.max(1,distance),true)}}
+    voiceCool=Math.max(0,voiceCool-dt);
+    if(playing&&voiceCool===0&&!isSpeaking()&&time%60>=12){if(enemy.state==='追逐'){announce(chaseSaid++%2?'站住。晚自习还没有结束。':'林序，不要在走廊奔跑。');voiceCool=16}else if(hidden&&enemy.sawHide&&enemy.state==='搜索'){announce('储物柜也要检查。不要以为躲起来就可以离校。');voiceCool=20}}
     const oldEnemy=enemy.body.position.clone();
-    if (enemy.update(dt, hidingSpot.target(camera), (run && moving)||doorNoise>0, hidden, alert, time % 60 < 12)) {
+    if (!calmMode&&enemy.update(dt, hidingSpot.target(camera), (run && moving)||doorNoise>0, hidden, alert, time % 60 < 12)) {
         playing=false;keys.clear();score.pause();pauseAudio();document.exitPointerLock();defeat.begin();closeOverlay=()=>defeat.finish();broadcast('林序，你的名字还在名单上。请回到座位。');
     }
     else {
@@ -122,7 +130,7 @@ function frame(ms: number) { requestAnimationFrame(frame); const dt = Math.min((
     }
     enemyStride+=enemy.body.position.distanceTo(oldEnemy);
     if(playing&&enemyStride>1.25){enemyStride=0;const dx=enemy.body.position.x-camera.position.x,dz=enemy.body.position.z-camera.position.z,distance=Math.hypot(dx,dz);effect('step',Math.max(0,1-distance/18)*.55,(Math.cos(camera.rotation.y)*dx-Math.sin(camera.rotation.y)*dz)/Math.max(1,distance),!visible(camera.position,enemy.body.position));}
-} rendering.render(); }
+} updateSky(camera); rendering.render(); }
 menu();
 requestAnimationFrame(frame);
 // Opt-in read-only telemetry for automated keyboard-driven traversal. No state mutation.

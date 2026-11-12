@@ -1,0 +1,17 @@
+{
+ "source": "Poly Haven CC0 1.0",
+ "files": {
+  "SchoolDesk_01_2k/LICENSE-CC0.txt": "d821952ecc7f7f18119d2b99d3940395b8d22a87979c049619aaca60dd991100",
+  "SchoolDesk_01_2k/SchoolDesk_01.bin": "80d0ece097fde9b1efe15a9babfb6bb1573d228bab6e02e3806cb5eca39c2c0c",
+  "SchoolDesk_01_2k/SchoolDesk_01_2k.gltf": "98eb40d3ed2992d73d6e9150d5d5b8acd64937f4a832c1018eb668b72caabea6",
+  "SchoolDesk_01_2k/textures/SchoolDesk_01_arm_2k.jpg": "de68c0fa738d75992e36a9ae5cd1dffeed8db3fa16b1bbb3e30cbb2d754e9f40",
+  "SchoolDesk_01_2k/textures/SchoolDesk_01_diff_2k.jpg": "e02cca7645b4ac33aec1d13457d6346fc44bc23e31c321ff1484f32d2523fbf3",
+  "SchoolDesk_01_2k/textures/SchoolDesk_01_nor_gl_2k.jpg": "6c01d397344d262802516455a70347a668a00e4e73ae39f413ec13c1ba3f8110",
+  "SchoolChair_01_2k/LICENSE-CC0.txt": "d26756043ae05441333e0a13e4bc16cb07571cd84b556cde2a39ebfdc0c4582a",
+  "SchoolChair_01_2k/SchoolChair_01.bin": "7d64d556ba88d3962778085b9a190f1adb0d84e667bca8ef032c0ae34b31a9fe",
+  "SchoolChair_01_2k/SchoolChair_01_2k.gltf": "f072f367f9282032bcc6fefb9ceb01cc2776166d9026a75583f2c8a7767e9693",
+  "SchoolChair_01_2k/textures/SchoolChair_01_arm_2k.jpg": "270a10398ee3a5753dd4208f2eb3ee97edcb00ccf3ac3227d00b276403d00df4",
+  "SchoolChair_01_2k/textures/SchoolChair_01_diff_2k.jpg": "7fabb6303317102d68afd3ccc9de247c3ec16577133f45a2d0cd13e550728a89",
+  "SchoolChair_01_2k/textures/SchoolChair_01_nor_gl_2k.jpg": "c7f018f35c03f3d42728da0e2aa032c0deea20210cd6b49328c56bde279e60ad"
+ }
+}

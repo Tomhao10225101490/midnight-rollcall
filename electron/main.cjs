@@ -7,5 +7,5 @@ app.whenReady().then(()=>{
  for(const event of ['focus','blur','minimize','restore'])w.on(event,sendFocus);w.webContents.on('did-finish-load',sendFocus);
  w.webContents.setWindowOpenHandler(()=>({action:'deny'}));w.webContents.on('will-navigate',e=>e.preventDefault());
  Menu.setApplicationMenu(Menu.buildFromTemplate([{label:'末铃点名',submenu:[{role:'about'},{role:'quit'}]},{label:'窗口',submenu:[{role:'togglefullscreen'},{role:'minimize'}]}]));
- w.loadFile(path.join(__dirname,'../dist/index.html'),process.env.ROLLCALL_QA==='1'?{query:{qa:'1'}}:{});
+ const query={};if(process.env.ROLLCALL_QA==='1')query.qa='1';if(process.env.ROLLCALL_QA_CALM==='1')query.calm='1';w.loadFile(path.join(__dirname,'../dist/index.html'),Object.keys(query).length?{query}:{});
 });app.on('window-all-closed',()=>app.quit());
